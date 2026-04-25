@@ -1,7 +1,7 @@
 from django.db import models
 from PIL import Image  # pillow
 from mptt.models import MPTTModel, TreeForeignKey
-from shop.models.public import Brand
+from shop.public.models import Brand
 import os 
 # Create your models here.
 
