@@ -1,9 +1,10 @@
 from django.db import models
 from PIL import Image  # pillow
-
+from mptt.models import MPTTModel, TreeForeignKey
+from shop.models.public import Brand
+import os 
 # Create your models here.
 
-# مدل دسته‌بندی اصلی
 
 class BaseCategorys(models.Model):
     name = models.CharField(max_length=50, unique=True, verbose_name="اسم  --  فارسی --  دسته بندی اصلی")
@@ -27,19 +28,25 @@ class BaseCategorys(models.Model):
     def __str__(self):
         return self.name
 
-# مدل دسته بندی
-class Category(models.Model):
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, verbose_name="دسته بندی والد", related_name='subcategories')
+class Category(MPTTModel):
+
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     base_catgory = models.ForeignKey(BaseCategorys, verbose_name="دسته بندی اصلی", on_delete=models.CASCADE, related_name='categories')
-    
-    name = models.CharField(max_length=20, unique=True, verbose_name="نام دسته بندی ---فارسی")
+
+    name = models.CharField(max_length=100,unique=True, verbose_name='نام دسته‌بندی')
     en_name = models.CharField(max_length=20, unique=True, verbose_name="نام دسته بندی ---انگلیسی")
-    description = models.TextField(verbose_name="توضیحات دسته بندی")
+    description = models.TextField(blank=True, null=True)
+    brand = models.ManyToManyField(Brand, blank=True, related_name='categories')
     image = models.ImageField(upload_to=upload_cat_image_path, verbose_name="عکس دسته بندی", blank=True, null=True)
 
+    class MPTTMeta:
+        order_insertion_by = ["parent", "name"]
+
     class Meta:
-        verbose_name = "دسته بندی"
-        verbose_name_plural = "دسته بندی ها"
+        verbose_name = 'دسته‌بندی'
+        verbose_name_plural = 'دسته‌بندی‌ها'
+
+
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -48,6 +55,7 @@ class Category(models.Model):
             output_size = (300,300)
             img.thumbnail(output_size, Image.LANCZOS)
             img.save(self.image.path)
+
 
     def __str__(self):
         return self.name
