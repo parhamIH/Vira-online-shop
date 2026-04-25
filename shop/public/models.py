@@ -1,5 +1,8 @@
 from django.db import models
-
+from colorfield.fields import ColorField
+from shop.categories.models import Category
+from PIL import Image
+import os
 # Create your models here.
 
 # مدل برند  public
