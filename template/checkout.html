@@ -1,0 +1,430 @@
+{% extends "shared/_Main.html" %}
+{% load static %}
+{% load humanize %}
+
+
+<!-- start content -->
+{% block main %}
+
+<div class="content">
+    <div class="container-fluid">
+
+        <div class="payment_navigtions">
+            <div class="checkout-headers cart">
+                <ul>
+                    <li class="nav">
+                        <a href="{% url 'cart' %}">
+                            <i class="bi bi-cart"></i>
+                            <p>سبد خرید</p>
+                        </a>
+                    </li>
+                    <li class="nav active">
+                        <a href="{% url 'checkout' %}">
+                            <i class="bi bi-truck"></i>
+                            <p>صورتحساب</p>
+                        </a>
+                    </li>
+                    <li class="nav">
+                        <i class="bi bi-card-list"></i>
+                        <p>فاکتور</p>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="container-fluid">
+        <div class="slider-title mb-4">
+            <div class="slider-title-desc">
+                <div class="slider-title-title">
+                    <h2 class="h1"> جزئیات <span class="title-font main-color-one-color">صورت حساب</span></h2>
+                </div>
+            </div>
+        </div>
+        <div class="content-box checkouts-form">
+            <div class="container-fluid">
+                <div class="checkout-form">
+                    <form action="{% url 'process_payment' %}" method="POST">
+                        {% csrf_token %}
+
+                        <div class="row g-4">
+                            <!-- بخش آدرس -->
+                            <div class="col-12 mb-3">
+                                <h5 class="title-font mb-3 h6">انتخاب آدرس</h5>
+                                {% if addresses %}
+                                    <div class="row">
+                                        {% for address in addresses %}
+                                            <div class="col-md-6 mb-3">
+                                                <div class="address-item p-3 border rounded">
+                                                    <div class="form-check">
+                                                        <input type="radio" class="form-check-input" name="selected_address" id="address-{{ address.id }}" value="{{ address.id }}" {% if forloop.first %}checked{% endif %}>
+                                                        <label for="address-{{ address.id }}" class="form-check-label">
+                                                            <strong>{{ address.title_address }}</strong><br>
+                                                            {{ address.province }} - {{ address.city }}<br>
+                                                            {{ address.full_address }}<br>
+                                                            کد پستی: {{ address.postcode }}<br>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="mb-3">
+                                        <a href="#" class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#newAddressForm">افزودن آدرس جدید</a>
+                                    </div>
+                                    
+                                    <div class="collapse" id="newAddressForm">
+                                        <div class="card card-body mb-3">
+                                            <h6 class="mb-3">افزودن آدرس جدید</h6>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="comment-item mb-3">
+                                                        <input type="text" class="form-control" id="floatingInputTitle" name="title_address" placeholder="عنوان آدرس را وارد کنید...">
+                                                        <label for="floatingInputTitle" class="form-label label-float fw-bold font-16">عنوان آدرس <span class="text-danger">*</span></label>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col-md-6">
+                                                    <div class="comment-item" for="floatingInputOstan">
+                                                        <label class="label-float fw-bold">استان <span class="text-danger">*</span></label>
+                                                        <select name="province" id="floatingInputOstan" class="form-select">
+                                                            {% for province in provinces %}
+                                                                <option value="{{ province.name }}">{{ province.name }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                <div class="col-md-6">
+                                    <div class="comment-item">
+                                        <label class="label-float fw-bold" for="floatingInputCity">شهر <span class="text-danger">*</span></label>
+                                        <select name="city" id="floatingInputCity" class="form-select">
+                                            {% for city in cities %}
+                                                <option value="{{ city.name }}">{{ city.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <div class="comment-item mb-3">
+                                        <input type="text" class="form-control" id="floatingInputStreet" name="full_address" placeholder="آدرس دقیق را وارد کنید ...">
+                                        <label for="floatingInputStreet" class="form-label label-float fw-bold">آدرس کامل</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="comment-item mb-3">
+                                        <input type="text" class="form-control" id="floatingInputPostalCode" name="postcode" placeholder="کد پستی را وارد کنید ...">
+                                        <label for="floatingInputPostalCode" class="form-label label-float fw-bold">کد پستی</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                                {% else %}
+                                    <div class="alert alert-warning">
+                                        شما هیچ آدرسی ثبت نکرده‌اید. لطفاً یک آدرس جدید ثبت کنید.
+                                    </div>
+                                    <!-- فرم افزودن آدرس جدید -->
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="comment-item mb-3">
+                                                <input type="text" class="form-control" id="floatingInputTitle" name="title_address" placeholder="عنوان آدرس را وارد کنید...">
+                                                <label for="floatingInputTitle" class="form-label label-float fw-bold font-16">عنوان آدرس <span class="text-danger">*</span></label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6">
+                                            <div class="comment-item" for="floatingInputOstan">
+                                                <label class="label-float fw-bold">استان <span class="text-danger">*</span></label>
+                                                <select name="province" id="floatingInputOstan" class="form-select">
+                                                    {% for province in provinces %}
+                                                        <option value="{{ province.name }}">{{ province.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="comment-item">
+                                                <label class="label-float fw-bold" for="floatingInputCity">شهر <span class="text-danger">*</span></label>
+                                                <select name="city" id="floatingInputCity" class="form-select">
+                                                    {% for city in cities %}
+                                                        <option value="{{ city.name }}">{{ city.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-12">
+                                            <div class="comment-item mb-3">
+                                                <input type="text" class="form-control" id="floatingInputStreet" name="full_address" placeholder="آدرس دقیق را وارد کنید ...">
+                                                <label for="floatingInputStreet" class="form-label label-float fw-bold">آدرس کامل</label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6">
+                                            <div class="comment-item mb-3">
+                                                <input type="text" class="form-control" id="floatingInputPostalCode" name="postcode" placeholder="کد پستی را وارد کنید ...">
+                                                <label for="floatingInputPostalCode" class="form-label label-float fw-bold">کد پستی</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- روش ارسال -->
+                            <div class="col-12">
+                                <div class="factor-item flex-column mb-3 align-items-start justify-content-between">
+                                    <h5 class="title-font mb-3 h6">روش ارسال</h5>
+                                    <div class="form-check mt-2">
+                                        <input type="radio" checked class="form-check-input" name="shipping_method" id="post-1" value="post">
+                                        <label for="post-1" class="form-check-label">
+                                            پست (4 تا 7 روز کاری): {{ shipping_costs.post|intcomma }} تومان
+                                        </label>
+                                    </div>
+                                    <div class="form-check mt-2">
+                                        <input type="radio" class="form-check-input" name="shipping_method" id="post-2" value="tipax">
+                                        <label for="post-2" class="form-check-label">
+                                            تیپاکس (2 تا 3 روز کاری): {{ shipping_costs.tipax|intcomma }} تومان
+                                        </label>
+                                    </div>
+                                    <div class="form-check mt-2">
+                                        <input type="radio" class="form-check-input" name="shipping_method" id="post-3" value="express">
+                                        <label for="post-3" class="form-check-label">
+                                            پیک موتوری اختصاصی (کمتر از 5 ساعت): {{ shipping_costs.express|intcomma }} تومان
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- زمان ارسال -->
+                            <div class="col-12">
+                                <div class="factor-item pb-3">
+                                    <h5 class="title-font mb-3 h6">زمان ارسال</h5>
+                                    <div class="row gy-3">
+                                        {% for date in delivery_dates %}
+                                        <div class="col-sm-2">
+                                            <div class="send-item {% if forloop.first %}active{% endif %}">
+                                                <input type="radio" name="delivery_date" value="{{ date.value }}" id="date-{{ forloop.counter }}" class="d-none" {% if forloop.first %}checked{% endif %}>
+                                                <label for="date-{{ forloop.counter }}">
+                                                    <h6 class="font-14 text-center">{{ date.day_name }}</h6>
+                                                    <p class="font-14 text-center mt-1 mb-0 text-muted">{{ date.date_str }}</p>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- روش پرداخت -->
+                            <div class="col-12">
+                                <div class="factor-item pb-3">
+                                    <h5 class="title-font mb-3 h6">شیوه پرداخت</h5>
+                                    <div class="row gy-3">
+                                        <div class="col-sm-6">
+                                            <div class="bank-item active">
+                                                <input type="radio" checked class="form-check-input d-none" name="payment_method" id="payment-1" value="online">
+                                                <label for="payment-1" class="d-flex align-items-center">
+                                                    <i class="bi bi-credit-card-2-back main-color-one-color"></i>
+                                                    <h6 class="font-14 mx-2">پرداخت آنلاین</h6>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        {% if enable_cash_on_delivery %}
+                                        <div class="col-sm-6">
+                                            <div class="bank-item">
+                                                <input type="radio" class="form-check-input d-none" name="payment_method" id="payment-2" value="cod">
+                                                <label for="payment-2" class="d-flex align-items-center">
+                                                    <i class="bi bi-house-fill main-color-one-color"></i>
+                                                    <h6 class="font-14 mx-2">پرداخت در محل</h6>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- توضیحات سفارش -->
+                            <div class="col-12">
+                                <div class="comment-item mb-3">
+                                    <textarea class="form-control py-3" id="floatingInputDesc" name="order_notes" rows="5" placeholder="اگر سفارش شما توضیح خاصی دارد اینجا وارد کنید"></textarea>
+                                    <label for="floatingInputDesc" class="form-label label-float fw-bold">توضیحات سفارش</label>
+                                </div>
+                            </div>
+
+                            <!-- خلاصه فاکتور -->
+                            <div class="col-12">
+                                <div class="cart-canvases position-sticky top-0">
+                                    <div class="item shadow-none">
+                                        <div class="factor">
+                                            <div class="d-flex factor-item mb-3 align-items-center justify-content-between">
+                                                <h5 class="title-font mb-0 h6">قیمت کالا ها</h5>
+                                                <p class="mb-0 font-17">{{ cart.total_price|intcomma }} تومان</p>
+                                            </div>
+
+                                            <div class="d-flex factor-item mb-3 align-items-center justify-content-between">
+                                                <h5 class="title-font mb-0 h6">تخفیف کالا ها</h5>
+                                                <p class="mb-0 font-18">{{ cart.total_discount|intcomma }} تومان</p>
+                                            </div>
+
+                                            <div class="d-flex factor-item mb-3 align-items-center justify-content-between">
+                                                <h5 class="title-font mb-0 h6">هزینه ارسال</h5>
+                                                <p class="mb-0 font-18 shipping-cost">{{ shipping_costs.post|intcomma }} تومان</p>
+                                            </div>
+
+                                            <div class="d-flex factor-item mb-3 align-items-center justify-content-between">
+                                                <h5 class="title-font mb-0 h6">مجموع</h5>
+                                                <p class="mb-0 font-18 total-price">{{ cart.total_final_price|add:shipping_costs.post|intcomma }} تومان</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- دکمه ثبت سفارش -->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <button type="submit" id="paymentButton" class="btn product-meta-add-to-cart-btn main-color-one-bg rounded-pill">
+                                        پرداخت و ثبت سفارش
+                                    </button>
+                                    <div id="paymentLoading" style="display:none" class="text-center mt-2">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">در حال بارگذاری...</span>
+                                        </div>
+                                        <p class="mt-2">در حال انتقال به درگاه پرداخت...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="Dottedsquare-checkout d-lg-flex d-none"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // رفتار انتخاب روش ارسال
+    document.addEventListener('DOMContentLoaded', function() {
+        const shippingMethods = document.querySelectorAll('input[name="shipping_method"]');
+        const shippingCostElement = document.querySelector('.shipping-cost');
+        const totalPriceElement = document.querySelector('.total-price');
+        const cartTotal = parseInt('{{ cart.total_final_price }}', 10);
+        
+        const shippingCosts = {
+            'post': parseInt('{{ shipping_costs.post }}', 10),
+            'tipax': parseInt('{{ shipping_costs.tipax }}', 10),
+            'express': parseInt('{{ shipping_costs.express }}', 10)
+        };
+        
+        shippingMethods.forEach(method => {
+            method.addEventListener('change', function() {
+                const selectedMethod = this.value;
+                const cost = shippingCosts[selectedMethod];
+                
+                shippingCostElement.textContent = `${cost.toLocaleString()} تومان`;
+                totalPriceElement.textContent = `${(cartTotal + cost).toLocaleString()} تومان`;
+            });
+        });
+        
+        // اضافه کردن رفتار برای انتخاب تاریخ
+        const dateItems = document.querySelectorAll('.send-item');
+        dateItems.forEach(item => {
+            item.addEventListener('click', function() {
+                dateItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+            });
+        });
+        
+        // اضافه کردن رفتار برای انتخاب روش پرداخت
+        const paymentItems = document.querySelectorAll('.bank-item');
+        paymentItems.forEach(item => {
+            item.addEventListener('click', function() {
+                paymentItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+            });
+        });
+        
+        // مدیریت فرم پرداخت
+        const form = document.querySelector('form[action="{% url 'process_payment' %}"]');
+        const paymentButton = document.getElementById('paymentButton');
+        const paymentLoading = document.getElementById('paymentLoading');
+        
+        if (form && paymentButton) {
+            form.addEventListener('submit', function(e) {
+                // بررسی آدرس انتخاب شده
+                const selectedAddressRadios = document.querySelectorAll('input[name="selected_address"]:checked');
+                const titleAddress = form.querySelector('input[name="title_address"]');
+                const province = form.querySelector('select[name="province"]');
+                const city = form.querySelector('select[name="city"]');
+                const fullAddress = form.querySelector('input[name="full_address"]');
+                const postcode = form.querySelector('input[name="postcode"]');
+                
+                let hasAddress = false;
+                
+                if (selectedAddressRadios.length > 0) {
+                    // آدرس موجود انتخاب شده
+                    hasAddress = true;
+                    console.log('آدرس انتخاب شده:', selectedAddressRadios[0].value);
+                } else if (titleAddress && titleAddress.value && province && province.value && 
+                    city && city.value && fullAddress && fullAddress.value && 
+                    postcode && postcode.value) {
+                    // آدرس جدید وارد شده
+                    hasAddress = true;
+                    console.log('آدرس جدید وارد شده');
+                }
+                
+                if (!hasAddress) {
+                    e.preventDefault();
+                    alert('لطفاً یک آدرس انتخاب کنید یا آدرس جدید وارد کنید');
+                    return;
+                }
+                
+                // بررسی روش ارسال، تاریخ و روش پرداخت
+                const shippingMethod = document.querySelector('input[name="shipping_method"]:checked');
+                const deliveryDate = document.querySelector('input[name="delivery_date"]:checked');
+                const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
+                
+                if (!shippingMethod || !deliveryDate || !paymentMethod) {
+                    e.preventDefault();
+                    alert('لطفاً تمام گزینه‌های مورد نیاز را انتخاب کنید');
+                    return;
+                }
+                
+                // نمایش حالت بارگذاری
+                paymentButton.disabled = true;
+                paymentLoading.style.display = 'block';
+                console.log('فرم در حال ارسال...');
+                
+                // CSRF token اضافه کردن به header (برای اطمینان)
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                if (csrftoken) {
+                    const headers = new Headers({
+                        'X-CSRFToken': csrftoken,
+                    });
+                }
+                
+                // فرم معتبر است، اجازه ارسال بده
+                setTimeout(() => {
+                    if (!form.submitted) {
+                        form.submitted = true;
+                        form.submit();
+                    }
+                }, 200);
+            });
+        }
+    });
+</script>
+
+<!-- end content -->
+{% endblock main %}

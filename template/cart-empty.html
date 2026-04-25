@@ -1,0 +1,34 @@
+{% extends "shared/_Main.html" %}
+{% load static %}
+{% load humanize %}
+{% block main %}
+
+<!-- start content -->
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="cart-empty">
+            <div class="content-box">
+                <div class="container-fluid">
+                    <div class="cart-empty-image text-center">
+                        <img src="{% static 'assets/img/mini_cart-empty.png' %}" width="300" alt="">
+                    </div>
+                    <div class="cart-empty-title">
+                        <h2 class="text-center title-font">
+                            سبد خرید شما خالی میباشد
+                        </h2>
+                        <div class="text-center mt-3">
+                            <a href="/products" class="btn main-color-one-outline rounded-pill px-4">رفتن به فروشگاه</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<!-- end content -->
+
+{% endblock %}

@@ -1,0 +1,340 @@
+{% extends "shared/_Main.html" %}
+{% load static %}
+{% load humanize %}
+{% block main %}
+<!-- start breadcroumb -->
+ <style>
+    .counter {
+        display: flex;
+        align-items: center;
+    }
+    
+    .cart-product {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+    }
+    
+    .cart-product-item {
+        border: 1px solid #ddd;
+        padding: 15px;
+        border-radius: 8px;
+        background-color: #fff;
+    }
+    
+    .image img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+    
+    .product-info {
+        flex: 1;
+    }
+    
+    .counter {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .counter button {
+        padding: 5px 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f5f5f5;
+        cursor: pointer;
+    }
+    
+    .counter-input {
+        width: 50px;
+        text-align: center;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 5px;
+    }
+    
+    .product-price {
+        text-align: right;
+        color: #333;
+    }
+    
+    .cart-summary {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        padding: 20px;
+        border-radius: 8px;
+    }
+    
+    /* استایل‌های جدید برای نمایش رنگ و سایز */
+    .product-attributes {
+        margin: 8px 0;
+        color: #666;
+    }
+    
+    .product-color, .product-size {
+        display: inline-flex;
+        align-items: center;
+        background-color: #f5f5f5;
+        padding: 4px 10px;
+        border-radius: 4px;
+        margin-bottom: 5px;
+    }
+    
+    .color-dot {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        margin-right: 5px;
+        vertical-align: middle;
+        border: 1px solid #ddd;
+    }
+    
+    /* استایل سبد خرید خالی */
+    .empty-cart-message {
+        margin-top: 30px;
+    }
+    
+    .font-60 {
+        font-size: 60px;
+    }
+    
+ </style>
+
+
+<!-- end breadcroumb -->
+
+
+<!-- start content -->
+
+<div class="content">
+    <div class="container-fluid">
+
+        <div class="payment_navigtions">
+            <div class="checkout-headers cart">
+                <ul>
+                    <li class="nav active">
+                        <a href="">
+                            <i class="bi bi-cart"></i>
+                            <p>سبد خرید</p>
+                        </a>
+                    </li>
+                    <li class="nav">
+                        <a href="">
+                            <i class="bi bi-truck"></i>
+                            <p>صورتحساب</p>
+                        </a>
+                    </li>
+                    <li class="nav">
+                        <i class="bi bi-card-list"></i>
+                        <p>فاکتور</p>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="container-fluid">
+        <div class="cart-product">
+            <div class="row gy-4">
+                <!-- بخش محصولات -->
+                <div class="col-lg-9">
+                    {% if cart_items %}
+                    {% for item in cart_items %}
+                    <div class="cart-product-item mt-3">
+                        <div class="content-box">
+                            <div class="row gy-2 align-items-center">
+                                <!-- تصویر محصول -->
+                                <div class="col-md-2 w-100-in-400">
+                                    <div class="image">
+                                        {# Assumes a URL pattern named 'product_detail' that takes a product ID. #}
+                                        <a href="{% url 'product_detail' item.package.product.id item.package.product.name %}">
+                                            <img src="{{ item.package.product.image.url }}" 
+                                            alt="{{ item.package.product.name }}" 
+                                            class="img-fluid" >
+                                        </a>
+                                    </div>
+                                </div>
+                                <!-- جزئیات محصول -->
+                                <div class="col-md-10 w-100-in-400">
+                                    <div class="d-flex justify-content-between align-items-start flex-wrap">
+                                        <!-- اطلاعات محصول -->
+                                        <div class="product-info">
+                                            <h6 class="font-16">
+                                                <a href="{% url 'product_detail' item.package.product.id item.package.product.name %}">
+                                                    {{ item.package.product.name }}
+
+                                                </a>
+                                                {% if item.package.discount %}
+                                                <span class="badge ms-2 danger-label rounded-pill">
+                                                    {{ item.package.discount }}%
+                                                </span>
+                                                {% else %}
+                                                <br>
+                                                {% endif %}
+                                            </h6>
+                                            <!-- نمایش رنگ و سایز محصول -->
+                                            <div class="product-attributes d-flex align-items-center flex-wrap my-2">
+                                                {% if item.package.color %}
+                                                <div class="product-color me-3">
+                                                    <span class="fw-bold">رنگ:</span>
+                                                    <span class="ms-1">{{ item.package.color.name }}</span>
+                                                    <span class="color-dot" style="background-color: {{ item.package.color.hex_code }};"></span>
+                                                </div>
+                                                {% endif %}
+                                                {% if item.package.size %}
+                                                <div class="product-size">
+                                                    <span class="fw-bold">سایز:</span>
+                                                    {# This requires the `display_size` property on your Size model. #}
+                                                    <span class="ms-1">{{ item.package.size.display_size }}</span>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="cart-item d-flex align-items-center mt-3">
+                                                <!-- کنترل تعداد -->
+                                                <div class="counter">
+                                                    <input type="hidden" class="package-id" value="{{ item.package.id }}">
+                                                    <button type="button" 
+                                                            class="decrease-btn" 
+                                                            data-max-quantity="{{ item.package.quantity }}">
+                                                        -
+                                                    </button>
+                                                    <input type="text" 
+                                                           class="counter-input" 
+                                                           data-package-id="{{ item.package.id }}" 
+                                                           value="{{ item.count }}" 
+                                                           readonly>
+                                                    <button type="button" 
+                                                            class="increase-btn" 
+                                                            data-max-quantity="{{ item.package.quantity }}">
+                                                        +
+                                                    </button>
+                                                </div>
+                                                <!-- دکمه حذف -->
+                                                <div class="remove danger-label ms-3">
+                                                    <a href="#" class="delete-cart-item" data-package-id="{{ item.package.id }}">
+                                                        <i class="bi bi-trash-fill"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- قیمت محصول -->
+                                        <div class="product-price">
+                                            {% if item.package.discount %}
+                                            <div class="product-box-price-discount mb-2">
+                                                <del>{{ item.package.price | intcomma }} تومان</del>
+                                            </div>
+                                            {% endif %}
+                                            <div class="product-box-price-final">
+                                                <h4 id="item-price-{{ item.package.id }}">
+                                                    {{ item.package.final_price | intcomma }} تومان
+                                                </h4>
+                                            </div>
+                                            <div>
+                                                <strong>مجموع: </strong>
+                                                <span id="item-total-{{ item.package.id }}">
+                                                    {{ item.total_final_price | intcomma }}
+                                                </span>
+                                                تومان
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <!-- نمایش پیام سبد خرید خالی -->
+                    <div class="empty-cart-message">
+                        <div class="text-center p-5 bg-white rounded-3 shadow-sm">
+                            <i class="bi bi-basket font-60 text-muted mb-3 d-block"></i>
+                            <h4 class="mb-3">سبد خرید شما خالی است</h4>
+                            <p class="text-muted mb-4">می‌توانید به فروشگاه بازگشته و محصولات مورد نظر خود را اضافه کنید</p>
+                            <a href="/products" class="btn main-color-one-bg border-0 px-4 py-2">مشاهده محصولات</a>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+    
+                <!-- بخش خلاصه سبد خرید -->
+                <div class="col-lg-3">
+                    {% if cart_items %}
+                    <div class="cart-summary position-sticky top-0">
+                        <div class="summary-item">
+                            <div class="d-flex justify-content-between mb-3">
+                                <h5>قیمت کالاها</h5>
+                                <p id="total-goods-price">{{ cart_total | intcomma }} تومان</p>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <h5>تخفیف کالاها</h5>
+                                <p id="total-discount">0 تومان</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <h5>مجموع</h5>
+                                <p id="total-price">{{ cart_total | intcomma }} تومان</p>
+                            </div>
+                            <!-- ... existing code ... -->
+                            <div class="d-flex justify-content-center mt-4 mb-3">
+                                <a href="/checkout" class="btn main-color-one-bg border-0 px-5 py-2">پرداخت</a>
+                            </div>
+                            <!-- ... existing code ... -->
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- بخش کوپن تخفیف -->
+        {% if cart_items %}
+        <div class="my-3">
+            <div class="show-discount-modal pointer p-3 bg-white rounded-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#discountModal">
+                <i class="bi bi-patch-exclamation main-color-one-color me-2" style="font-size: 24px; vertical-align: middle;"></i>
+                <span style="vertical-align: middle;">کوپن تخفیف دارید؟ برای ثبت کد اینجا کلیک کنید.</span>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+
+<!-- end content -->
+
+<!-- modal discount -->
+
+<div class="discount-modal">
+    <div class="modal fade" id="discountModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel">کد تخفیف</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4 class="font-16 mb-3">
+                        اگر شما کد تخفیف دارید ، برای ثبت آن از طریق زیر اقدام کنید.
+                    </h4>
+                    <form action="">
+                        <div class="form-group">
+                            <label for="discount" class="form-label">کد تخفیف:</label>
+                            <input type="text" class="form-control" placeholder="برای مثال eyd1402"
+                                   id="discount">
+                        </div>
+                        <button class="btn main-color-one-bg border-0">ثبت کد
+                            تخفیف</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<!--end modal discount-->
+<script src="{% static 'assets/js/increaseanddecreasequnut.js' %}"></script>
+
+{% endblock main %}

@@ -1,0 +1,764 @@
+{% extends 'shared/_Main.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}پیام‌ها و اطلاعیه‌ها{% endblock %}
+
+{% block main %}
+<div class="content">
+    <div class="container-fluid">
+        <!-- CSRF Token hidden field -->
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+        <!-- منوی موبایل -->
+        <div class="custom-filter d-lg-none d-block">
+            <button class="btn btn-filter-float border-0 main-color-two-bg shadow-box px-4 rounded-3 position-fixed" style="z-index: 999;bottom:80px;" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                <i class="bi bi-list font-20 fw-bold text-white"></i>
+                <span class="d-block font-14 text-white">منو</span>
+            </button>
+
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title">منو</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="panel-nav-logo">
+                        <a href="/" class="text-center d-block mb-3">
+                            <img src="{% static 'assets/img/logo.png' %}" alt="" class="img-fluid" width="200">
+                        </a>
+                    </div>
+                    <div class="penel-nav">
+                        <div class="panel-nav-nav">
+                            <nav class="navbar profile-box-nav">
+                                <ul class="navbar-nav flex-column">
+                                    <li class="nav-item {% if request.path == '/profile' %}active{% endif %}"><a href="/profile" class="nav-link">
+                                        <i class="bi bi-house-door"></i>پروفایل</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/orders' %}active{% endif %}"><a href="/profile/orders" class="nav-link">
+                                        <i class="bi bi-cart-check"></i>سفارش های من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/address' %}active{% endif %}"><a href="/profile/address" class="nav-link">
+                                        <i class="bi bi-pin-map"></i>آدرس های من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/notification' %}active{% endif %}"><a href="/profile/notification" class="nav-link">
+                                        <i class="bi bi-bell"></i>پیام ها و اطلاعیه ها</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/comments' %}active{% endif %}"><a href="/profile/comments" class="nav-link">
+                                        <i class="bi bi-chat-dots"></i>نظرات من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/support' %}active{% endif %}"><a href="/support" class="nav-link">
+                                        <i class="bi bi-question-circle"></i>درخواست پشتیبانی</a>
+                                    </li>
+                                    {% if user.is_staff %}
+                                    <li class="nav-item {% if request.path == '/support/admin/' %}active{% endif %}"><a href="/support/admin/" class="nav-link">
+                                        <i class="bi bi-headset"></i>پنل مدیریت تیکت‌ها</a>
+                                    </li>
+                                    {% endif %}
+                                    <li class="nav-item {% if request.path == '/profile/list' %}active{% endif %}"><a href="/profile/list" class="nav-link">
+                                        <i class="bi bi-heart"></i>محصولات مورد علاقه</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/offers' %}active{% endif %}"><a href="/profile/offers" class="nav-link">
+                                        <i class="bi bi-gift"></i>کد های تخفیف من</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/logout/" class="nav-link">
+                                        <i class="bi bi-arrow-right-square"></i>خروج از حساب کاربری</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel position-relative">
+            <div class="row gy-4">
+                <!-- منوی دسکتاپ -->
+                <div class="col-lg-3 d-lg-block d-none">
+                    <div class="panel-nav-logo">
+                        <a href="/" class="text-center d-block mb-3">
+                            <img src="{% static 'assets/img/logo.png' %}" alt="" class="img-fluid" width="200">
+                        </a>
+                    </div>
+                    <div class="penel-nav">
+                        <div class="panel-nav-nav">
+                            <nav class="navbar profile-box-nav">
+                                <ul class="navbar-nav flex-column">
+                                    <li class="nav-item {% if request.path == '/profile' %}active{% endif %}"><a href="/profile" class="nav-link">
+                                        <i class="bi bi-house-door"></i>پروفایل</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/orders' %}active{% endif %}"><a href="/profile/orders" class="nav-link">
+                                        <i class="bi bi-cart-check"></i>سفارش های من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/address' %}active{% endif %}"><a href="/profile/address" class="nav-link">
+                                        <i class="bi bi-pin-map"></i>آدرس های من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/notification' %}active{% endif %}"><a href="/profile/notification" class="nav-link">
+                                        <i class="bi bi-bell"></i>پیام ها و اطلاعیه ها</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/comments' %}active{% endif %}"><a href="/profile/comments" class="nav-link">
+                                        <i class="bi bi-chat-dots"></i>نظرات من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/support' %}active{% endif %}"><a href="/support" class="nav-link">
+                                        <i class="bi bi-question-circle"></i>درخواست پشتیبانی</a>
+                                    </li>
+                                    {% if user.is_staff %}
+                                    <li class="nav-item {% if request.path == '/support/admin/' %}active{% endif %}"><a href="/support/admin/" class="nav-link">
+                                        <i class="bi bi-headset"></i>پنل مدیریت تیکت‌ها</a>
+                                    </li>
+                                    {% endif %}
+                                    <li class="nav-item {% if request.path == '/profile/list' %}active{% endif %}"><a href="/profile/list" class="nav-link">
+                                        <i class="bi bi-heart"></i>محصولات مورد علاقه</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/offers' %}active{% endif %}"><a href="/profile/offers" class="nav-link">
+                                        <i class="bi bi-gift"></i>کد های تخفیف من</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/logout/" class="nav-link">
+                                        <i class="bi bi-arrow-right-square"></i>خروج از حساب کاربری</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- محتوای اصلی -->
+                <div class="col-lg-9">
+                    <div class="position-sticky top-0">
+                        <!-- هدر پنل -->
+                        <div class="panel-header mb-3">
+                            <div class="content-box">
+                                <div class="container-fluid">
+                                    <div class="row gy-5 align-items-center">
+                                        <div class="col-md-6 col-8">
+                                            <div class="d-flex align-items-center">
+                                                <h6> {% if first_name %} {{first_name}} {% elif username %} {{username}} {% else %} کاربر {% endif %} عزیز به پنل کاربری خوش آمدید</h6>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-4">
+                                            <div class="panel-alert d-flex justify-content-end">
+                                                <a href="/profile/notification">
+                                                    <i class="bi bi-bell pointer"></i>
+                                                </a>
+                                                <span class="count-item rounded-circle"> {{notifications_count}} </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="d-flex align-items-center panel-profile">
+                                                <img src="{% static 'assets/img/user.png' %}" class="img-fluid img-profile-panel rounded-circle me-3 shadow-md" alt="">
+                                                <div class="d-grid gap-2">
+                                                    <h6 class="font-14 main-color-one-color">حساب کاربری من</h6>
+                                                    <div class="d-flex align-items-center">
+                                                        <h6 class="font-14">
+                                                            {{username}}</h6>
+                                                        <a href="/profile/informations" class="ms-2"><i class="bi bi-pencil-square"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- عنوان صفحه -->
+                        <div class="slider-title mt-4">
+                            <div class="slider-title-desc">
+                                <div class="slider-title-title pb-4">
+                                    <h2 class="h1"><span class="title-font main-color-one-color">پیام‌ها</span> و اطلاعیه‌ها </h2>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- بخش فیلتر اعلان‌ها -->
+                        <div class="notification-filter mb-4">
+                            <div class="content-box">
+                                <div class="container-fluid">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="filter-buttons">
+                                            <button class="btn btn-sm btn-outline-primary active" data-filter="all">همه</button>
+                                            <button class="btn btn-sm btn-outline-primary" data-filter="unread">خوانده نشده</button>
+                                            <button class="btn btn-sm btn-outline-primary" data-filter="read">خوانده شده</button>
+                                        </div>
+                                        <button class="btn btn-sm btn-outline-secondary mark-all-read">
+                                            <i class="bi bi-check2-all me-1"></i> علامت‌گذاری همه به عنوان خوانده شده
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- لیست اعلان‌ها -->
+                        <div class="notification-list-section">
+                            <div class="content-box notification-container">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h2 class="content-title mb-0">پیام‌ها و اعلان‌های شما</h2>
+                                    <div class="notification-counter">
+                                        <span class="badge rounded-pill bg-primary">{{ notifications_count }} اعلان</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="card-body p-0">
+                                    {% if notifications %}
+                                    <div class="row g-4" id="notifications-container">
+                                        {% for notice in notifications %}
+                                            <div id="notification-{{ notice.id }}" class="col-12 notification-item {% if notice.is_read %}read{% else %}unread{% endif %}">
+                                                <div class="card h-100 border-0 rounded-4 shadow-hover {% if not notice.is_read %}unread-card{% endif %}">
+                                                    <div class="card-body p-4">
+                                                        <div class="d-flex align-items-start">
+                                                            <!-- آیکون نوع اعلان -->
+                                                            <div class="notification-icon me-3 p-2 rounded-circle">
+                                                                {% if notice.type == 'success' %}
+                                                                    <i class="bi bi-check-circle-fill text-success fs-4"></i>
+                                                                {% elif notice.type == 'info' %}
+                                                                    <i class="bi bi-info-circle-fill text-info fs-4"></i>
+                                                                {% elif notice.type == 'warning' %}
+                                                                    <i class="bi bi-exclamation-triangle-fill text-warning fs-4"></i>
+                                                                {% elif notice.type == 'danger' %}
+                                                                    <i class="bi bi-exclamation-circle-fill text-danger fs-4"></i>
+                                                                {% else %}
+                                                                    <i class="bi bi-bell-fill text-primary fs-4"></i>
+                                                                {% endif %}
+                                                            </div>
+                                                            
+                                                            <!-- محتوای اعلان -->
+                                                            <div class="notification-content flex-grow-1">
+                                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                                    <h5 class="card-title font-16 fw-bold mb-0">{{ notice.title }}</h5>
+                                                                    <small class="text-muted notification-date">{{ notice.created_at }}</small>
+                                                                </div>
+                                                                <p class="card-text mb-3 notification-message">{{ notice.message }}</p>
+                                                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                                                    <div>
+                                                                        {% if not notice.is_read %}
+                                                                            <button class="btn btn-sm btn-primary rounded-pill mark-as-read" data-id="{{ notice.id }}">
+                                                                                <i class="bi bi-check2 me-1"></i> علامت‌گذاری به عنوان خوانده شده
+                                                                            </button>
+                                                                        {% else %}
+                                                                            <span class="badge bg-light text-dark rounded-pill">
+                                                                                <i class="bi bi-check2-all me-1"></i> خوانده شده
+                                                                            </span>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                    <div>
+                                                                        <button class="btn btn-sm btn-outline-danger rounded-pill delete-notification" data-id="{{ notice.id }}">
+                                                                            <i class="bi bi-trash me-1"></i> حذف
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% else %}
+                                    <div class="empty-state p-5 text-center">
+                                        <div class="empty-state__icon mb-4">
+                                            <i class="bi bi-bell-slash fs-1 text-muted"></i>
+                                        </div>
+                                        <h4 class="empty-state__title mb-3">هیچ اعلانی ندارید</h4>
+                                        <p class="empty-state__description text-muted">اعلان‌های شما اینجا نمایش داده می‌شود</p>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- اسکریپت برای مدیریت اعلان‌ها -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    console.log("صفحه بارگذاری شد");
+    
+    // تعریف CSRF token برای استفاده در درخواست‌های AJAX
+    var csrftoken = "{{ csrf_token }}";
+    console.log("CSRF Token تنظیم شد");
+    
+    // به‌روزرسانی شمارنده اعلان‌های خوانده نشده در ابتدای بارگذاری صفحه
+    updateUnreadCount();
+    
+    // اضافه کردن رویداد کلیک برای دکمه علامت‌گذاری به عنوان خوانده شده
+    var markButtons = document.querySelectorAll('.mark-as-read');
+    console.log("تعداد دکمه‌های علامت‌گذاری:", markButtons.length);
+    
+    markButtons.forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            var id = this.getAttribute('data-id');
+            console.log("کلیک روی دکمه خواندن با آیدی:", id);
+            markAsRead(id);
+        });
+    });
+    
+    // اضافه کردن رویداد کلیک برای دکمه حذف اعلان
+    var deleteButtons = document.querySelectorAll('.delete-notification');
+    console.log("تعداد دکمه‌های حذف:", deleteButtons.length);
+    
+    deleteButtons.forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            var id = this.getAttribute('data-id');
+            console.log("کلیک روی دکمه حذف با آیدی:", id);
+            deleteNotification(id);
+        });
+    });
+    
+    // اضافه کردن رویداد کلیک برای دکمه‌های فیلتر
+    var filterButtons = document.querySelectorAll('.filter-buttons button');
+    console.log("تعداد دکمه‌های فیلتر:", filterButtons.length);
+    
+    filterButtons.forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            var filter = this.getAttribute('data-filter');
+            console.log("کلیک روی دکمه فیلتر:", filter);
+            filterNotifications(filter);
+        });
+    });
+    
+    // اضافه کردن رویداد کلیک برای دکمه علامت‌گذاری همه به عنوان خوانده شده
+    var markAllButton = document.querySelector('.mark-all-read');
+    if (markAllButton) {
+        console.log("دکمه خواندن همه پیدا شد");
+        markAllButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log("کلیک روی دکمه خواندن همه");
+            markAllAsRead();
+        });
+    } else {
+        console.log("دکمه خواندن همه پیدا نشد!");
+    }
+});
+
+// فیلتر کردن اعلان‌ها
+function filterNotifications(filter) {
+    console.log("در حال فیلتر کردن:", filter);
+    
+    // فعال کردن دکمه انتخاب شده
+    var filterButtons = document.querySelectorAll('.filter-buttons button');
+    filterButtons.forEach(function(button) {
+        button.classList.remove('active');
+        if (button.getAttribute('data-filter') === filter) {
+            button.classList.add('active');
+        }
+    });
+    
+    // نمایش یا مخفی کردن اعلان‌ها بر اساس فیلتر
+    var notificationItems = document.querySelectorAll('.notification-item');
+    notificationItems.forEach(function(item) {
+        if (filter === 'all') {
+            item.style.display = 'block';
+        } else if (filter === 'read' && item.classList.contains('read')) {
+            item.style.display = 'block';
+        } else if (filter === 'unread' && item.classList.contains('unread')) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+    
+    // بررسی خالی بودن نتایج
+    checkEmptyResults();
+}
+
+// بررسی خالی بودن نتایج فیلتر
+function checkEmptyResults() {
+    var visibleItems = document.querySelectorAll('.notification-item[style="display: block"]').length;
+    console.log("تعداد آیتم‌های قابل مشاهده:", visibleItems);
+    
+    var emptyMessage = document.getElementById('empty-filter-message');
+    
+    if (visibleItems === 0) {
+        if (!emptyMessage) {
+            var container = document.getElementById('notifications-container');
+            var div = document.createElement('div');
+            div.id = 'empty-filter-message';
+            div.className = 'col-12';
+            div.innerHTML = '<div class="alert alert-info">هیچ اعلانی با این فیلتر یافت نشد.</div>';
+            container.appendChild(div);
+        }
+    } else if (emptyMessage) {
+        emptyMessage.remove();
+    }
+}
+
+// علامت‌گذاری یک اعلان به عنوان خوانده شده
+function markAsRead(notificationId) {
+    console.log("در حال ارسال درخواست برای خواندن اعلان با آیدی:", notificationId);
+    
+    // نمایش فوری تغییرات در UI قبل از تکمیل درخواست AJAX
+    var notificationItem = document.getElementById('notification-' + notificationId);
+    notificationItem.classList.remove('unread');
+    notificationItem.classList.add('read');
+    
+    var readButton = notificationItem.querySelector('.mark-as-read');
+    if (readButton) {
+        var readBadge = document.createElement('span');
+        readBadge.className = 'badge bg-light text-dark rounded-pill';
+        readBadge.innerHTML = '<i class="bi bi-check2-all me-1"></i> خوانده شده';
+        readButton.parentNode.replaceChild(readBadge, readButton);
+    }
+    
+    // ارسال درخواست به سرور با Fetch API
+    fetch("{% url 'user_notifications' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': "{{ csrf_token }}"
+        },
+        body: 'notification_id=' + notificationId + '&mark_read=true'
+    })
+    .then(function(response) {
+        console.log("پاسخ از سرور دریافت شد:", response.status);
+        if (!response.ok) {
+            throw new Error('خطا در پاسخ سرور: ' + response.status);
+        }
+        return response.json();
+    })
+    .then(function(data) {
+        console.log("داده‌های پاسخ:", data);
+        if (data.status === 'success') {
+            // به‌روزرسانی شمارنده اعلان‌های خوانده نشده
+            updateUnreadCount();
+            
+            // نمایش پیام موفقیت
+            showNotification('اعلان به عنوان خوانده شده علامت‌گذاری شد.', 'success');
+        } else {
+            console.error("خطا در پاسخ سرور:", data);
+            showNotification('خطا در علامت‌گذاری اعلان: ' + (data.message || "خطای نامشخص"), 'error');
+        }
+    })
+    .catch(function(error) {
+        console.error("خطا در ارسال درخواست:", error);
+        showNotification('خطا در ارتباط با سرور. لطفاً دوباره تلاش کنید.', 'error');
+    });
+}
+
+// علامت‌گذاری همه اعلان‌ها به عنوان خوانده شده
+function markAllAsRead() {
+    console.log("در حال ارسال درخواست برای خواندن همه اعلان‌ها");
+    
+    // نمایش فوری تغییرات در UI قبل از تکمیل درخواست AJAX
+    var unreadItems = document.querySelectorAll('.notification-item.unread');
+    unreadItems.forEach(function(item) {
+        item.classList.remove('unread');
+        item.classList.add('read');
+        
+        var readButton = item.querySelector('.mark-as-read');
+        if (readButton) {
+            var readBadge = document.createElement('span');
+            readBadge.className = 'badge bg-light text-dark rounded-pill';
+            readBadge.innerHTML = '<i class="bi bi-check2-all me-1"></i> خوانده شده';
+            readButton.parentNode.replaceChild(readBadge, readButton);
+        }
+    });
+    
+    // ارسال درخواست به سرور با Fetch API
+    fetch("{% url 'user_notifications' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': "{{ csrf_token }}"
+        },
+        body: 'mark_all_read=true'
+    })
+    .then(function(response) {
+        console.log("پاسخ از سرور دریافت شد:", response.status);
+        if (!response.ok) {
+            throw new Error('خطا در پاسخ سرور: ' + response.status);
+        }
+        return response.json();
+    })
+    .then(function(data) {
+        console.log("داده‌های پاسخ:", data);
+        if (data.status === 'success') {
+            // به‌روزرسانی شمارنده اعلان‌های خوانده نشده
+            updateUnreadCount();
+            
+            // نمایش پیام موفقیت
+            showNotification('همه اعلان‌ها به عنوان خوانده شده علامت‌گذاری شدند.', 'success');
+        } else {
+            console.error("خطا در پاسخ سرور:", data);
+            showNotification('خطا در علامت‌گذاری اعلان‌ها: ' + (data.message || "خطای نامشخص"), 'error');
+        }
+    })
+    .catch(function(error) {
+        console.error("خطا در ارسال درخواست:", error);
+        showNotification('خطا در ارتباط با سرور. لطفاً دوباره تلاش کنید.', 'error');
+    });
+}
+
+// حذف یک اعلان
+function deleteNotification(notificationId) {
+    console.log("در حال ارسال درخواست برای حذف اعلان با آیدی:", notificationId);
+    
+    // ارسال درخواست به سرور با Fetch API
+    fetch("{% url 'user_notifications' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': "{{ csrf_token }}"
+        },
+        body: 'notification_id=' + notificationId + '&delete_notification=true'
+    })
+    .then(function(response) {
+        console.log("پاسخ از سرور دریافت شد:", response.status);
+        if (!response.ok) {
+            throw new Error('خطا در پاسخ سرور: ' + response.status);
+        }
+        return response.json();
+    })
+    .then(function(data) {
+        console.log("داده‌های پاسخ:", data);
+        if (data.status === 'success') {
+            var notificationItem = document.getElementById('notification-' + notificationId);
+            
+            // انیمیشن حذف
+            notificationItem.style.opacity = '0';
+            notificationItem.style.transition = 'opacity 0.3s';
+            
+            setTimeout(function() {
+                notificationItem.remove();
+                
+                // بررسی خالی بودن لیست
+                var remainingItems = document.querySelectorAll('.notification-item').length;
+                if (remainingItems === 0) {
+                    var container = document.getElementById('notifications-container');
+                    container.innerHTML = '<div class="col-12"><div class="alert alert-info">شما هیچ اعلان یا پیامی ندارید.</div></div>';
+                } else {
+                    // بررسی خالی بودن نتایج فیلتر
+                    checkEmptyResults();
+                }
+                
+                // به‌روزرسانی شمارنده اعلان‌های خوانده نشده
+                updateUnreadCount();
+            }, 300);
+            
+            // نمایش پیام موفقیت
+            showNotification('اعلان با موفقیت حذف شد.', 'success');
+        } else {
+            console.error("خطا در پاسخ سرور:", data);
+            showNotification('خطا در حذف اعلان: ' + (data.message || "خطای نامشخص"), 'error');
+        }
+    })
+    .catch(function(error) {
+        console.error("خطا در ارسال درخواست:", error);
+        showNotification('خطا در ارتباط با سرور. لطفاً دوباره تلاش کنید.', 'error');
+    });
+}
+
+// به‌روزرسانی شمارنده اعلان‌های خوانده نشده
+function updateUnreadCount() {
+    var unreadCount = document.querySelectorAll('.notification-item.unread').length;
+    console.log("تعداد اعلان‌های خوانده نشده:", unreadCount);
+    
+    var countElements = document.querySelectorAll('.count-item');
+    countElements.forEach(function(element) {
+        element.textContent = unreadCount;
+        if (unreadCount === 0) {
+            element.style.display = 'none';
+        } else {
+            element.style.display = 'inline-block';
+        }
+    });
+    
+    var badgeElements = document.querySelectorAll('.badge-spn');
+    badgeElements.forEach(function(element) {
+        element.textContent = unreadCount;
+    });
+}
+
+// نمایش اعلان‌ها به کاربر
+function showNotification(message, type) {
+    var notificationClass = 'alert-info';
+    if (type === 'success') notificationClass = 'alert-success';
+    if (type === 'error') notificationClass = 'alert-danger';
+    
+    var notification = document.createElement('div');
+    notification.className = 'alert ' + notificationClass + ' notification';
+    notification.style.position = 'fixed';
+    notification.style.top = '20px';
+    notification.style.right = '20px';
+    notification.style.zIndex = '9999';
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    // مخفی کردن اعلان پس از چند ثانیه
+    setTimeout(function() {
+        notification.style.opacity = '0';
+        notification.style.transition = 'opacity 0.3s';
+        
+        setTimeout(function() {
+            notification.remove();
+        }, 300);
+    }, 3000);
+}
+</script>
+
+<!-- استایل برای اعلان‌ها -->
+<style>
+.notification-list-section {
+    margin-bottom: 30px;
+}
+
+.notification-container {
+    border-radius: 12px;
+    padding: 25px;
+    background-color: #fff;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.content-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    position: relative;
+    padding-right: 15px;
+}
+
+.content-title:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 5px;
+    height: 100%;
+    background: linear-gradient(to bottom, #007bff, #6610f2);
+    border-radius: 20px;
+}
+
+.notification-counter .badge {
+    font-size: 14px;
+    padding: 8px 15px;
+    box-shadow: 0 3px 10px rgba(0,123,255,0.2);
+}
+
+.notification-item {
+    transition: all 0.3s ease;
+    margin-bottom: 10px;
+}
+
+.notification-item .card {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.notification-item .card:hover {
+    transform: translateY(-3px);
+}
+
+.shadow-hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.shadow-hover:hover {
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.unread-card {
+    border-right: 5px solid #007bff;
+    background-color: rgba(13, 110, 253, 0.04);
+}
+
+.notification-icon {
+    background-color: rgba(13, 110, 253, 0.1);
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-date {
+    font-size: 12px;
+    color: #6c757d;
+    background-color: rgba(108, 117, 125, 0.1);
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+
+.notification-message {
+    color: #555;
+    line-height: 1.6;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
+
+.btn-outline-danger {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-outline-danger:hover {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.rounded-pill {
+    border-radius: 50rem;
+}
+
+.empty-state {
+    padding: 60px 0;
+}
+
+.empty-state__icon {
+    color: #dee2e6;
+}
+
+.empty-state__title {
+    font-size: 20px;
+    color: #495057;
+}
+
+.empty-state__description {
+    font-size: 16px;
+    color: #adb5bd;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.filter-buttons .btn {
+    margin-right: 5px;
+    border-radius: 50rem;
+    padding: 8px 15px;
+}
+
+.filter-buttons .btn.active {
+    background-color: #007bff;
+    color: white;
+}
+
+/* انیمیشن اضافه شدن و حذف اعلان */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.notification-item {
+    animation: fadeIn 0.5s ease forwards;
+}
+</style>
+{% endblock main %} 

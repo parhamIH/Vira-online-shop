@@ -1,0 +1,16 @@
+<div class="content-box">
+    <h2 class="content-title">محصولات مورد علاقه</h2>
+    <div class="card-body">
+        {% if products_with_packages %}
+        <!-- ... existing code ... -->
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-state__icon">
+                <i class="fas fa-heart"></i>
+            </div>
+            <h4 class="empty-state__title">هیچ محصول مورد علاقه‌ای ندارید</h4>
+            <p class="empty-state__description">محصولات مورد علاقه شما اینجا نمایش داده می‌شود</p>
+        </div>
+        {% endif %}
+    </div>
+</div> 

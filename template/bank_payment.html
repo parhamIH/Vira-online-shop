@@ -1,0 +1,112 @@
+{% extends "shared/_Main.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block main %}
+<div class="content">
+    <div class="container-fluid">
+        <div class="payment_navigtions">
+            <div class="checkout-headers cart">
+                <ul>
+                    <li class="nav">
+                        <a href="{% url 'cart' %}">
+                            <i class="bi bi-cart"></i>
+                            <p>سبد خرید</p>
+                        </a>
+                    </li>
+                    <li class="nav">
+                        <a href="{% url 'checkout' %}">
+                            <i class="bi bi-truck"></i>
+                            <p>صورتحساب</p>
+                        </a>
+                    </li>
+                    <li class="nav active">
+                        <i class="bi bi-credit-card-2-back"></i>
+                        <p>پرداخت</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid mt-5">
+        <div class="slider-title mb-4">
+            <div class="slider-title-desc">
+                <div class="slider-title-title">
+                    <h2 class="h1"> درگاه <span class="title-font main-color-one-color">پرداخت</span></h2>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-box bank-payment-form">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body p-5">
+                                <h3 class="card-title text-center mb-4">در حال انتقال به درگاه پرداخت</h3>
+                                
+                                <div class="mb-4 text-center">
+                                    <img src="{% static 'assets/images/payment-icon.png' %}" alt="پرداخت" style="max-width: 100px;">
+                                </div>
+                                
+                                <div class="alert alert-info text-center" id="loading-message">
+                                    در حال انتقال به درگاه پرداخت بانکی. لطفاً منتظر بمانید...
+                                </div>
+                                
+                                <div id="payment-form-container" style="display: none;">
+                                    <div class="mb-4">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>شماره سفارش:</strong> {{ order.order_number }}</p>
+                                            </div>
+                                            <div class="col-md-6 text-md-left">
+                                                <p><strong>مبلغ قابل پرداخت:</strong> {{ amount|intcomma }} تومان</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- فرم پرداخت - در حالت واقعی این فرم باید به صورت خودکار ارسال شود -->
+                                    <form id="bank-payment-form" action="https://sandbox.zarinpal.com/pg/StartPay/" method="POST" class="text-center">
+                                        <input type="hidden" name="MerchantID" value="{{ merchant_id }}">
+                                        <input type="hidden" name="Amount" value="{{ amount }}">
+                                        <input type="hidden" name="Description" value="{{ description }}">
+                                        <input type="hidden" name="CallbackURL" value="{{ callback_url }}">
+                                        
+                                        <button type="submit" class="btn btn-lg main-color-one-bg text-white mb-3">
+                                            انتقال به درگاه پرداخت
+                                        </button>
+                                        
+                                        <p class="text-muted small">اگر به صورت خودکار به درگاه پرداخت منتقل نشدید، روی دکمه بالا کلیک کنید.</p>
+                                    </form>
+                                    
+                                    <div class="mt-4 text-center">
+                                        <a href="{% url 'checkout' %}" class="text-muted">بازگشت به صفحه صورتحساب</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ارسال خودکار فرم پس از بارگذاری صفحه
+    window.onload = function() {
+        // نمایش فرم پس از مدت کوتاهی
+        setTimeout(function() {
+            document.getElementById("loading-message").style.display = "none";
+            document.getElementById("payment-form-container").style.display = "block";
+            
+            // ارسال خودکار فرم پس از نمایش
+            setTimeout(function() {
+                console.log("Submitting payment form to ZarinPal...");
+                document.getElementById("bank-payment-form").submit();
+            }, 1000);
+        }, 1500);
+    };
+</script>
+{% endblock main %} 

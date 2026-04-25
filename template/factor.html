@@ -1,0 +1,228 @@
+{% extends "shared/_Main.html" %}
+{% load static %}
+{% load humanize %}
+{% load cart_filters %}
+
+{% block main %}
+<div class="content">
+    <div class="container-fluid">
+        <div class="payment_navigtions">
+            <div class="checkout-headers cart">
+                <ul>
+                    <li class="nav">
+                        <a href="{% url 'cart' %}">
+                            <i class="bi bi-cart"></i>
+                            <p>سبد خرید</p>
+                        </a>
+                    </li>
+                    <li class="nav">
+                        <a href="{% url 'checkout' %}">
+                            <i class="bi bi-truck"></i>
+                            <p>صورتحساب</p>
+                        </a>
+                    </li>
+                    <li class="nav active">
+                        <i class="bi bi-card-list"></i>
+                        <p>فاکتور</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="slider-title mb-4">
+            <div class="slider-title-desc">
+                <div class="slider-title-title">
+                    <h2 class="h1"> فاکتور <span class="title-font main-color-one-color">سفارش #{{ order.id }}</span></h2>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-box invoice-container">
+            <div class="container-fluid">
+                <div class="invoice-content" id="printableArea">
+                    <div class="row">
+                        <div class="col-3 text-center">
+                            <img src="{% static 'assets/images/logo.png' %}" alt="لوگو" style="max-width: 100px;">
+                        </div>
+                        <div class="col-6 text-center"><h3 class="font-weight-bold">صورتحساب فروش کالا و خدمات</h3></div>
+                        <div class="col-3 text-right">
+                            <p class="mb-1">شماره سفارش: {{ order.order_number }}</p>
+                            <p class="mb-0">تاریخ سفارش: {{ date_str }}</p>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th class="text-center" colspan="11">مشخصات فروشنده</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td colspan="11" class="text-right">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <p class="mb-1">نام شخص حقیقی / حقوقی: {{ store_info.name }}</p>
+                                            <p class="mb-0">آدرس کامل: {{ store_info.address }}</p>
+                                        </div>
+                                        <div class="col-4">
+                                            <p class="mb-1">شماره اقتصادی: {{ store_info.economic_code }}</p>
+                                            <p class="mb-0">کد پستی: {{ store_info.postal_code }}</p>
+                                        </div>
+                                        <div class="col-4">
+                                            <p class="mb-1">شناسه ملی: {{ store_info.national_id }}</p>
+                                            <p class="mb-0">تلفن: {{ store_info.phone }}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <thead>
+                            <tr>
+                                <th class="text-center" colspan="11">مشخصات خریدار</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td colspan="11" class="text-right">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <p class="mb-1">نام و نام خانوادگی: {{ order.user.get_full_name }}</p>
+                                            <p class="mb-0">آدرس کامل: {{ order.address.full_address }}</p>
+                                        </div>
+                                        <div class="col-4">
+                                            <p class="mb-1">استان: {{ order.address.province }}</p>
+                                            <p class="mb-0">کد پستی: {{ order.address.postcode }}</p>
+                                        </div>
+                                        <div class="col-4">
+                                            <p class="mb-1">شهر: {{ order.address.city }}</p>
+                                            <p class="mb-1">عنوان آدرس: {{ order.address.title_address }}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <thead>
+                            <tr>
+                                <th class="text-center" colspan="11">مشخصات کالا یا خدمات مورد معامله</th>
+                            </tr>
+                            </thead>
+                            <thead>
+                            <tr class="text-center">
+                                <th>ردیف</th>
+                                <th>کد کالا</th>
+                                <th>شرح کالا یا خدمات</th>
+                                <th>تعداد</th>
+                                <th>قیمت واحد (تومان)</th>
+                                <th>قیمت کل (تومان)</th>
+                                <th>مبلغ تخفیف (تومان)</th>
+                                <th>قیمت نهایی (تومان)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in cart_items %}
+                                <tr class="text-center">
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ item.package.product.id }}</td>
+                                    <td>{{ item.package.product.name }}</td>
+                                    <td>{{ item.count }}</td>
+                                    <td>{{ item.package.price|intcomma }}</td>
+                                    <td>{{ item.package.price|multiply:item.count|intcomma }}</td>
+                                    {% if item.package.is_active_discount %}
+                                        <td>{{ item.package.discount_price|multiply:item.count|intcomma }}</td>
+                                        <td>{{ item.get_price|multiply:item.count|intcomma }}</td>
+                                    {% else %}
+                                        <td>0</td>
+                                        <td>{{ item.get_price|multiply:item.count|intcomma }}</td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                            
+                            <tr>
+                                <th colspan="5" class="text-right">هزینه ارسال ({{ order.get_shipping_method_display_name }})</th>
+                                <th class="text-center" colspan="2">{{ order.shipping_cost|intcomma }}</th>
+                                <th class="text-center">{{ order.shipping_cost|intcomma }}</th>
+                            </tr>
+                            
+                            <tr>
+                                <th colspan="5" class="text-right">جمع کل</th>
+                                <th class="text-center">{{ total_price|intcomma }}</th>
+                                <th class="text-center">{{ total_discount|intcomma }}</th>
+                                <th class="text-center">{{ final_price|intcomma }}</th>
+                            </tr>
+                            
+                            <tr>
+                                <th colspan="4" class="text-right">روش پرداخت: 
+                                    {% if order.payment_method == 'online' %}
+                                        پرداخت آنلاین
+                                    {% elif order.payment_method == 'cod' %}
+                                        پرداخت در محل
+                                    {% else %}
+                                        {{ order.payment_method }}
+                                    {% endif %}
+                                </th>
+                                <th colspan="4" class="text-right">زمان تحویل: {{ order.jalali_delivery_date }} - روش ارسال: {{ order.get_shipping_method_display_name }}</th>
+                            </tr>
+                            
+                            {% if order.notes %}
+                            <tr>
+                                <th colspan="8" class="text-right">توضیحات: {{ order.notes }}</th>
+                            </tr>
+                            {% endif %}
+                            
+                            <tr style="height: 80px;">
+                                <td colspan="4" class="text-right align-bottom">مهر و امضا فروشنده</td>
+                                <td colspan="4" class="text-right align-bottom">مهر و امضا خریدار</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="row mt-4 mb-5">
+                    <div class="col-12 text-center">
+                        <button type="button" class="btn main-color-one-bg text-white" id="printButton" onclick="printInvoice()">
+                            <i class="bi bi-printer"></i> چاپ فاکتور
+                        </button>
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary mx-2">
+                            <i class="bi bi-house"></i> بازگشت به صفحه اصلی
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function printInvoice() {
+        var printContents = document.getElementById('printableArea').innerHTML;
+        var originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+    }
+</script>
+
+<style>
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+        #printableArea, #printableArea * {
+            visibility: visible;
+        }
+        #printableArea {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+        #printButton, .header, .footer {
+            display: none !important;
+        }
+    }
+</style>
+{% endblock main %}

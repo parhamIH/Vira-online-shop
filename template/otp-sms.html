@@ -1,0 +1,148 @@
+<!doctype html>
+<html class="no-js" lang="Fa_IR" dir="rtl">
+
+<head>
+    <meta charset="utf-8">
+    <title>قالب شاهان</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16x16.png">
+
+    <!-- Place favicon.ico in the root directory -->
+
+    <link rel="stylesheet" href="assets/css/normalize.css">
+    <link rel="stylesheet" href="assets/font/bootstrap-icon/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/js/plugin/swiper/swiper-bundle.min.css">
+    <link rel="stylesheet" href="assets/js/plugin/countdown/countdown.css">
+    <link rel="stylesheet" href="assets/js/plugin/rasta-contact/style.css">
+    <link rel="stylesheet" href="assets/js/plugin/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+
+    <meta name="theme-color" content="#f4f5f9">
+</head>
+
+<body style="background: url('assets/img/bg-auth.jpg');background-repeat: no-repeat;background-size: cover">
+
+
+<!-- start content -->
+
+<div class="content vh-100">
+    <div class="container-fluid h-100">
+        <div class="auth h-100 d-flex align-items-center">
+            <div class="container-fluid">
+                <div class="auth-items">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-4">
+
+                            <div class="auth-logo text-center">
+                                <a href="">
+                                    <img src="assets/img/logo.png" width="200" alt="">
+                                </a>
+                            </div>
+                            <div class="auth-form shadow-xl rounded-3 bg-white">
+                                <div class="auth-form-title mb-4 slider-title-desc-center">
+                                    <h2 class="text-center h4 text-muted title-font">ورود / ثبت نام</h2>
+                                </div>
+
+                                <div class="alert text-center alert-success">
+                                    یک کد برای شما پیامک شد لطفا آن را وارد کنید
+                                </div>
+
+                                <div id="otp-input">
+                                    <input placeholder="_" type="number" step="1" min="0" max="9" autocomplete="no" pattern="\d*" />
+                                    <input placeholder="_" type="number" step="1" min="0" max="9" autocomplete="no" pattern="\d*" />
+                                    <input placeholder="_" type="number" step="1" min="0" max="9" autocomplete="no" pattern="\d*" />
+                                    <input placeholder="_" type="number" step="1" min="0" max="9" autocomplete="no" pattern="\d*" />
+                                    <input placeholder="_" type="number" step="1" min="0" max="9" autocomplete="no" pattern="\d*" />
+                                    <input placeholder="_" type="number" step="1" min="0" max="9" autocomplete="no" pattern="\d*" />
+                                    <input id="otp-value" placeholder="_" type="hidden" name="otp" />
+                                </div>
+
+
+                                <!-- Countdown timer html -->
+                                <div class="countDownContainer">
+                                    <div class="countdown-bar" id="countdownB">
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group mt-3">
+                                    <button type="submit" id="submit" class="btn btn-success w-100 mt-4 btn-login">وورد به
+                                        سایت
+                                    </button>
+                                </div>
+
+
+                            </div>
+
+                            <p class="loginTermsDesc">با ورود و یا ثبت نام در شاهان شما <a class="underlined main-color-one-color fw-bold"
+                                                                                              href="/rules/">شرایط و
+                                قوانین</a> استفاده از سرویس‌های سایت شاهان و <a class="underlined main-color-one-color fw-bold"
+                                                                                   href="/privacy-polices/">قوانین حریم
+                                خصوصی</a> آن را می‌پذیرید.</p>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- end content -->
+
+
+
+<script src="assets/js/vendor/modernizr-3.11.2.min.js"></script>
+<script src="assets/js/vendor/jquery-3.7.1.min.js"></script>
+<script src="assets/js/vendor/bootstrap.bundle-5.3.2.min.js"></script>
+<script src="assets/js/plugin/swiper/swiper-bundle.min.js"></script>
+<script src="assets/js/plugin/countdown/countdown.js"></script>
+<script src="assets/js/plugin/vanilla-tilt/vanilla-tilt.min.js"></script>
+<script src="assets/js/plugin/rasta-contact/script.js"></script>
+<script src="assets/js/plugin/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+<script src="assets/js/plugin/otp-sms/otp-input.js"></script>
+<script src="assets/js/plugin/otp-loader/script.js"></script>
+<script src="assets/js/plugins.js"></script>
+<script src="assets/js/main.js"></script>
+
+<!-- Run Countdown Timer Script -->
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        countdown('countdownB', 0, 0, 0, 50);
+    });
+</script>
+<!-- End script -->
+
+
+<!-- otp input callback -->
+
+
+<script>
+    const continueButton = document.querySelector("#submit");
+    continueButton.addEventListener("click", (e) => {
+        updateValue(inputs);
+        alert(OTPValueContainer.value);
+    });
+</script>
+
+<!-- end otp input callback -->
+
+</body>
+
+</html>

@@ -1,0 +1,399 @@
+{% extends "shared/_Main.html" %}
+{% load static %}
+{% block main %}
+
+
+<!-- start content -->
+
+<div class="content">
+    <div class="container-fluid">
+
+        <div class="custom-filter d-lg-none d-block">
+            <button class="btn btn-filter-float border-0 main-color-two-bg shadow-box px-4 rounded-3 position-fixed" style="z-index: 999;bottom:80px;" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                <i class="bi bi-list font-20 fw-bold text-white"></i>
+                <span class="d-block font-14 text-white">منو</span>
+            </button>
+
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title">منو</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="panel-nav-logo">
+                        <a href="" class="text-center d-block mb-3">
+                            <img src="{% static 'assets/img/logo.png' %}" alt="" class="img-fluid" width="200">
+                        </a>
+                    </div>
+                    <div class="penel-nav">
+                        <div class="panel-nav-nav">
+                            <nav class="navbar profile-box-nav">
+                                <ul class="navbar-nav flex-column">
+                                    <li class="nav-item {% if request.path == '/profile' %}active{% endif %}"><a href="/profile" class="nav-link">
+                                        <i class="bi bi-house-door"></i>پروفایل</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/orders' %}active{% endif %}"><a href="/profile/orders" class="nav-link">
+                                        <i class="bi bi-cart-check"></i>سفارش های من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/address' %}active{% endif %}"><a href="/profile/address" class="nav-link">
+                                        <i class="bi bi-pin-map"></i>آدرس های من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/notification' %}active{% endif %}"><a href="/profile/notification" class="nav-link">
+                                        <i class="bi bi-bell"></i>پیام ها و اطلاعیه ها</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/comments' %}active{% endif %}"><a href="/profile/comments" class="nav-link">
+                                        <i class="bi bi-chat-dots"></i>نظرات من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/support' %}active{% endif %}"><a href="/support" class="nav-link">
+                                        <i class="bi bi-question-circle"></i>درخواست پشتیبانی</a>
+                                    </li>
+                                    {% if user.is_staff %}
+                                    <li class="nav-item {% if request.path == '/support/admin/' %}active{% endif %}"><a href="/support/admin/" class="nav-link">
+                                        <i class="bi bi-headset"></i>پنل مدیریت تیکت‌ها</a>
+                                    </li>
+                                    {% endif %}
+                                    <li class="nav-item {% if request.path == '/profile/list' %}active{% endif %}"><a href="/profile/list" class="nav-link">
+                                        <i class="bi bi-heart"></i>محصولات مورد علاقه</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/offers' %}active{% endif %}"><a href="/profile/offers" class="nav-link">
+                                        <i class="bi bi-gift"></i>کد های تخفیف من</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/logout/" class="nav-link">
+                                        <i class="bi bi-arrow-right-square"></i>خروج از حساب کاربری</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel position-relative">
+            <div class="row gy-4">
+                <div class="col-lg-3 d-lg-block d-none">
+                    <div class="panel-nav-logo">
+                        <a href="" class="text-center d-block mb-3">
+                            <img src="{% static 'assets/img/logo.png' %}" alt="" class="img-fluid" width="200">
+                        </a>
+                    </div>
+                    <div class="penel-nav">
+                        <div class="panel-nav-nav">
+                            <nav class="navbar profile-box-nav">
+                                <ul class="navbar-nav flex-column">
+                                    <li class="nav-item {% if request.path == '/profile' %}active{% endif %}"><a href="/profile" class="nav-link">
+                                        <i class="bi bi-house-door"></i>پروفایل</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/orders' %}active{% endif %}"><a href="/profile/orders" class="nav-link">
+                                        <i class="bi bi-cart-check"></i>سفارش های من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/address' %}active{% endif %}"><a href="/profile/address" class="nav-link">
+                                        <i class="bi bi-pin-map"></i>آدرس های من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/notification' %}active{% endif %}"><a href="/profile/notification" class="nav-link">
+                                        <i class="bi bi-bell"></i>پیام ها و اطلاعیه ها</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/comments' %}active{% endif %}"><a href="/profile/comments" class="nav-link">
+                                        <i class="bi bi-chat-dots"></i>نظرات من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/support' %}active{% endif %}"><a href="/support" class="nav-link">
+                                        <i class="bi bi-question-circle"></i>درخواست پشتیبانی</a>
+                                    </li>
+                                    {% if user.is_staff %}
+                                    <li class="nav-item {% if request.path == '/support/admin/' %}active{% endif %}"><a href="/support/admin/" class="nav-link">
+                                        <i class="bi bi-headset"></i>پنل مدیریت تیکت‌ها</a>
+                                    </li>
+                                    {% endif %}
+                                    <li class="nav-item {% if request.path == '/profile/list' %}active{% endif %}"><a href="/profile/list" class="nav-link">
+                                        <i class="bi bi-heart"></i>محصولات مورد علاقه</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/offers' %}active{% endif %}"><a href="/profile/offers" class="nav-link">
+                                        <i class="bi bi-gift"></i>کد های تخفیف من</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/logout/" class="nav-link">
+                                        <i class="bi bi-arrow-right-square"></i>خروج از حساب کاربری</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="position-sticky top-0">
+                        <div class="panel-header mb-3">
+                            <div class="content-box">
+                                <div class="container-fluid">
+                                    <div class="row gy-5 align-items-center">
+                                        <div class="col-md-6 col-8">
+                                            <div class="d-flex align-items-center">
+                                                <h6> امیر عزیز به پنل کاربری خوش آمدید</h6>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-4">
+                                            <div class="panel-alert d-flex justify-content-end">
+                                                <i class="bi bi-bell pointer"></i>
+                                                <span class="count-item rounded-circle">0</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="d-flex align-items-center panel-profile">
+                                                <img src="{% static 'assets/img/user.png' %}" class="img-fluid img-profile-panel rounded-circle me-3 shadow-md" alt="">
+                                                <div class="d-grid gap-2">
+                                                    <h6 class="font-14 main-color-one-color">حساب کاربری من</h6>
+                                                    <div class="d-flex align-items-center">
+                                                        <h6 class="font-14">
+                                                            {{username}}</h6>
+                                                        <a href="" class="ms-2"><i class="bi bi-pencil-square"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="slider-title mt-4">
+                            <div class="slider-title-desc">
+                                <div class="slider-title-title pb-4">
+                                    <h2 class="h1 title-font">آدرس های ثبت شده</h2>
+                                </div>
+                            </div>
+                        </div>
+                        {% if success_message %}
+                        <div class="alert alert-success">{{ success_message }}</div>
+                        {% endif %}
+        
+                        <button type="button" class="btn main-color-one-bg border-0 px-5 py-3" data-bs-toggle="modal" data-bs-target="#createAddressModal">
+                            ثبت آدرس جدید
+                        </button>
+        
+                        <br><br>
+        
+
+                        <div class="content content-spacing">
+                            <style>
+                                .content.content-spacing {
+                                    padding: 20px 0;
+                                    margin-top: 15px;
+                                    background-color: #f8f9fa;
+                                    border-radius: 8px;
+                                }
+                                
+                                .content-box {
+                                    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                                    border-radius: 8px;
+                                    padding: 20px;
+                                    background-color: #ffffff;
+                                }
+                                
+                                .content-title {
+                                    font-size: 18px;
+                                    font-weight: 600;
+                                    color: #333;
+                                    margin-bottom: 15px;
+                                    padding-bottom: 10px;
+                                    border-bottom: 1px solid #eee;
+                                }
+                                
+                                .modal-backdrop {
+                                    display: none !important;
+                                }
+                                .modal-content {
+                                    max-height: 90vh; /* جلوگیری از بزرگ شدن بیش از حد */
+                                    overflow: hidden;
+                                }
+                                
+                                .modal-body {
+                                    max-height: 60vh; /* کنترل ارتفاع محتوای داخلی */
+                                    overflow-y: auto; /* اسکرول برای محتوای اضافی */
+                                }
+                                                          
+                            </style>
+                            <div class="container-fluid">
+                                <div class="content-box">
+                                    <h2 class="content-title">آدرس ها</h2>
+                                    <div class="card-body">
+                                        {% if addresses %}
+                                        <div class="row">
+                                            {% for address in addresses %}
+                                                <div class="col-md-4">
+                                                    <div class="bg-white card addresses-item mb-4 shadow-sm">
+                                                        <div class="gold-members p-4">
+                                                            <div class="media">
+                                                                <div class="media-body">
+                                                                    <h6 class="mb-1 border">
+                                                                        استان : {{address.province}} <br>
+                                                                        شهر :  {{address.city}} <br>
+                                                                        *{{address.title_address}} <br>
+                                                                        کد پستی :  {{address.postcode}}
+                                                                    </h6>
+                                                                    <p class="text-overflow-2 address-line">
+                                                                        {{address.full_address}}
+                                                                    </p>
+                                                                    <p class="mb-0 text-black font-weight-bold">
+                                                                        <a class="me-3" data-bs-toggle="modal" data-bs-target="#addressModal{{ address.id }}" href="#" onclick="editAddress({{ address.id }})">
+                                                                            <i class="bi bi-pencil"></i>
+                                                                        </a>
+                                                                        <a class="text-danger" data-bs-toggle="modal" data-bs-target="#delete-address-modal{{ address.id }}" href="#" onclick="deleteAddress({{ address.id }})">
+                                                                            <i class="bi bi-trash"></i>
+                                                                        </a>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                        
+                                                    <div class="modal fade" id="addressModal{{ address.id }}" tabindex="-1" aria-labelledby="addressModalLabel{{ address.id }}" aria-hidden="true" data-bs-backdrop="static">
+                                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">بروزرسانی آدرس</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                                </div>
+                                                                <form id="updateAddressForm" method="POST" action="/profile/address">
+                                                                    {% csrf_token %}
+                                                                    <input type="hidden" name="address_id" value="{{address.id}}"> 
+                                                                    <input type="hidden" name="update_address" value="true"> 
+                                                    
+                                                                    <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
+                                                                        <div class="mb-3">
+                                                                            <label for="title_address">عنوان آدرس</label>
+                                                                            <input type="text" class="form-control" name="title_address" required>
+                                                                        </div>
+                                                                        <div class="mb-3">
+                                                                            <label for="province">استان</label>
+                                                                            <input type="text" class="form-control" name="province" required>
+                                                                        </div>
+                                                                        <div class="mb-3">
+                                                                            <label for="city">شهر</label>
+                                                                            <input type="text" class="form-control" name="city" required>
+                                                                        </div>
+                                                                        <div class="mb-3">
+                                                                            <label for="full_address">آدرس کامل</label>
+                                                                            <textarea class="form-control" name="full_address" required></textarea>
+                                                                        </div>
+                                                                        <div class="mb-3">
+                                                                            <label for="postcode">کد پستی</label>
+                                                                            <input type="text" class="form-control" name="postcode" required pattern="[0-9]{10}">
+                                                                        </div>
+                                                                    </div>
+                                                    
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                                                                            <button type="submit" class="btn btn-primary">ذخیره تغییرات</button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                        <div class="empty-state">
+                                            <div class="empty-state__icon">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                            </div>
+                                            <h4 class="empty-state__title">هیچ آدرسی ثبت نشده است</h4>
+                                            <p class="empty-state__description">آدرس‌های ذخیره شده شما اینجا نمایش داده می‌شود</p>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="createAddressModal" tabindex="-1" aria-labelledby="createAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">افزودن آدرس جدید</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="/profile/address">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="title_address">عنوان آدرس</label>
+                        <input type="text" class="form-control" name="title_address" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="province">استان</label>
+                        <input type="text" class="form-control" name="province" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="city">شهر</label>
+                        <input type="text" class="form-control" name="city" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="full_address">آدرس کامل</label>
+                        <textarea class="form-control" name="full_address" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="postcode">کد پستی</label>
+                        <input type="text" class="form-control" name="postcode" required pattern="[0-9]{10}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                    <button type="submit" class="btn btn-primary" name="create_address" value="true">ذخیره آدرس</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function editAddress(addressId) {
+        fetch(`/get-address/${addressId}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('address_id').value = addressId;
+                document.getElementById('title_address').value = data.title_address;
+                document.getElementById('province').value = data.province;
+                document.getElementById('city').value = data.city;
+                document.getElementById('full_address').value = data.full_address;
+                document.getElementById('postcode').value = data.postcode;
+            })
+            .catch(error => console.error('Error fetching address:', error));
+    }
+    
+</script>
+
+
+<script>
+    function deleteAddress(addressId) {
+        if (confirm("آیا مطمئن هستید که می‌خواهید این آدرس را حذف کنید؟")) {
+            fetch(`/profile/address`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: new URLSearchParams({
+                    'delete_address': 'true',
+                    'address_id': addressId
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("آدرس با موفقیت حذف شد!");
+                    location.reload();
+                } else {
+                    alert("خطایی رخ داد. لطفاً دوباره تلاش کنید.");
+                }
+            })
+            .catch(error => console.error("خطا در حذف آدرس:", error));
+        }
+    }
+</script>
+
+{% endblock main %}

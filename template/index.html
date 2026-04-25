@@ -1,0 +1,1328 @@
+{% extends "shared/_Main.html" %}
+
+{% load static %}
+{% load humanize %}
+{% load jalali_tags %}
+{% block main %}
+    
+<!-- start main slider -->
+
+<div class="main-slider py-20">
+    <div class="container-fluid">
+        <div class="slider shadow-box rounded-4 overflow-hidden">
+            <div class="swiper" id="homeSlider">
+                <div class="swiper-wrapper">
+                    {% for slider in sliders %}
+                    <div class="swiper-slide position-relative">
+                        <a href="{{ slider.link|default:'#' }}">
+                            <img src="{{ slider.image.url }}" loading="lazy" class="img-fluid w-100" alt="{{ slider.title }}">
+                            {% if slider.title or slider.subtitle %}
+                            <div class="slider-content bg-dark bg-opacity-50 p-4 rounded-3 text-white">
+                                {% if slider.title %}<h2 class="display-5 fw-bold mb-2">{{ slider.title }}</h2>{% endif %}
+                                {% if slider.subtitle %}<p class="h5 mb-3">{{ slider.subtitle }}</p>{% endif %}
+                                <button class="btn btn-primary rounded-pill px-4 py-2">مشاهده محصولات</button>
+                            </div>
+                            {% endif %}
+                        </a>
+                    </div>
+                    {% empty %}
+                    <!-- نمایش اسلایدر پیش‌فرض در صورت خالی بودن -->
+                    <div class="swiper-slide">
+                        <a href="">
+                            <img src="{% static 'assets/img/slide-3.gif' %}" loading="lazy" class="img-fluid w-100" alt="">
+                            <div class="slider-content bg-dark bg-opacity-50 p-4 rounded-3 text-white">
+                                <h2 class="display-5 fw-bold mb-2">فروش ویژه محصولات</h2>
+                                <p class="h5 mb-3">تخفیفات استثنایی تا 50%</p>
+                                <button class="btn btn-primary rounded-pill px-4 py-2">مشاهده محصولات</button>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="swiper-slide">
+                        <a href="">
+                            <img src="{% static 'assets/img/slide-4.gif' %}" loading="lazy" class="img-fluid w-100" alt="">
+                            <div class="slider-content bg-dark bg-opacity-50 p-4 rounded-3 text-white">
+                                <h2 class="display-5 fw-bold mb-2">محصولات جدید</h2>
+                                <p class="h5 mb-3">جدیدترین محصولات با کیفیت بالا</p>
+                                <button class="btn btn-primary rounded-pill px-4 py-2">مشاهده محصولات</button>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="swiper-slide">
+                        <a href="">
+                            <img src="{% static 'assets/img/slide-5.gif' %}" loading="lazy" class="img-fluid w-100" alt="">
+                            <div class="slider-content bg-dark bg-opacity-50 p-4 rounded-3 text-white">
+                                <h2 class="display-5 fw-bold mb-2">پیشنهادات ویژه</h2>
+                                <p class="h5 mb-3">محصولات برتر با قیمت مناسب</p>
+                                <button class="btn btn-primary rounded-pill px-4 py-2">مشاهده محصولات</button>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="swiper-button-next d-lg-flex d-none"></div>
+                <div class="swiper-button-prev d-lg-flex d-none"></div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- end main slider -->
+
+<style>
+.slider-content {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    max-width: 50%;
+    transition: all 0.3s ease;
+}
+
+.swiper-slide:hover .slider-content {
+    transform: translateY(-5px);
+}
+
+#homeSlider .swiper-pagination-bullet {
+    width: 12px;
+    height: 12px;
+    opacity: 0.8;
+}
+
+#homeSlider .swiper-pagination-bullet-active {
+    background-color: #007bff;
+    opacity: 1;
+}
+
+@media (max-width: 768px) {
+    .slider-content {
+        max-width: 80%;
+        right: 15px;
+        bottom: 15px;
+        padding: 10px !important;
+    }
+    
+    .slider-content h2 {
+        font-size: 1.5rem !important;
+    }
+    
+    .slider-content p {
+        font-size: 1rem !important;
+    }
+    
+    .slider-content .btn {
+        font-size: 0.9rem;
+        padding: 0.375rem 0.75rem !important;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    new Swiper('#homeSlider', {
+        loop: true,
+        autoplay: {
+            delay: 5000,
+            disableOnInteraction: false,
+        },
+        effect: 'fade',
+        fadeEffect: {
+            crossFade: true
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        keyboard: {
+            enabled: true,
+        },
+    });
+});
+</script>
+
+<!--start slider brand-->
+
+<div class="brands-section py-5">
+    <div class="container-fluid">
+        <div class="section-title mb-5">
+            <h3 class="title-font text-center h2 mb-4"><span class="main-color-one-color">برندهای</span> برتر</h3>
+            <p class="text-center text-muted mb-4">محصولات با کیفیت از برندهای معتبر</p>
+            <div class="d-flex justify-content-center">
+                <img src="{% static 'assets/img/line.png' %}" class="line-image" alt="خط تزئینی">
+            </div>
+        </div>
+        
+        <div class="brands-carousel position-relative">
+            <div class="swiper" id="brandSlider">
+                <div class="swiper-wrapper py-4">
+            {% for featured_brand in featured_brands %}
+                    <div class="swiper-slide">
+                        <div class="brand-item bg-white rounded-4 shadow-sm p-3 text-center brand-card">
+                            <a href="/products?brand={{ featured_brand.brand.en_name }}" class="d-block">
+                                <img src="{{ featured_brand.brand.logo.url }}" alt="{{ featured_brand.brand.name }}" class="img-fluid brand-logo mb-3">
+                                <h5 class="brand-name mb-0">{{ featured_brand.brand.name }}</h5>
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <!-- برندهای پیش‌فرض در صورت خالی بودن -->
+                    <div class="swiper-slide">
+                        <div class="brand-item bg-white rounded-4 shadow-sm p-3 text-center brand-card">
+                            <a href="#">
+                                <img src="{% static 'assets/img/brand1-1.png' %}" alt="برند سامسونگ" class="img-fluid brand-logo mb-3">
+                                <h5 class="brand-name mb-0">سامسونگ</h5>
+                    </a>
+                </div>
+            </div>
+                    <div class="swiper-slide">
+                        <div class="brand-item bg-white rounded-4 shadow-sm p-3 text-center brand-card">
+                            <a href="#">
+                                <img src="{% static 'assets/img/brand1-2.png' %}" alt="برند اپل" class="img-fluid brand-logo mb-3">
+                                <h5 class="brand-name mb-0">اپل</h5>
+                    </a>
+                </div>
+            </div>
+                    <div class="swiper-slide">
+                        <div class="brand-item bg-white rounded-4 shadow-sm p-3 text-center brand-card">
+                            <a href="#">
+                                <img src="{% static 'assets/img/brand1-3.png' %}" alt="برند شیائومی" class="img-fluid brand-logo mb-3">
+                                <h5 class="brand-name mb-0">شیائومی</h5>
+                    </a>
+                </div>
+            </div>
+                    <div class="swiper-slide">
+                        <div class="brand-item bg-white rounded-4 shadow-sm p-3 text-center brand-card">
+                            <a href="#">
+                                <img src="{% static 'assets/img/brand1-4.png' %}" alt="برند سونی" class="img-fluid brand-logo mb-3">
+                                <h5 class="brand-name mb-0">سونی</h5>
+                    </a>
+                </div>
+            </div>
+                    <div class="swiper-slide">
+                        <div class="brand-item bg-white rounded-4 shadow-sm p-3 text-center brand-card">
+                            <a href="#">
+                                <img src="{% static 'assets/img/brand1-5.png' %}" alt="برند ال جی" class="img-fluid brand-logo mb-3">
+                                <h5 class="brand-name mb-0">ال جی</h5>
+                    </a>
+                </div>
+            </div>
+                    <div class="swiper-slide">
+                        <div class="brand-item bg-white rounded-4 shadow-sm p-3 text-center brand-card">
+                            <a href="#">
+                                <img src="{% static 'assets/img/brand1-6.png' %}" alt="برند هواوی" class="img-fluid brand-logo mb-3">
+                                <h5 class="brand-name mb-0">هواوی</h5>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+                <div class="swiper-pagination"></div>
+            </div>
+            <div class="swiper-button-next brands-button-next"></div>
+            <div class="swiper-button-prev brands-button-prev"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+.brand-card {
+    transition: all 0.3s ease;
+    overflow: hidden;
+    height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.brand-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+.brand-logo {
+    max-height: 100px;
+    width: auto;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+
+.brand-card:hover .brand-logo {
+    transform: scale(1.1);
+}
+
+.brand-name {
+    color: #333;
+    font-size: 1rem;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.brand-card:hover .brand-name {
+    color: #007bff;
+}
+
+.brands-button-next, .brands-button-prev {
+    background-color: rgba(255,255,255,0.8);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.brands-button-next:after, .brands-button-prev:after {
+    font-size: 18px;
+    color: #333;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    new Swiper('#brandSlider', {
+        slidesPerView: 2,
+        spaceBetween: 20,
+        loop: true,
+        autoplay: {
+            delay: 3000,
+            disableOnInteraction: false
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true
+        },
+        navigation: {
+            nextEl: '.brands-button-next',
+            prevEl: '.brands-button-prev',
+        },
+        breakpoints: {
+            // when window width is >= 576px
+            576: {
+                slidesPerView: 3,
+                spaceBetween: 20
+            },
+            // when window width is >= 768px
+            768: {
+                slidesPerView: 4,
+                spaceBetween: 30
+            },
+            // when window width is >= 992px
+            992: {
+                slidesPerView: 5,
+                spaceBetween: 30
+            },
+            // when window width is >= 1200px
+            1200: {
+                slidesPerView: 6,
+                spaceBetween: 30
+            }
+        }
+    });
+});
+</script>
+
+<!--end slider brand-->
+
+<!-- نمایش بنرهای بالای صفحه -->
+{% if top_banners %}
+<div class="advert-banner">
+    <div class="container-fluid">
+        <div class="row g-3 align-items-center">
+            {% for banner in top_banners %}
+            {% if banner.size == 'full' %}
+            <div class="col-12">
+            {% elif banner.size == 'half' %}
+            <div class="col-lg-6">
+            {% else %}
+            <div class="col-lg-4">
+            {% endif %}
+                <div class="advert-banner-item img-tilt" data-tilt>
+                    <a href="{{ banner.link|default:'#' }}">
+                        <img src="{{ banner.image.url }}" alt="{{ banner.title }}" class="img-fluid">
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- start feature -->
+
+<div class="feature py-20">
+    <div class="container-fluid">
+        <div class="row justify-content-center g-2 row-cols-1 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-5">
+
+            <div class="col">
+                <div class="feature-item">
+                    <div class="feature-item-icon">
+                        <img src="{% static 'assets/img/history.png' %}" alt="">
+                    </div>
+                    <div class="feature-item-desc">
+                        <h5>ضمانت بازگشت وجه</h5>
+                        <p class="text-muted mb-0 mt-1">در صورت عدم رضایت
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="feature-item">
+                    <div class="feature-item-icon">
+                        <img src="{% static 'assets/img/credit-card.png' %}" alt="">
+                    </div>
+                    <div class="feature-item-desc">
+                        <h5>تضمین قیمت
+                        </h5>
+                        <p class="text-muted mb-0 mt-1">کمترین قیمت بازار
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="feature-item">
+                    <div class="feature-item-icon">
+                        <img src="{% static 'assets/img/fast.png' %}" alt="">
+                    </div>
+                    <div class="feature-item-desc">
+                        <h5>ارسال سریع
+                        </h5>
+                        <p class="text-muted mb-0 mt-1">امن و مطمئن
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="feature-item">
+                    <div class="feature-item-icon">
+                        <img src="{% static 'assets/img/headphone.png' %}" alt="">
+                    </div>
+                    <div class="feature-item-desc">
+                        <h5>پشتیبانی عالی
+                        </h5>
+                        <p class="text-muted mb-0 mt-1">24 ساعته شبانه روز
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="feature-item">
+                    <div class="feature-item-icon">
+                        <img src="{% static 'assets/img/badge.png' %}" alt="">
+                    </div>
+                    <div class="feature-item-desc">
+                        <h5>اصالت کالا
+                        </h5>
+                        <p class="text-muted mb-0 mt-1">
+                            تضمین اصالت کالا
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<!--end feature shop-->
+
+<!--  start site category -->
+
+<div class="site-category py-20">
+    <div class="container-fluid">
+        <div class="section-title mb-5">
+            <h3 class="title-font text-center h2 mb-4"><span class="main-color-one-color">دسته‌بندی</span> محصولات</h3>
+            <p class="text-center text-muted mb-4">محصول مورد نظر خود را از بین دسته‌بندی‌های متنوع انتخاب کنید</p>
+            <div class="d-flex justify-content-center">
+            <img src="{% static 'assets/img/line.png' %}" class="line-image" alt="خط تزئینی">
+            </div>
+        </div>
+
+        <div class="site-categories">
+            <div class="row g-4 justify-content-center">
+                {% for base_category in base_categories %}
+                <div class="col-lg-2 col-md-3 col-sm-6">
+                    <div class="site-category-items p-3 shadow-box rounded-4 position-relative overflow-hidden category-card">
+                        <div class="category-overlay"></div>
+                        <a href="categories/{{ base_category.en_name }}">
+                            <div class="site-category-items-icon position-relative mb-3 text-center">
+                                <img src="{{ base_category.image.url }}" alt="{{ base_category.name }}" class="img-fluid category-image">
+                            </div>
+                            <h6 class="text-center mb-2 category-title">{{ base_category.name }}</h6>
+                            <div class="text-center">
+                            </div>
+                            <div class="category-btn">
+                                <button class="btn btn-primary btn-sm rounded-pill px-3">مشاهده محصولات</button>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+                    </div>
+                </div>
+    </div>
+</div>
+
+<style>
+.category-card {
+    transition: all 0.3s ease;
+    height: 240px;
+}
+
+.category-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+}
+
+.category-image {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    transition: all 0.3s ease;
+}
+
+.category-card:hover .category-image {
+    transform: scale(1.1);
+}
+
+.category-title {
+    font-weight: 600;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.category-card:hover .category-title {
+    color: #007bff;
+}
+
+.category-count {
+    font-size: 0.8rem;
+}
+
+.category-btn {
+    position: absolute;
+    bottom: -40px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    transition: all 0.3s ease;
+    opacity: 0;
+}
+
+.category-card:hover .category-btn {
+    bottom: 15px;
+    opacity: 1;
+}
+
+.category-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 70%, rgba(255,255,255,1) 100%);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.category-card:hover .category-overlay {
+    opacity: 1;
+}
+</style>
+
+<!--  end site category -->
+
+<!-- start offer -->
+
+<div class="offers py-5 my-5 rounded-4 shadow-sm" style="background: var(--bg-site);">
+    <div class="container-fluid">
+        <div class="section-header mb-5">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="d-flex align-items-center">
+                        <div class="section-icon bg-danger text-white rounded-circle p-3 me-3">
+                            <i class="bi bi-percent fs-5"></i>
+                        </div>
+                        <div>
+                            <h2 class="h1 mb-2">پیشنهادات <span class="text-danger title-font">شگفت‌انگیز</span></h2>
+                            <p class="mb-0 text-muted">بهترین تخفیف‌های روز را از دست ندهید</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                    <a href="/products?orderby=is_active_discount" class="btn btn-outline-danger rounded-pill px-4">
+                        مشاهده همه پیشنهادات
+                        <i class="bi bi-arrow-left-circle ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="offer-container">
+            <div class="row g-4">
+                {% if special_products %}
+                <div class="col-lg-6">
+                    <div class="offer-big-card bg-gradient rounded-4 p-4 shadow position-relative overflow-hidden h-100">
+                        <div class="offer-badge">
+                            <span class="badge bg-light text-danger p-2 fs-5 rounded-pill">{{ special_products.0.discount }}% تخفیف</span>
+                        </div>
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <div class="offer-content">
+                                    <h3 class="text-white mb-3">پیشنهاد ویژه این هفته</h3>
+                                    <h4 class="text-white mb-4">{{ special_products.0.product.name }}</h4>
+                                    <div class="price-container mb-4">
+                                        <p class="text-white-50 text-decoration-line-through mb-2">{{ special_products.0.price|intcomma }} تومان</p>
+                                        <h3 class="text-white">{{ special_products.0.final_price|intcomma }} تومان</h3>
+                                    </div>
+                                    <div class="countdown-container mb-4">
+                                        <div class="countdown bg-white bg-opacity-25 rounded p-2 d-inline-block" data-date="2025-01-01" data-time="00:00"></div>
+                                    </div>
+                                    <a href="/product/{{ special_products.0.product.id }}/{{ special_products.0.product.name }}" class="btn btn-light rounded-pill px-4 py-2 btn-hover-effect">
+                                        <i class="bi bi-basket me-2"></i>
+                                        خرید محصول
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="offer-image text-center">
+                                    <img src="{{ special_products.0.product.image.url }}" alt="{{ special_products.0.product.name }}" class="img-fluid offer-img-zoom">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="row g-4 h-100">
+                        {% for product in special_products|slice:"1:5" %}
+                        <div class="col-md-6">
+                            <div class="offer-small-card bg-white rounded-4 p-3 text-center h-100 position-relative 
+                                {% if forloop.counter == 1 %}border-primary-hover{% elif forloop.counter == 2 %}border-success-hover{% elif forloop.counter == 3 %}border-warning-hover{% else %}border-danger-hover{% endif %}">
+                                <div class="offer-badge-small">
+                                    <span class="badge 
+                                        {% if forloop.counter == 1 %}bg-primary{% elif forloop.counter == 2 %}bg-success{% elif forloop.counter == 3 %}bg-warning text-dark{% else %}bg-danger{% endif %} 
+                                        rounded-pill">{{ product.discount }}% تخفیف</span>
+                                </div>
+                                <img src="{{ product.product.image.url }}" alt="{{ product.product.name }}" class="img-fluid mb-3 offer-img-zoom">
+                                <h5 class="mb-2">{{ product.product.name }}</h5>
+                                <div class="price-container mb-3">
+                                    <p class="text-muted text-decoration-line-through small mb-1">{{ product.price|intcomma }} تومان</p>
+                                    <h6 class="{% if forloop.counter == 1 %}text-primary{% elif forloop.counter == 2 %}text-success{% elif forloop.counter == 3 %}text-warning{% else %}text-danger{% endif %}">
+                                        {{ product.final_price|intcomma }} تومان
+                                    </h6>
+                                </div>
+                                <a href="/product/{{ product.product.id }}/{{ product.product.name }}" class="btn btn-sm 
+                                    {% if forloop.counter == 1 %}btn-primary{% elif forloop.counter == 2 %}btn-success{% elif forloop.counter == 3 %}btn-warning text-dark{% else %}btn-danger{% endif %} 
+                                    rounded-pill px-3 btn-hover-effect">مشاهده محصول</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                        {% if special_products|length < 5 %}
+                        <!-- نمایش کارت‌های پیش‌فرض برای تکمیل گرید اگر محصولات کافی نباشند -->
+                        {% with remaining=5|add:"-"|add:special_products|length %}
+                        {% for i in "12345"|slice:remaining %}
+                        <div class="col-md-6">
+                            <div class="offer-small-card bg-white rounded-4 p-3 text-center h-100 position-relative 
+                                {% if forloop.counter == 1 %}border-primary-hover{% elif forloop.counter == 2 %}border-success-hover{% elif forloop.counter == 3 %}border-warning-hover{% else %}border-danger-hover{% endif %}">
+                                <div class="offer-badge-small">
+                                    <span class="badge 
+                                        {% if forloop.counter == 1 %}bg-primary{% elif forloop.counter == 2 %}bg-success{% elif forloop.counter == 3 %}bg-warning text-dark{% else %}bg-danger{% endif %} 
+                                        rounded-pill">{{ forloop.counter|add:"20" }}% تخفیف</span>
+                                </div>
+                                <img src="{% static 'assets/img/product/product-default.jpg' %}" alt="محصول پیشنهادی" class="img-fluid mb-3 offer-img-zoom">
+                                <h5 class="mb-2">محصول پیشنهادی {{ forloop.counter }}</h5>
+                                <div class="price-container mb-3">
+                                    <p class="text-muted text-decoration-line-through small mb-1">{{ forloop.counter|add:"1000000" }} تومان</p>
+                                    <h6 class="{% if forloop.counter == 1 %}text-primary{% elif forloop.counter == 2 %}text-success{% elif forloop.counter == 3 %}text-warning{% else %}text-danger{% endif %}">
+                                        {{ forloop.counter|add:"800000" }} تومان
+                                    </h6>
+                                </div>
+                                <a href="#" class="btn btn-sm 
+                                    {% if forloop.counter == 1 %}btn-primary{% elif forloop.counter == 2 %}btn-success{% elif forloop.counter == 3 %}btn-warning text-dark{% else %}btn-danger{% endif %} 
+                                    rounded-pill px-3 btn-hover-effect">مشاهده محصول</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% endwith %}
+                        {% endif %}
+                    </div>
+                </div>
+                {% else %}
+                <!-- نمایش پیش‌فرض در صورت نبود محصول -->
+                <div class="col-lg-6">
+                    <div class="offer-big-card bg-gradient rounded-4 p-4 shadow position-relative overflow-hidden h-100">
+                        <div class="offer-badge">
+                            <span class="badge bg-light text-danger p-2 fs-5 rounded-pill">50% تخفیف</span>
+                        </div>
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <div class="offer-content">
+                                    <h3 class="text-white mb-3">پیشنهاد ویژه این هفته</h3>
+                                    <h4 class="text-white mb-4">ساعت هوشمند هوآوی مدل GT2 Pro 46mm</h4>
+                                    <div class="price-container mb-4">
+                                        <p class="text-white-50 text-decoration-line-through mb-2">2,000,000 تومان</p>
+                                        <h3 class="text-white">1,000,000 تومان</h3>
+                                    </div>
+                                    <div class="countdown-container mb-4">
+                                        <div class="countdown bg-white bg-opacity-25 rounded p-2 d-inline-block" data-date="2025-01-01" data-time="00:00"></div>
+                                    </div>
+                                    <a href="#" class="btn btn-light rounded-pill px-4 py-2 btn-hover-effect">
+                                        <i class="bi bi-basket me-2"></i>
+                                        خرید محصول
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="offer-image text-center">
+                                    <img src="{% static 'assets/img/product/wach3.jpg' %}" alt="ساعت هوشمند" class="img-fluid offer-img-zoom">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="row g-4 h-100">
+                        <div class="col-md-6">
+                            <div class="offer-small-card bg-white rounded-4 p-3 text-center h-100 position-relative border-primary-hover">
+                                <div class="offer-badge-small">
+                                    <span class="badge bg-primary rounded-pill">30% تخفیف</span>
+                                </div>
+                                <img src="{% static 'assets/img/product/product-image5.jpg' %}" alt="هدفون بی‌سیم" class="img-fluid mb-3 offer-img-zoom">
+                                <h5 class="mb-2">هدفون بی‌سیم سونی</h5>
+                                <div class="price-container mb-3">
+                                    <p class="text-muted text-decoration-line-through small mb-1">1,500,000 تومان</p>
+                                    <h6 class="text-primary">1,050,000 تومان</h6>
+                                </div>
+                                <a href="#" class="btn btn-sm btn-primary rounded-pill px-3 btn-hover-effect">مشاهده محصول</a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="offer-small-card bg-white rounded-4 p-3 text-center h-100 position-relative border-success-hover">
+                                <div class="offer-badge-small">
+                                    <span class="badge bg-success rounded-pill">20% تخفیف</span>
+                                </div>
+                                <img src="{% static 'assets/img/product/laptop1.jpg' %}" alt="لپ تاپ" class="img-fluid mb-3 offer-img-zoom">
+                                <h5 class="mb-2">لپ تاپ گیمینگ ایسوس</h5>
+                                <div class="price-container mb-3">
+                                    <p class="text-muted text-decoration-line-through small mb-1">35,000,000 تومان</p>
+                                    <h6 class="text-success">28,000,000 تومان</h6>
+                                </div>
+                                <a href="#" class="btn btn-sm btn-success rounded-pill px-3 btn-hover-effect">مشاهده محصول</a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="offer-small-card bg-white rounded-4 p-3 text-center h-100 position-relative border-warning-hover">
+                                <div class="offer-badge-small">
+                                    <span class="badge bg-warning text-dark rounded-pill">25% تخفیف</span>
+                                </div>
+                                <img src="{% static 'assets/img/product/television3.jpg' %}" alt="تلویزیون" class="img-fluid mb-3 offer-img-zoom">
+                                <h5 class="mb-2">تلویزیون سامسونگ 55 اینچ</h5>
+                                <div class="price-container mb-3">
+                                    <p class="text-muted text-decoration-line-through small mb-1">20,000,000 تومان</p>
+                                    <h6 class="text-warning">15,000,000 تومان</h6>
+                                </div>
+                                <a href="#" class="btn btn-sm btn-warning text-dark rounded-pill px-3 btn-hover-effect">مشاهده محصول</a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="offer-small-card bg-white rounded-4 p-3 text-center h-100 position-relative border-danger-hover">
+                                <div class="offer-badge-small">
+                                    <span class="badge bg-danger rounded-pill">40% تخفیف</span>
+                                </div>
+                                <img src="{% static 'assets/img/product/product-image3.jpg' %}" alt="گوشی موبایل" class="img-fluid mb-3 offer-img-zoom">
+                                <h5 class="mb-2">گوشی موبایل سامسونگ گلکسی</h5>
+                                <div class="price-container mb-3">
+                                    <p class="text-muted text-decoration-line-through small mb-1">12,000,000 تومان</p>
+                                    <h6 class="text-danger">7,200,000 تومان</h6>
+                                </div>
+                                <a href="#" class="btn btn-sm btn-danger rounded-pill px-3 btn-hover-effect">مشاهده محصول</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.offer-big-card {
+    background: linear-gradient(45deg, #FF416C, #FF4B2B);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.offer-big-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15) !important;
+}
+
+.offer-badge {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+}
+
+.offer-badge-small {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 10;
+}
+
+.offer-small-card {
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.border-primary-hover:hover {
+    border-color: var(--bs-primary);
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px rgba(13, 110, 253, 0.1);
+}
+
+.border-success-hover:hover {
+    border-color: var(--bs-success);
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px rgba(25, 135, 84, 0.1);
+}
+
+.border-warning-hover:hover {
+    border-color: var(--bs-warning);
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px rgba(255, 193, 7, 0.1);
+}
+
+.border-danger-hover:hover {
+    border-color: var(--bs-danger);
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px rgba(220, 53, 69, 0.1);
+}
+
+.offer-img-zoom {
+    transition: all 0.5s ease;
+    max-height: 150px;
+    object-fit: contain;
+}
+
+.offer-small-card:hover .offer-img-zoom,
+.offer-big-card:hover .offer-img-zoom {
+    transform: scale(1.1);
+}
+
+.btn-hover-effect {
+    transition: all 0.3s ease;
+}
+
+.btn-hover-effect:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+}
+
+.countdown {
+    display: flex;
+    gap: 10px;
+}
+
+.countdown > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(255,255,255,0.3);
+    padding: 5px 10px;
+    border-radius: 5px;
+    min-width: 60px;
+}
+
+.countdown .number {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.countdown .text {
+    font-size: 0.8rem;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize countdown
+    const countdownElements = document.querySelectorAll('.countdown');
+    countdownElements.forEach(function(element) {
+        const targetDate = element.getAttribute('data-date');
+        const targetTime = element.getAttribute('data-time');
+        const targetDateTime = `${targetDate} ${targetTime}`;
+        
+        // Update the count down every 1 second
+        const x = setInterval(function() {
+            // Get today's date and time
+            const now = new Date().getTime();
+            
+            // Set the date we're counting down to
+            const countDownDate = new Date(targetDateTime).getTime();
+            
+            // Find the distance between now and the count down date
+            const distance = countDownDate - now;
+            
+            // Time calculations for days, hours, minutes and seconds
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            // Display the result
+            element.innerHTML = `
+                <div><span class="number">${days}</span><span class="text">روز</span></div>
+                <div><span class="number">${hours}</span><span class="text">ساعت</span></div>
+                <div><span class="number">${minutes}</span><span class="text">دقیقه</span></div>
+                <div><span class="number">${seconds}</span><span class="text">ثانیه</span></div>
+            `;
+            
+            // If the count down is finished, clear interval and display message
+            if (distance < 0) {
+                clearInterval(x);
+                element.innerHTML = '<div class="expired">پایان یافته</div>';
+            }
+        }, 1000);
+    });
+});
+</script>
+
+<!-- end offer -->
+
+<!-- نمایش بنرهای وسط صفحه -->
+{% if middle_banners %}
+<div class="advert-banner">
+    <div class="container-fluid">
+        <div class="row g-3 align-items-center">
+            {% for banner in middle_banners %}
+            {% if banner.size == 'full' %}
+            <div class="col-12">
+            {% elif banner.size == 'half' %}
+            <div class="col-lg-6">
+            {% else %}
+            <div class="col-lg-4">
+            {% endif %}
+                <div class="advert-banner-item img-tilt" data-tilt>
+                    <a href="{{ banner.link|default:'#' }}">
+                        <img src="{{ banner.image.url }}" alt="{{ banner.title }}" class="img-fluid">
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+                </div>
+            </div>
+        </div>
+{% endif %}
+
+<!-- start product boxs -->
+
+<div class="popular-products py-5" style="background: var(--bg-site);">
+    <div class="container-fluid">
+        <div class="section-header mb-5">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="d-flex align-items-center">
+                        <div class="section-icon bg-primary text-white rounded-circle p-3 me-3">
+                            <i class="bi bi-star-fill fs-5"></i>
+                        </div>
+                                <div>
+                            <h2 class="h1 mb-2">محصولات <span class="main-color-one-color title-font">ویژه</span></h2>
+                            <p class="mb-0 text-muted">محصولات برگزیده با بیشترین تخفیف</p>
+                                </div>
+                            </div>
+                        </div>
+                <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                    <a href="/products?orderby=is_active_discount" class="btn btn-outline-primary rounded-pill px-4">
+                        مشاهده همه محصولات
+                        <i class="bi bi-arrow-left-circle ms-2"></i>
+                    </a>
+                        </div>
+                    </div>
+                </div>
+
+        <div class="products-carousel position-relative">
+            <div class="swiper" id="specialProductsSlider">
+                <div class="swiper-wrapper pb-5">
+                    {% for product in special_products %}
+                    <div class="swiper-slide">
+                        <div class="product-card bg-white rounded-4 shadow-sm overflow-hidden h-100 position-relative">
+                            {% if product.discount > 0 %}
+                            <div class="product-badge bg-danger text-white position-absolute px-3 py-1 rounded-pill fs-7">
+                                {{ product.discount }}% تخفیف
+                    </div>
+                            {% endif %}
+                            
+                            <div class="product-image position-relative overflow-hidden">
+                                <a href="/product/{{ product.product.id }}/{{ product.product.name }}">
+                                    <img src="{{ product.product.image.url }}" alt="{{ product.product.name }}" class="img-fluid w-100 product-img">
+                                </a>
+                                <div class="product-actions">
+                                    <a href="/product/{{ product.product.id }}/{{ product.product.name }}" class="btn btn-sm btn-primary rounded-circle" data-bs-toggle="tooltip" title="مشاهده محصول">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="/product/{{ product.product.id }}/{{ product.product.name }}" class="btn btn-sm btn-success rounded-circle" data-bs-toggle="tooltip" title="افزودن به سبد خرید">
+                                        <i class="bi bi-cart-plus"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-sm btn-danger rounded-circle" data-bs-toggle="tooltip" title="افزودن به علاقه‌مندی‌ها">
+                                        <i class="bi bi-heart"></i>
+                                    </a>
+            </div>
+        </div>
+
+                            <div class="product-info p-3">
+                                <h5 class="product-title text-truncate mb-2">
+                                    <a href="/product/{{ product.product.id }}/{{ product.product.name }}" class="text-dark">{{ product.product.name }}</a>
+                                </h5>
+                                
+                                <div class="product-price mb-2">
+                                    {% if product.discount > 0 %}
+                                    <del class="text-muted me-2">{{ product.price|intcomma }} تومان</del>
+                                    {% endif %}
+                                    <span class="text-primary fw-bold fs-5">{{ product.final_price|intcomma }} تومان</span>
+                                </div>
+                                
+                                <div class="product-meta d-flex justify-content-between align-items-center">
+                                    <div class="product-rating">
+                                        <i class="bi bi-star-fill text-warning"></i>
+                                        <i class="bi bi-star-fill text-warning"></i>
+                                        <i class="bi bi-star-fill text-warning"></i>
+                                        <i class="bi bi-star-fill text-warning"></i>
+                                        <i class="bi bi-star-half text-warning"></i>
+                                        <span class="ms-1 small text-muted">(4.5)</span>
+                                </div>
+                                    <div class="product-availability text-success small">
+                                        <i class="bi bi-check-circle-fill"></i> موجود
+                                </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                    {% endfor %}
+                        </div>
+                <div class="swiper-pagination"></div>
+                    </div>
+            <div class="swiper-button-next products-slider-button-next"></div>
+            <div class="swiper-button-prev products-slider-button-prev"></div>
+                </div>
+            </div>
+        </div>
+
+<style>
+.product-card {
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.08);
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+.product-badge {
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+}
+
+.product-image {
+    height: 220px;
+    background-color: #f8f9fa;
+}
+
+.product-img {
+    height: 100%;
+    object-fit: contain;
+    transition: all 0.5s ease;
+}
+
+.product-card:hover .product-img {
+    transform: scale(1.05);
+}
+
+.product-actions {
+    position: absolute;
+    bottom: -50px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: rgba(255,255,255,0.9);
+    transition: all 0.3s ease;
+}
+
+.product-card:hover .product-actions {
+    bottom: 0;
+}
+
+.product-title {
+    font-size: 1rem;
+    height: 1.5rem;
+    overflow: hidden;
+}
+
+.product-title a {
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.product-title a:hover {
+    color: #0d6efd !important;
+}
+
+.fs-7 {
+    font-size: 0.85rem;
+}
+
+.section-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.products-slider-button-next, .products-slider-button-prev {
+    background-color: rgba(255,255,255,0.8);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.products-slider-button-next:after, .products-slider-button-prev:after {
+    font-size: 18px;
+    color: #333;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    new Swiper('#specialProductsSlider', {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        loop: true,
+        autoplay: {
+            delay: 4000,
+            disableOnInteraction: false
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true
+        },
+        navigation: {
+            nextEl: '.products-slider-button-next',
+            prevEl: '.products-slider-button-prev',
+        },
+        breakpoints: {
+            576: {
+                slidesPerView: 2,
+                spaceBetween: 20
+            },
+            768: {
+                slidesPerView: 3,
+                spaceBetween: 30
+            },
+            992: {
+                slidesPerView: 4,
+                spaceBetween: 30
+            },
+            1200: {
+                slidesPerView: 5,
+                spaceBetween: 30
+            }
+        }
+    });
+    
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+});
+</script>
+
+<!-- end product boxs -->
+
+<!-- نمایش بنرهای پایین صفحه -->
+{% if bottom_banners %}
+<div class="advert-banner d-sm-block d-none">
+    <div class="container-fluid">
+        <div class="row g-3 align-items-center">
+            {% for banner in bottom_banners %}
+            {% if banner.size == 'full' %}
+            <div class="col-12">
+            {% elif banner.size == 'half' %}
+            <div class="col-lg-6">
+            {% else %}
+            <div class="col-lg-4">
+            {% endif %}
+                <div class="advert-banner-item img-tilt" data-tilt>
+                    <a href="{{ banner.link|default:'#' }}">
+                        <img src="{{ banner.image.url }}" alt="{{ banner.title }}" class="img-fluid">
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% else %}
+<!-- نمایش بنر پیش‌فرض -->
+<div class="advert-banner d-sm-block d-none">
+    <div class="container-fluid">
+        <div class="row g-3 align-items-center">
+            <div class="col-12">
+                <div class="advert-banner-item img-tilt" data-tilt>
+                    <a href="">
+                        <img src="{% static 'assets/img/advert-5.webp' %}" alt="">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<!-- start banners
+<div class="py-5" id="banners">
+    <div class="container-fluid">
+        <div class="row gx-4 gy-4">
+            <div class="col-lg-6">
+                <div class="promo-banner h-100 position-relative overflow-hidden rounded-4">
+                    <img src="{% static 'assets/img/banner/banner-1.jpg' %}" alt="تخفیف ویژه" class="w-100 h-100 object-fit-cover">
+                    <div class="promo-content position-absolute top-0 start-0 p-4 p-lg-5 text-white h-100 d-flex flex-column justify-content-center">
+                        <span class="badge bg-danger px-3 py-2 mb-3 animate__animated animate__fadeInDown">پیشنهاد محدود</span>
+                        <h2 class="display-6 fw-bold mb-3 text-shadow animate__animated animate__fadeInUp">
+                            تخفیف استثنایی
+                            <span class="d-block text-warning my-2">تا ۵۰٪ تخفیف</span>
+                            برای خرید محصولات
+                        </h2>
+                        <p class="mb-4 animate__animated animate__fadeInUp">فقط تا پایان این هفته فرصت دارید از این تخفیف ویژه استفاده کنید!</p>
+                        <a href="/products?orderby=is_active_discount" class="btn btn-light btn-lg rounded-pill px-4 animate__animated animate__fadeInUp">
+                            همین الان خرید کنید
+                            <i class="bi bi-arrow-left ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="row g-4 h-100">
+                    <div class="col-md-6">
+                        <div class="promo-banner position-relative overflow-hidden rounded-4 h-100">
+                            <img src="{% static 'assets/img/banner/banner-2.jpg' %}" alt="محصولات جدید" class="w-100 h-100 object-fit-cover">
+                            <div class="promo-content position-absolute top-0 start-0 p-4 text-white h-100 d-flex flex-column justify-content-center">
+                                <h3 class="fw-bold mb-3 animate__animated animate__fadeInRight">محصولات جدید</h3>
+                                <p class="mb-3 d-none d-sm-block animate__animated animate__fadeInRight">جدیدترین کالکشن‌های فصل</p>
+                                <a href="/products?orderby=created_at" class="btn btn-sm btn-outline-light rounded-pill animate__animated animate__fadeInRight">مشاهده</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="promo-banner position-relative overflow-hidden rounded-4 h-100">
+                            <img src="{% static 'assets/img/banner/banner-3.jpg' %}" alt="پرفروش‌ترین‌ها" class="w-100 h-100 object-fit-cover">
+                            <div class="promo-content position-absolute top-0 start-0 p-4 text-white h-100 d-flex flex-column justify-content-center">
+                                <h3 class="fw-bold mb-3 animate__animated animate__fadeInRight">پرفروش‌ترین‌ها</h3>
+                                <p class="mb-3 d-none d-sm-block animate__animated animate__fadeInRight">محبوب‌ترین محصولات</p>
+                                <a href="/products?orderby=sales" class="btn btn-sm btn-outline-light rounded-pill animate__animated animate__fadeInRight">مشاهده</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="promo-banner position-relative overflow-hidden rounded-4">
+                            <img src="{% static 'assets/img/banner/banner-4.jpg' %}" alt="ارسال رایگان" class="w-100 h-100 object-fit-cover">
+                            <div class="promo-content position-absolute top-0 start-0 p-4 text-white h-100 d-flex flex-column justify-content-center">
+                                <h3 class="fw-bold mb-2 animate__animated animate__fadeInUp">ارسال رایگان</h3>
+                                <p class="mb-0 animate__animated animate__fadeInUp">برای خریدهای بالای ۵۰۰ هزار تومان</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<style>
+.promo-banner {
+    min-height: 200px;
+    background-color: #f5f5f5;
+    transition: all 0.3s ease;
+}
+
+.promo-banner img {
+    transition: transform 0.5s ease;
+}
+
+.promo-banner:hover img {
+    transform: scale(1.05);
+}
+
+.promo-content {
+    z-index: 1;
+}
+
+.promo-content:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%);
+    z-index: -1;
+}
+
+.text-shadow {
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.object-fit-cover {
+    object-fit: cover;
+}
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+<!-- end banners -->
+
+<style>
+.section-title .line-image {
+    max-width: 100%;
+    height: auto;
+    width: 277px;
+    max-height: 100px;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .section-title .line-image {
+        width: 200px;
+    }
+}
+
+@media (max-width: 576px) {
+    .section-title .line-image {
+        width: 150px;
+    }
+}
+</style>
+
+{% endblock main %}
+

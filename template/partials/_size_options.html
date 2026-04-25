@@ -1,0 +1,17 @@
+{% for package in packages %}
+<div class="size-option">
+    <input type="radio" class="form-check-input" 
+        name="size-options" id="size-option{{package.id}}" 
+        value="{{package.id}}" data-quantity="{{package.quantity}}"
+        onclick="setPackageId('{{package.id}}')">
+    <label class="btn btn-outline-secondary" for="size-option{{package.id}}">
+        {% if package.size.size %}
+            {{package.size.size}}
+        {% elif package.size.size_numrical %}
+            {{package.size.size_numrical}}
+        {% elif package.size.number_size %}
+            {{package.size.number_size}}
+        {% endif %}
+    </label>
+</div>
+{% endfor %} 

@@ -1,0 +1,304 @@
+{% extends "shared/_Main.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Mobile Navigation -->
+<div class="d-lg-none">
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="panelOffcanvas" aria-labelledby="panelOffcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="panelOffcanvasLabel">منوی پنل کاربری</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="panel-nav-logo">
+                <a href="" class="text-center d-block mb-3">
+                    <img src="{% static 'assets/img/logo.png' %}" alt="" class="img-fluid" width="200">
+                </a>
+            </div>
+            <div class="penel-nav">
+                <div class="panel-nav-nav">
+                    <nav class="navbar profile-box-nav">
+                        <ul class="navbar-nav flex-column">
+                            <li class="nav-item {% if request.path == '/profile' or request.path == '/profile/' %}active{% endif %}"><a href="/profile" class="nav-link">
+                                <i class="bi bi-house-door"></i>پروفایل</a>
+                            </li>
+                            <li class="nav-item {% if request.path == '/profile/orders' or request.path == '/profile/orders/' %}active{% endif %}"><a href="/profile/orders" class="nav-link">
+                                <i class="bi bi-cart-check"></i>سفارش های من</a>
+                            </li>
+                            <li class="nav-item {% if request.path == '/profile/address' or request.path == '/profile/address/' %}active{% endif %}"><a href="/profile/address" class="nav-link">
+                                <i class="bi bi-pin-map"></i>آدرس های من</a>
+                            </li>
+                            <li class="nav-item {% if request.path == '/profile/notification' or request.path == '/profile/notification/' %}active{% endif %}"><a href="/profile/notification" class="nav-link">
+                                <i class="bi bi-bell"></i>پیام ها و اطلاعیه ها</a>
+                            </li>
+                            <li class="nav-item {% if request.path == '/profile/comments' or request.path == '/profile/comments/' %}active{% endif %}"><a href="/profile/comments" class="nav-link">
+                                <i class="bi bi-chat-dots"></i>نظرات من</a>
+                            </li>
+                            <li class="nav-item {% if request.path == '/support' or request.path == '/support/' %}active{% endif %}"><a href="/support" class="nav-link">
+                                <i class="bi bi-question-circle"></i>درخواست پشتیبانی</a>
+                            </li>
+                            {% if user.is_staff %}
+                            <li class="nav-item {% if request.path == '/support/admin/' or request.path == '/support/admin' %}active{% endif %}"><a href="/support/admin/" class="nav-link">
+                                <i class="bi bi-headset"></i>پنل مدیریت تیکت‌ها</a>
+                            </li>
+                            {% endif %}
+                            <li class="nav-item {% if request.path == '/profile/list' or request.path == '/profile/list/' %}active{% endif %}"><a href="/profile/list" class="nav-link">
+                                <i class="bi bi-heart"></i>محصولات مورد علاقه</a>
+                            </li>
+                            <li class="nav-item {% if request.path == '/profile/offers' or request.path == '/profile/offers/' %}active{% endif %}"><a href="/profile/offers" class="nav-link">
+                                <i class="bi bi-gift"></i>کد های تخفیف من</a>
+                            </li>
+                            <li class="nav-item"><a href="/logout/" class="nav-link">
+                                <i class="bi bi-arrow-right-square"></i>خروج از حساب کاربری</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel position-relative">
+    <div class="row gy-4">
+        <!-- Desktop Navigation -->
+        <div class="col-lg-3 d-lg-block d-none">
+            <div class="panel-nav-logo">
+                <a href="" class="text-center d-block mb-3">
+                    <img src="{% static 'assets/img/logo.png' %}" alt="" class="img-fluid" width="200">
+                </a>
+            </div>
+            <div class="penel-nav">
+                <div class="panel-nav-nav">
+                    <nav class="navbar profile-box-nav">
+                        <ul class="navbar-nav flex-column">
+                            <li class="nav-item {% if request.path == '/profile' or request.path == '/profile/' %}active{% endif %}"><a href="/profile" class="nav-link">
+                                <i class="bi bi-house-door"></i>پروفایل</a>
+                            </li>
+                            <li class="nav-item {% if request.path == '/profile/orders' or request.path == '/profile/orders/' %}active{% endif %}"><a href="/profile/orders" class="nav-link">
+                                <i class="bi bi-cart-check"></i>سفارش های من</a>
+                            </li>
+                            <li class="nav-item {% if request.path == '/profile/address' or request.path == '/profile/address/' %}active{% endif %}"><a href="/profile/address" class="nav-link">
+                                <i class="bi bi-pin-map"></i>آدرس های من</a>
+                            </li>
+                            <li class="nav-item {% if request.path == '/profile/notification' or request.path == '/profile/notification/' %}active{% endif %}"><a href="/profile/notification" class="nav-link">
+                                <i class="bi bi-bell"></i>پیام ها و اطلاعیه ها</a>
+                            </li>
+                            <li class="nav-item {% if request.path == '/profile/comments' or request.path == '/profile/comments/' %}active{% endif %}"><a href="/profile/comments" class="nav-link">
+                                <i class="bi bi-chat-dots"></i>نظرات من</a>
+                            </li>
+                            <li class="nav-item {% if request.path == '/support' or request.path == '/support/' %}active{% endif %}"><a href="/support" class="nav-link">
+                                <i class="bi bi-question-circle"></i>درخواست پشتیبانی</a>
+                            </li>
+                            {% if user.is_staff %}
+                            <li class="nav-item {% if request.path == '/support/admin/' or request.path == '/support/admin' %}active{% endif %}"><a href="/support/admin/" class="nav-link">
+                                <i class="bi bi-headset"></i>پنل مدیریت تیکت‌ها</a>
+                            </li>
+                            {% endif %}
+                            <li class="nav-item {% if request.path == '/profile/list' or request.path == '/profile/list/' %}active{% endif %}"><a href="/profile/list" class="nav-link">
+                                <i class="bi bi-heart"></i>محصولات مورد علاقه</a>
+                            </li>
+                            <li class="nav-item {% if request.path == '/profile/offers' or request.path == '/profile/offers/' %}active{% endif %}"><a href="/profile/offers" class="nav-link">
+                                <i class="bi bi-gift"></i>کد های تخفیف من</a>
+                            </li>
+                            <li class="nav-item"><a href="/logout/" class="nav-link">
+                                <i class="bi bi-arrow-right-square"></i>خروج از حساب کاربری</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-9">
+            <div class="position-sticky top-0">
+                <!-- Panel Header -->
+                <div class="panel-header">
+                    <div class="content-box">
+                        <div class="container-fluid">
+                            <div class="row gy-5 align-items-center">
+                                <div class="col-md-6 col-8">
+                                    <div class="d-flex align-items-center">
+                                        <h6>کدهای تخفیف من</h6>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-4">
+                                    <div class="d-flex align-items-center justify-content-end">
+                                        <button class="btn btn-primary d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#panelOffcanvas" aria-controls="panelOffcanvas">
+                                            <i class="bi bi-list"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Main Content -->
+                <div class="panel-content">
+                    <!-- Statistics Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="panel-meta-item d-flex align-items-center">
+                                <div class="panel-meta-item-icon bg-success">
+                                    <i class="bi bi-gift-fill"></i>
+                                </div>
+                                <div class="panel-meta-title d-flex flex-column">
+                                    <h6 class="h6">کل کدهای تخفیف</h6>
+                                    <h5 class="title-font h3">{{ coupons.count|default:0 }}</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel-meta-item d-flex align-items-center">
+                                <div class="panel-meta-item-icon bg-primary">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                </div>
+                                <div class="panel-meta-title d-flex flex-column">
+                                    <h6 class="h6">کدهای فعال</h6>
+                                    <h5 class="title-font h3">{{ coupons|length|default:0 }}</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel-meta-item d-flex align-items-center">
+                                <div class="panel-meta-item-icon bg-warning">
+                                    <i class="bi bi-clock-fill"></i>
+                                </div>
+                                <div class="panel-meta-title d-flex flex-column">
+                                    <h6 class="h6">کدهای منقضی شده</h6>
+                                    <h5 class="title-font h3">0</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Coupons Table -->
+                    <div class="panel shadow-sm rounded-3 p-4 bg-white">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="mb-0"><i class="bi bi-gift text-primary"></i> کدهای تخفیف من</h4>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-download"></i> دانلود لیست
+                                </button>
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="bi bi-plus"></i> کد جدید
+                                </button>
+                            </div>
+                        </div>
+                        
+                        {% if coupons %}
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped">
+                                    <thead class="table-light">
+                                        <tr class="text-center">
+                                            <th class="title-font">#</th>
+                                            <th class="title-font">کد تخفیف</th>
+                                            <th class="title-font">مقدار تخفیف</th>
+                                            <th class="title-font">وضعیت</th>
+                                            <th class="title-font">تاریخ انقضا</th>
+                                            <th class="title-font">عملیات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-center">
+                                        {% for coupon in coupons %}
+                                        <tr>
+                                            <td class="font-14">{{ forloop.counter }}</td>
+                                            <td class="font-14">
+                                                <span class="badge bg-light text-dark border">{{ coupon.code }}</span>
+                                            </td>
+                                            <td class="font-14">
+                                                <span class="text-success fw-bold">{{ coupon.discount }}%</span>
+                                            </td>
+                                            <td class="font-14">
+                                                {% if coupon.is_active %}
+                                                    <span class="badge bg-success">
+                                                        <i class="bi bi-check-circle me-1"></i>فعال
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">
+                                                        <i class="bi bi-x-circle me-1"></i>غیرفعال
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="font-14">
+                                                {% if coupon.expire_at %}
+                                                    <span class="text-muted">{{ coupon.expire_at|date:'Y/m/d' }}</span>
+                                                {% else %}
+                                                    <span class="text-success">بدون انقضا</span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="font-14">
+                                                <div class="btn-group btn-group-sm" role="group">
+                                                    <button type="button" class="btn btn-outline-primary" title="کپی کد">
+                                                        <i class="bi bi-clipboard"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-info" title="جزئیات">
+                                                        <i class="bi bi-eye"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <!-- Empty State -->
+                            <div class="text-center py-5">
+                                <div class="mb-4">
+                                    <i class="bi bi-gift text-muted" style="font-size: 4rem;"></i>
+                                </div>
+                                <h5 class="text-muted mb-3">هنوز کد تخفیفی ندارید</h5>
+                                <p class="text-muted mb-4">کدهای تخفیف شما در اینجا نمایش داده خواهند شد</p>
+                                <div class="d-flex justify-content-center gap-3">
+                                    <button class="btn btn-primary">
+                                        <i class="bi bi-plus"></i> درخواست کد تخفیف
+                                    </button>
+                                    <button class="btn btn-outline-secondary">
+                                        <i class="bi bi-question-circle"></i> راهنما
+                                    </button>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- How to Use Section -->
+                    <div class="panel shadow-sm rounded-3 p-4 bg-white mt-4">
+                        <h5 class="mb-3"><i class="bi bi-info-circle text-info"></i> نحوه استفاده از کدهای تخفیف</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="text-center p-3">
+                                    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                        <i class="bi bi-1-circle text-primary fs-4"></i>
+                                    </div>
+                                    <h6>انتخاب محصول</h6>
+                                    <p class="text-muted small">محصول مورد نظر خود را انتخاب کنید</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center p-3">
+                                    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                        <i class="bi bi-2-circle text-primary fs-4"></i>
+                                    </div>
+                                    <h6>وارد کردن کد</h6>
+                                    <p class="text-muted small">کد تخفیف را در قسمت مربوطه وارد کنید</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center p-3">
+                                    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                        <i class="bi bi-3-circle text-primary fs-4"></i>
+                                    </div>
+                                    <h6>اعمال تخفیف</h6>
+                                    <p class="text-muted small">تخفیف به صورت خودکار اعمال می‌شود</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

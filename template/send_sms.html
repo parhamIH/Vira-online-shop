@@ -1,0 +1,37 @@
+{% extends "shared/_Main.html" %}
+
+{% block title %}ارسال پیامک دستی{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="card shadow border-0">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0">ارسال پیامک دستی</h4>
+                </div>
+                <div class="card-body">
+                    {% if success %}
+                        <div class="alert alert-success text-center">{{ success }}</div>
+                    {% endif %}
+                    {% if error %}
+                        <div class="alert alert-danger text-center">{{ error }}</div>
+                    {% endif %}
+                    <form method="post" class="rtl" dir="rtl">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">شماره موبایل گیرنده</label>
+                            <input type="text" class="form-control" id="phone" name="phone" placeholder="مثال: 09123456789" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="text" class="form-label">متن پیامک</label>
+                            <textarea class="form-control" id="text" name="text" rows="4" placeholder="متن پیامک را وارد کنید..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">ارسال پیامک</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

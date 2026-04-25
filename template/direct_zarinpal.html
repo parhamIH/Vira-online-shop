@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>انتقال به درگاه پرداخت زرین‌پال</title>
+    <style>
+        body {
+            font-family: Tahoma, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+            direction: rtl;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 90%;
+        }
+        .btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 20px 0;
+            text-decoration: none;
+        }
+        .loading {
+            display: block;
+            margin: 20px auto;
+        }
+        .info {
+            color: #17a2b8;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #e3f4f6;
+            border-radius: 5px;
+        }
+        .error {
+            color: #dc3545;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8d7da;
+            border-radius: 5px;
+        }
+        .back-btn {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .order-details {
+            text-align: right;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .separator {
+            border-top: 1px solid #dee2e6;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>انتقال به درگاه پرداخت</h1>
+        
+        <div class="order-details">
+            <h3>جزئیات سفارش</h3>
+            <p><strong>مبلغ قابل پرداخت:</strong> {{ amount|floatformat:0 }} تومان</p>
+            <p><strong>توضیحات:</strong> {{ description }}</p>
+        </div>
+        
+        <div class="separator"></div>
+        
+        <p class="info">لطفاً چند لحظه صبر کنید، در حال انتقال به درگاه پرداخت زرین‌پال...</p>
+        
+        <div id="manual-redirect">
+            <p>اگر به صورت خودکار منتقل نشدید، روی دکمه زیر کلیک کنید:</p>
+            <a id="redirect-button" href="#" class="btn">انتقال به درگاه پرداخت</a>
+        </div>
+        
+        <div>
+            <a href="{% url 'checkout' %}" class="back-btn">بازگشت به صفحه سفارش</a>
+        </div>
+        
+        <!-- نمایش جزئیات تراکنش در حالت تست -->
+        {% if test_mode %}
+        <div style="margin-top: 30px; padding: 15px; background-color: #f8f9fa; border-radius: 5px; text-align: right; direction: rtl;">
+            <h3>اطلاعات تراکنش (حالت تست)</h3>
+            <p><strong>مبلغ:</strong> {{ amount }} تومان</p>
+            <p><strong>توضیحات:</strong> {{ description }}</p>
+            <p><strong>شناسه مرچنت:</strong> {{ merchant_id }}</p>
+            <p><strong>آدرس بازگشت:</strong> {{ callback_url }}</p>
+        </div>
+        {% endif %}
+        
+        <!-- بخش دیباگ (مخفی) -->
+        <div id="debug-info" style="margin-top: 30px; font-size: 12px; color: #6c757d; display: none;">
+            <div class="separator"></div>
+            <h4>اطلاعات دیباگ</h4>
+            {% if authority %}
+            <p><strong>Authority:</strong> {{ authority }}</p>
+            {% endif %}
+            <p><strong>Callback URL:</strong> {{ callback_url }}</p>
+            {% if payment_url %}
+            <p><strong>Payment URL:</strong> {{ payment_url }}</p>
+            {% endif %}
+            <p><strong>Sandbox:</strong> {{ sandbox }}</p>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // دریافت مقدار authority از پارامترهای URL یا context
+            {% if authority %}
+            var authority = "{{ authority }}";
+            console.log("Authority from context: " + authority);
+            {% else %}
+            // کد Authority را از پارامتر URL می‌گیریم (اگر موجود باشد)
+            const urlParams = new URLSearchParams(window.location.search);
+            const authority = urlParams.get('authority');
+            console.log("Authority from URL params: " + authority);
+            {% endif %}
+            
+            {% if payment_url %}
+            var paymentUrl = "{{ payment_url }}";
+            console.log("Payment URL from context: " + paymentUrl);
+            {% else %}
+            var paymentUrl = null;
+            {% endif %}
+            
+            // مدیریت انتقال به درگاه
+            if (authority) {
+                // اگر آدرس کامل پرداخت وجود نداشت، آن را بسازیم
+                if (!paymentUrl) {
+                    // تشخیص محیط تست یا واقعی
+                    var domain = "www";
+                    {% if sandbox %}
+                    domain = "sandbox";
+                    {% endif %}
+                    paymentUrl = "https://" + domain + ".zarinpal.com/pg/StartPay/" + authority;
+                }
+                
+                console.log("Final payment URL: " + paymentUrl);
+                
+                // تنظیم لینک دکمه هدایت دستی
+                document.getElementById("redirect-button").href = paymentUrl;
+                
+                // هدایت خودکار به درگاه پرداخت پس از 3 ثانیه
+                setTimeout(function() {
+                    console.log("Redirecting to payment gateway...");
+                    window.location.href = paymentUrl;
+                }, 3000);
+            } else {
+                console.log("No authority parameter found");
+                document.getElementById("redirect-button").disabled = true;
+                document.getElementById("redirect-button").style.backgroundColor = "#6c757d";
+                document.getElementById("redirect-button").textContent = "خطا در دریافت شناسه پرداخت";
+                
+                // نمایش خطا
+                var infoEl = document.querySelector(".info");
+                if (infoEl) {
+                    infoEl.className = "error";
+                    infoEl.textContent = "خطا در دریافت شناسه پرداخت. لطفاً دوباره تلاش کنید.";
+                }
+            }
+            
+            // نمایش اطلاعات دیباگ با کلید Shift + D
+            document.addEventListener('keydown', function(e) {
+                if (e.shiftKey && e.key === 'D') {
+                    var debugInfo = document.getElementById('debug-info');
+                    if (debugInfo) {
+                        debugInfo.style.display = debugInfo.style.display === 'none' ? 'block' : 'none';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

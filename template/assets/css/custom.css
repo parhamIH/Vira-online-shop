@@ -1,0 +1,136 @@
+.login_body {
+    background: url('../img/bg-auth.png') no-repeat center center;
+    background-size: cover
+}
+
+.otp_body {
+    background: url('../img/bg-auth.png') no-repeat center center;
+    background-size: cover
+}
+
+.notification-container {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.notification {
+    padding: 16px 24px;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1em;
+    box-shadow: 0 8x 8px rgba(0, 0, 0, 0.1);
+    animation: fade-in 0.3s ease-out, fade-out 0.3s ease-in 4s;
+}
+
+.notification-success {
+    background-color: #2fcf55;
+}
+
+.notification-error {
+    background-color: #dc3545;
+}
+
+.notification-info {
+    background-color: #17a2b8;
+}
+
+.notification-warning {
+    background-color: #ffc107;
+}
+
+.ltr-text {
+    direction: ltr;
+    display: inline-block;
+}
+
+.ltr-direction {
+    direction: ltr;
+}
+
+.social-icons .bi-instagram {
+    color: #E4405F !important;
+}
+
+.social-icons .bi-whatsapp {
+    color: #25D366 !important;
+}
+
+.social-icons .bi-telegram {
+    color: #0088CC !important;
+}
+
+.profile-box-nav ul li:hover {
+    cursor: pointer;
+}
+
+.loader-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner {
+    width: 80px;
+    height: 80px;
+    border: 8px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #6B4875;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.toggle-checkbox:checked+.d-flex .toggle-label i {
+    transform: rotate(-90deg);
+    transition: transform 0.2s ease-in-out;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+    display: none;
+}
+
+.nav-item svg {
+    width: 1.2rem;
+    height: 1.2rem;
+    vertical-align: middle;
+    fill: currentColor;
+    margin-left: 4px;
+}
+
+.category-img {
+    max-width: 300px;
+    max-height: 400px;
+}
+
+.product-cart-price {
+    min-height: 64px;
+    max-height: 80px;
+}
+
+.form-check-input:checked {
+    background-color: #6B4875;
+    border-color: #6B4875;
+}
+
+.cursor-pointer {
+    cursor: pointer !important;
+}
+
+.mobile-cart-badge {
+    right: -4px;
+}
+
+.param_list dt,
+.param_list dd{
+    padding: 16px;
+}

@@ -1,0 +1,786 @@
+{% extends "shared/_Main.html" %}
+
+{% load static %}
+{% load humanize %}
+
+
+{% block main %}
+<!-- start breadcroumb -->
+
+<div class="bread-crumb py-4">
+    <div class="container-fluid">
+        <nav aria-label="breadcrumb" class="my-lg-0 my-2">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="/" class="font-14 text-muted-two">خانه</a></li>
+                <li class="breadcrumb-item"><a href="/products" class="font-14 text-muted-two">فروشگاه</a></li>
+                <li class="breadcrumb-item active"><a href="#" class="font-14 text-muted-two">{{ base_category.name }}</a></li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<!-- end breadcroumb -->
+
+<!-- main content page -->
+<div class="content">
+    <div class="container-fluid">
+        <!-- بنر دسته‌بندی -->
+        <div class="content mb-4">
+            <div class="container-fluid">
+                <div class="category-banner mb-4">
+                    <div class="card shadow-box border-0">
+                        <div class="card-body py-4">
+                            <div class="row align-items-center">
+                                <div class="col-md-2 col-sm-4 text-center">
+                                    <div class="category-image bg-white p-2 rounded-circle shadow mx-auto" style="width: 100px; height: 100px; display: flex; align-items: center; justify-content: center;">
+                                        <img src="{{base_category.image.url}}" alt="{{base_category.name}}" style="max-width: 80%; max-height: 80%; object-fit: contain;">
+                                    </div>
+                                </div>
+                                <div class="col-md-7 col-sm-8 mt-3 mt-sm-0 text-center text-sm-right">
+                                    <h2 class="mb-2">محصولات دسته <span class="main-color-one-color title-font">{{base_category.name}}</span></h2>
+                                    <p class="mb-0 text-muted">نمایش {{current_page.paginator.count}} محصول</p>
+            </div>
+                                <div class="col-md-3 mt-3 mt-md-0 text-center">
+                                    <a href="/products" class="btn main-color-green text-white rounded-pill px-4 w-100 w-md-auto">مشاهده همه محصولات</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- start filter in mobile -->
+        <div class="custom-filter d-lg-none d-block">
+            <button class="btn border-0 main-color-green shadow-box px-4 rounded-3 position-fixed btn-filter-float"
+                    style="z-index: 999;bottom:80px;" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                <i class="bi bi-funnel font-20 fw-bold text-white"></i>
+                <span class="d-block font-14 text-white">فیلتر</span>
+            </button>
+
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasRight"
+                 aria-labelledby="offcanvasRightLabel">
+                <div class="offcanvas-header">
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <h5 class="offcanvas-title" id="offcanvasRightLabel-2">فیلترهای محصولات</h5>
+                        <div>
+                            <a href="/categories/{{ base_category.en_name }}" class="btn btn-outline-danger btn-sm rounded-pill me-2">
+                                <i class="bi bi-x-circle me-1"></i>
+                                حذف فیلترها
+                            </a>
+                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="offcanvas-body">
+                    <!-- نمایش فیلترهای فعال حذف شده -->
+                    
+                    <div class="item-boxs">
+                        <!-- محدوده قیمت -->
+                        <div class="item-box card shadow-box border-0 mb-4">
+                            <div class="card-body">
+                                <div class="title">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h6 class="font-14">محدوده قیمت</h6>
+                                        <a class="btn border-0" data-bs-toggle="collapse" href="#collapsePriceMobile"
+                                           role="button" aria-expanded="false">
+                                            <i class="bi bi-chevron-down"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="desc collapse show" id="collapsePriceMobile">
+                                    <div class="filter-item-content">
+                                        <form action="" method="get">
+                                            <h6 class="mb-3 text-muted">حداقل قیمت:</h6>
+                                            <div class="form-group mb-4">
+                                                <input type="range" id="priceRangeMinMobile" class="form-range w-100" 
+                                                       min="0" max="10000000" step="100000" 
+                                                       value="{{ request.GET.price_min|default:'0' }}"
+                                                       oninput="document.getElementById('priceMinMobile').value=this.value; updatePriceRangeMinMax('Mobile');">
+                                                <div class="d-flex justify-content-between mt-2">
+                                                    <small>0 تومان</small>
+                                                    <small>10,000,000 تومان</small>
+                                                </div>
+                                            </div>
+                                            
+                                            <h6 class="mb-3 text-muted">حداکثر قیمت:</h6>
+                                            <div class="form-group mb-4">
+                                                <input type="range" id="priceRangeMaxMobile" class="form-range w-100" 
+                                                       min="0" max="10000000" step="100000" 
+                                                       value="{{ request.GET.price_max|default:'10000000' }}"
+                                                       oninput="document.getElementById('priceMaxMobile').value=this.value; updatePriceRangeMinMax('Mobile');">
+                                                <div class="d-flex justify-content-between mt-2">
+                                                    <small>0 تومان</small>
+                                                    <small>10,000,000 تومان</small>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row mt-3">
+                                                <div class="col-6">
+                                                    <label for="priceMinMobile" class="form-label">از:</label>
+                                                    <input type="number" name="price_min" id="priceMinMobile" min="0"
+                                                           class="form-control input-range-filter"
+                                                           placeholder="از 0" value="{{ request.GET.price_min|default:'0' }}"
+                                                           oninput="document.getElementById('priceRangeMinMobile').value=this.value; updatePriceRangeMinMax('Mobile');">
+                                                </div>
+                                                <div class="col-6">
+                                                    <label for="priceMaxMobile" class="form-label">تا:</label>
+                                                    <input type="number" name="price_max" id="priceMaxMobile" min="0" max="10000000"
+                                                           class="form-control input-range-filter"
+                                                           placeholder="تا بیشترین" value="{{ request.GET.price_max|default:'10000000' }}"
+                                                           oninput="document.getElementById('priceRangeMaxMobile').value=this.value; updatePriceRangeMinMax('Mobile');">
+                                                </div>
+                                                <div class="col-12">
+                                                    <!-- حفظ سایر پارامترهای URL موجود -->
+                                                    {% if request.GET.q %}<input type="hidden" name="q" value="{{ request.GET.q }}">{% endif %}
+                                                    {% if request.GET.orderby %}<input type="hidden" name="orderby" value="{{ request.GET.orderby }}">{% endif %}
+                                                    
+                                                    {% for category in selected_categories %}
+                                                        <input type="hidden" name="category" value="{{ category }}">
+                                                    {% endfor %}
+                                                    
+                                                    {% for color in selected_colors %}
+                                                        <input type="hidden" name="color" value="{{ color }}">
+                                                    {% endfor %}
+                                                    
+                                                    {% for size in selected_sizes %}
+                                                        <input type="hidden" name="size" value="{{ size }}">
+                                                    {% endfor %}
+                                                    
+                                                    {% for brand in selected_brands %}
+                                                        <input type="hidden" name="brand" value="{{ brand }}">
+                                                    {% endfor %}
+                                                    
+                                                    <div class="text-center my-3">
+                                                        <input type="submit" class="btn main-color-green text-white rounded-pill px-5 py-2" value="اعمال فیلتر">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- فیلتر رنگ -->
+                        <div class="item-box card shadow-box border-0 mb-4">
+                            <div class="card-body">
+                                <div class="title">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h6 class="font-14">فیلتر بر اساس رنگ</h6>
+                                        <a class="btn border-0" data-bs-toggle="collapse" href="#collapseColorsMobile"
+                                           role="button" aria-expanded="false">
+                                            <i class="bi bi-chevron-down"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="desc collapse show" id="collapseColorsMobile">
+                                    <div class="filter-item-content">
+                                        <form action="" method="get">
+                                            <div class="product-meta-color-items d-flex flex-wrap">
+                                                {% for color in base_colors %}
+                                                <div class="m-1">
+                                                    <input type="checkbox" class="btn-check" name="color" id="mobile-color-{{ color.id }}" 
+                                                           value="{{ color.name }}" {% if color.name in selected_colors %}checked{% endif %}>
+                                                    <label class="btn btn-outline-secondary" for="mobile-color-{{ color.id }}">
+                                                        <span style="background-color: {{ color.color }}; width: 20px; height: 20px; display: inline-block; border-radius: 50%; margin-right: 5px;"></span>
+                                                        {{ color.name }}
+                                                    </label>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                            
+                                            <!-- حفظ سایر پارامترهای URL موجود -->
+                                            {% if request.GET.q %}<input type="hidden" name="q" value="{{ request.GET.q }}">{% endif %}
+                                            {% if request.GET.orderby %}<input type="hidden" name="orderby" value="{{ request.GET.orderby }}">{% endif %}
+                                            {% if request.GET.price_min %}<input type="hidden" name="price_min" value="{{ request.GET.price_min }}">{% endif %}
+                                            {% if request.GET.price_max %}<input type="hidden" name="price_max" value="{{ request.GET.price_max }}">{% endif %}
+                                            
+                                            {% for category in selected_categories %}
+                                                <input type="hidden" name="category" value="{{ category }}">
+                                            {% endfor %}
+                                            
+                                            {% for size in selected_sizes %}
+                                                <input type="hidden" name="size" value="{{ size }}">
+                                            {% endfor %}
+                                            
+                                            {% for brand in selected_brands %}
+                                                <input type="hidden" name="brand" value="{{ brand }}">
+                                            {% endfor %}
+                                            
+                                            <div class="text-center mb-3 mt-2">
+                                                <input type="submit" class="btn main-color-green text-white rounded-pill px-5 py-2" value="اعمال فیلتر">
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- فیلتر سایز (اگر در category هم نیاز دارید) -->
+                        <div class="item-box card shadow-box border-0 mb-4">
+                            <div class="card-body">
+                                <div class="title">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h6 class="font-14">سایزها</h6>
+                                        <a class="btn border-0" data-bs-toggle="collapse" href="#collapseSizesMobile"
+                                           role="button" aria-expanded="false">
+                                            <i class="bi bi-chevron-down"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="desc collapse show" id="collapseSizesMobile">
+                                    <form action="" method="get">
+                                        <div class="d-flex flex-wrap">
+                                            {% for size in sizes %}
+                                            <div class="form-check me-3 mb-2">
+                                                <input type="checkbox" class="form-check-input" name="size" 
+                                                    value="{{ forloop.counter }}" 
+                                                    id="mobile-size-{{ size.id }}"
+                                                    {% if forloop.counter|stringformat:"i" in selected_sizes %}checked{% endif %}>
+                                                <label class="form-check-label" for="mobile-size-{{ size.id }}">
+                                                    {% if size.size %}
+                                                        {{ size.size }}
+                                                    {% elif size.size_numrical %}
+                                                        {{ size.size_numrical }}
+                                                    {% elif size.number_size %}
+                                                        {{ size.number_size }}
+                                                    {% endif %}
+                                                </label>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                        
+                                        <!-- حفظ سایر پارامترهای URL موجود -->
+                                        {% if request.GET.q %}<input type="hidden" name="q" value="{{ request.GET.q }}">{% endif %}
+                                        {% if request.GET.orderby %}<input type="hidden" name="orderby" value="{{ request.GET.orderby }}">{% endif %}
+                                        {% if request.GET.price_min %}<input type="hidden" name="price_min" value="{{ request.GET.price_min }}">{% endif %}
+                                        {% if request.GET.price_max %}<input type="hidden" name="price_max" value="{{ request.GET.price_max }}">{% endif %}
+                                        
+                                        {% for category in selected_categories %}
+                                            <input type="hidden" name="category" value="{{ category }}">
+                                        {% endfor %}
+                                        
+                                        {% for color in selected_colors %}
+                                            <input type="hidden" name="color" value="{{ color }}">
+                                        {% endfor %}
+                                        
+                                        {% for brand in selected_brands %}
+                                            <input type="hidden" name="brand" value="{{ brand }}">
+                                        {% endfor %}
+                                        
+                                        <div class="text-center mb-3 mt-2">
+                                            <input type="submit" class="btn main-color-green text-white rounded-pill px-5 py-2" value="اعمال فیلتر">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- فیلتر برند -->
+                        <div class="item-box card shadow-box border-0 mb-4">
+                            <div class="card-body">
+                                <div class="title">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h6 class="font-14">برندها</h6>
+                                        <a class="btn border-0" data-bs-toggle="collapse" href="#collapseBrandsMobile"
+                                           role="button" aria-expanded="false">
+                                            <i class="bi bi-chevron-down"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="desc collapse show" id="collapseBrandsMobile">
+                                    <form action="" method="get">
+                                        {% for brand in brands %}
+                                        <div class="d-flex align-items-center justify-content-between flex-wrap mb-3">
+                                            <div class="form-check">
+                                                <label for="mobile-brand-{{ brand.id }}" class="form-check-label">{{ brand.name }}</label>
+                                                <input type="checkbox" name="brand" value="{{ brand.en_name }}" 
+                                                       id="mobile-brand-{{ brand.id }}" class="form-check-input"
+                                                       {% if brand.en_name in selected_brands %}checked{% endif %}>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                        
+                                        <!-- حفظ سایر پارامترهای URL موجود -->
+                                        {% if request.GET.q %}<input type="hidden" name="q" value="{{ request.GET.q }}">{% endif %}
+                                        {% if request.GET.orderby %}<input type="hidden" name="orderby" value="{{ request.GET.orderby }}">{% endif %}
+                                        {% if request.GET.price_min %}<input type="hidden" name="price_min" value="{{ request.GET.price_min }}">{% endif %}
+                                        {% if request.GET.price_max %}<input type="hidden" name="price_max" value="{{ request.GET.price_max }}">{% endif %}
+                                        
+                                        {% for category in selected_categories %}
+                                            <input type="hidden" name="category" value="{{ category }}">
+                                        {% endfor %}
+                                        
+                                        {% for color in selected_colors %}
+                                            <input type="hidden" name="color" value="{{ color }}">
+                                        {% endfor %}
+                                        
+                                        {% for size in selected_sizes %}
+                                            <input type="hidden" name="size" value="{{ size }}">
+                                        {% endfor %}
+                                        
+                                        <div class="text-center mb-3 mt-2">
+                                            <input type="submit" class="btn main-color-green text-white rounded-pill px-5 py-2" value="اعمال فیلتر">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end filter mobile -->
+
+        <div class="row">
+            <!-- Desktop filters -->
+            <div class="col-lg-3 d-lg-block d-none">
+                <div class="filters-sidebar">
+                    <div class="filter-header d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="mb-0">فیلترهای محصولات</h5>
+                        <a href="/categories/{{ base_category.en_name }}" class="btn btn-outline-danger btn-sm rounded-pill">
+                            <i class="bi bi-x-circle me-1"></i>
+                            حذف فیلترها
+                        </a>
+                    </div>
+                    
+                    <!-- نمایش فیلترهای فعال حذف شده -->
+                    
+                    <!-- فیلتر قیمت -->
+                    <div class="item-box card shadow-box border-0 mb-4">
+                        <div class="card-body">
+                            <div class="title">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h6 class="font-14">محدوده قیمت</h6>
+                                    <a class="btn border-0" data-bs-toggle="collapse" href="#collapsePrice"
+                                       role="button" aria-expanded="false">
+                                        <i class="bi bi-chevron-down"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="desc collapse show" id="collapsePrice">
+                                <div class="filter-item-content">
+                                    <form action="" method="get">
+                                        <h6 class="mb-3 text-muted">حداقل قیمت:</h6>
+                                        <div class="form-group mb-4">
+                                            <input type="range" id="priceRangeMinDesktop" class="form-range w-100" 
+                                                   min="0" max="10000000" step="100000" 
+                                                   value="{{ request.GET.price_min|default:'0' }}"
+                                                   oninput="document.getElementById('priceMinDesktop').value=this.value; updatePriceRangeMinMax('Desktop');">
+                                            <div class="d-flex justify-content-between mt-2">
+                                                <small>0 تومان</small>
+                                                <small>10,000,000 تومان</small>
+                                            </div>
+                                        </div>
+                                        
+                                        <h6 class="mb-3 text-muted">حداکثر قیمت:</h6>
+                                        <div class="form-group mb-4">
+                                            <input type="range" id="priceRangeMaxDesktop" class="form-range w-100" 
+                                                   min="0" max="10000000" step="100000" 
+                                                   value="{{ request.GET.price_max|default:'10000000' }}"
+                                                   oninput="document.getElementById('priceMaxDesktop').value=this.value; updatePriceRangeMinMax('Desktop');">
+                                            <div class="d-flex justify-content-between mt-2">
+                                                <small>0 تومان</small>
+                                                <small>10,000,000 تومان</small>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row mt-3">
+                                            <div class="col-6">
+                                                <label for="priceMinDesktop" class="form-label">از:</label>
+                                                <input type="number" name="price_min" id="priceMinDesktop" min="0"
+                                                       class="form-control input-range-filter"
+                                                       placeholder="از 0" value="{{ request.GET.price_min|default:'0' }}"
+                                                       oninput="document.getElementById('priceRangeMinDesktop').value=this.value; updatePriceRangeMinMax('Desktop');">
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="priceMaxDesktop" class="form-label">تا:</label>
+                                                <input type="number" name="price_max" id="priceMaxDesktop" min="0" max="10000000"
+                                                       class="form-control input-range-filter"
+                                                       placeholder="تا بیشترین" value="{{ request.GET.price_max|default:'10000000' }}"
+                                                       oninput="document.getElementById('priceRangeMaxDesktop').value=this.value; updatePriceRangeMinMax('Desktop');">
+                                            </div>
+                                            <div class="col-12">
+                                                <!-- حفظ سایر پارامترهای URL موجود -->
+                                                {% if request.GET.q %}<input type="hidden" name="q" value="{{ request.GET.q }}">{% endif %}
+                                                {% if request.GET.orderby %}<input type="hidden" name="orderby" value="{{ request.GET.orderby }}">{% endif %}
+                                                
+                                                {% for category in selected_categories %}
+                                                    <input type="hidden" name="category" value="{{ category }}">
+                                                {% endfor %}
+                                                
+                                                {% for color in selected_colors %}
+                                                    <input type="hidden" name="color" value="{{ color }}">
+                                                {% endfor %}
+                                                
+                                                {% for size in selected_sizes %}
+                                                    <input type="hidden" name="size" value="{{ size }}">
+                                                {% endfor %}
+                                                
+                                                {% for brand in selected_brands %}
+                                                    <input type="hidden" name="brand" value="{{ brand }}">
+                                                {% endfor %}
+                                                
+                                                <div class="text-center my-3">
+                                                    <input type="submit" class="btn main-color-green text-white rounded-pill px-5 py-2" value="اعمال فیلتر">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- فیلتر رنگ -->
+                    <div class="item-box card shadow-box border-0 mb-4">
+                        <div class="card-body">
+                            <div class="title">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h6 class="font-14">فیلتر بر اساس رنگ</h6>
+                                    <a class="btn border-0" data-bs-toggle="collapse" href="#collapseColors"
+                                       role="button" aria-expanded="false">
+                                        <i class="bi bi-chevron-down"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="desc collapse show" id="collapseColors">
+                                <div class="filter-item-content">
+                                    <form action="" method="get">
+                                        <div class="product-meta-color-items d-flex flex-wrap">
+                                            {% for color in base_colors %}
+                                            <div class="m-1">
+                                                <input type="checkbox" class="btn-check" name="color" id="color-{{ color.id }}" 
+                                                       value="{{ color.name }}" {% if color.name in selected_colors %}checked{% endif %}>
+                                                <label class="btn btn-outline-secondary" for="color-{{ color.id }}">
+                                                    <span style="background-color: {{ color.color }}; width: 20px; height: 20px; display: inline-block; border-radius: 50%; margin-right: 5px;"></span>
+                                                    {{ color.name }}
+                                                </label>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                        
+                                        <!-- حفظ سایر پارامترهای URL موجود -->
+                                        {% if request.GET.q %}<input type="hidden" name="q" value="{{ request.GET.q }}">{% endif %}
+                                        {% if request.GET.orderby %}<input type="hidden" name="orderby" value="{{ request.GET.orderby }}">{% endif %}
+                                        {% if request.GET.price_min %}<input type="hidden" name="price_min" value="{{ request.GET.price_min }}">{% endif %}
+                                        {% if request.GET.price_max %}<input type="hidden" name="price_max" value="{{ request.GET.price_max }}">{% endif %}
+                                        
+                                        {% for category in selected_categories %}
+                                            <input type="hidden" name="category" value="{{ category }}">
+                                        {% endfor %}
+                                        
+                                        {% for size in selected_sizes %}
+                                            <input type="hidden" name="size" value="{{ size }}">
+                                        {% endfor %}
+                                        
+                                        {% for brand in selected_brands %}
+                                            <input type="hidden" name="brand" value="{{ brand }}">
+                                        {% endfor %}
+                                        
+                                        <div class="text-center mb-3 mt-2">
+                                            <input type="submit" class="btn main-color-green text-white rounded-pill px-5 py-2" value="اعمال فیلتر">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- فیلتر سایز (اگر در category هم نیاز دارید) -->
+                    <div class="item-box card shadow-box border-0 mb-4">
+                        <div class="card-body">
+                            <div class="title">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h6 class="font-14">سایزها</h6>
+                                    <a class="btn border-0" data-bs-toggle="collapse" href="#collapseSizes"
+                                       role="button" aria-expanded="false">
+                                        <i class="bi bi-chevron-down"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="desc collapse show" id="collapseSizes">
+                                <form action="" method="get">
+                                    <div class="d-flex flex-wrap">
+                                        {% for size in sizes %}
+                                        <div class="form-check me-3 mb-2">
+                                            <input type="checkbox" class="form-check-input" name="size" 
+                                                value="{{ forloop.counter }}" 
+                                                id="size-{{ size.id }}"
+                                                {% if forloop.counter|stringformat:"i" in selected_sizes %}checked{% endif %}>
+                                            <label class="form-check-label" for="size-{{ size.id }}">
+                                                {% if size.size %}
+                                                    {{ size.size }}
+                                                {% elif size.size_numrical %}
+                                                    {{ size.size_numrical }}
+                                                {% elif size.number_size %}
+                                                    {{ size.number_size }}
+                                                {% endif %}
+                                            </label>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    
+                                    <!-- حفظ سایر پارامترهای URL موجود -->
+                                    {% if request.GET.q %}<input type="hidden" name="q" value="{{ request.GET.q }}">{% endif %}
+                                    {% if request.GET.orderby %}<input type="hidden" name="orderby" value="{{ request.GET.orderby }}">{% endif %}
+                                    {% if request.GET.price_min %}<input type="hidden" name="price_min" value="{{ request.GET.price_min }}">{% endif %}
+                                    {% if request.GET.price_max %}<input type="hidden" name="price_max" value="{{ request.GET.price_max }}">{% endif %}
+                                    
+                                    {% for category in selected_categories %}
+                                        <input type="hidden" name="category" value="{{ category }}">
+                                    {% endfor %}
+                                    
+                                    {% for color in selected_colors %}
+                                        <input type="hidden" name="color" value="{{ color }}">
+                                    {% endfor %}
+                                    
+                                    {% for brand in selected_brands %}
+                                        <input type="hidden" name="brand" value="{{ brand }}">
+                                    {% endfor %}
+                                    
+                                    <div class="text-center mb-3 mt-2">
+                                        <input type="submit" class="btn main-color-green text-white rounded-pill px-5 py-2" value="اعمال فیلتر">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- فیلتر برند -->
+                    <div class="item-box card shadow-box border-0 mb-4">
+                        <div class="card-body">
+                            <div class="title">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h6 class="font-14">برندها</h6>
+                                    <a class="btn border-0" data-bs-toggle="collapse" href="#collapseBrands"
+                                       role="button" aria-expanded="false">
+                                        <i class="bi bi-chevron-down"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="desc collapse show" id="collapseBrands">
+                                <form action="" method="get">
+                                    {% for brand in brands %}
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap mb-3">
+                                        <div class="form-check">
+                                            <label for="brand-{{ brand.id }}" class="form-check-label">{{ brand.name }}</label>
+                                            <input type="checkbox" name="brand" value="{{ brand.en_name }}" 
+                                                   id="brand-{{ brand.id }}" class="form-check-input"
+                                                   {% if brand.en_name in selected_brands %}checked{% endif %}>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    
+                                    <!-- حفظ سایر پارامترهای URL موجود -->
+                                    {% if request.GET.q %}<input type="hidden" name="q" value="{{ request.GET.q }}">{% endif %}
+                                    {% if request.GET.orderby %}<input type="hidden" name="orderby" value="{{ request.GET.orderby }}">{% endif %}
+                                    {% if request.GET.price_min %}<input type="hidden" name="price_min" value="{{ request.GET.price_min }}">{% endif %}
+                                    {% if request.GET.price_max %}<input type="hidden" name="price_max" value="{{ request.GET.price_max }}">{% endif %}
+                                    
+                                    {% for category in selected_categories %}
+                                        <input type="hidden" name="category" value="{{ category }}">
+                                    {% endfor %}
+                                    
+                                    {% for color in selected_colors %}
+                                        <input type="hidden" name="color" value="{{ color }}">
+                                    {% endfor %}
+                                    
+                                    {% for size in selected_sizes %}
+                                        <input type="hidden" name="size" value="{{ size }}">
+                                    {% endfor %}
+                                    
+                                    <div class="text-center mb-3 mt-2">
+                                        <input type="submit" class="btn main-color-green text-white rounded-pill px-5 py-2" value="اعمال فیلتر">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- محصولات -->
+            <div class="col-lg-9">
+                <div class="filter-items shadow-box mb-4 bg-white p-4 rounded-4">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-md-4">
+                            <div class="filter-item">
+                                <div class="header-form">
+                                    <form action="" name="search" method="GET">
+                                        <input type="search" class="form-control input-search" placeholder="جستجوی محصول" name="q" value="{{ request.GET.q|default:'' }}">
+                                        <button type="submit" class="btn input-btn-search"><i class="bi bi-search"></i></button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="filter-item">
+                                <div class="filter-item-select">
+                                    <form action="">
+                                        <div>
+                                            <div class="row align-items-center">
+                                                <div class="col-5">
+                                                    <h6>نمایش بر اساس:</h6>
+                                                </div>
+                                                <div class="col-7">
+                                                    <select name="orderby" class="form-control" onchange="this.form.submit()" aria-label="مرتب سازی براساس">
+                                                        <option value="date" {% if request.GET.orderby == 'date' %}selected{% endif %}>تاریخ</option>
+                                                        <option value="higher-price" {% if request.GET.orderby == 'higher-price' %}selected{% endif %}>بیشترین قیمت</option>
+                                                        <option value="lower-price" {% if request.GET.orderby == 'lower-price' %}selected{% endif %}>کمترین قیمت</option>
+                                                        <option value="is_active" {% if request.GET.orderby == 'is_active' %}selected{% endif %}>موجودیت ها</option>
+                                                        <option value="is_active_discount" {% if request.GET.orderby == 'is_active_discount' %}selected{% endif %}>تخفیف ها</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="filter-label">
+                                <p class="text-muted text-end mb-0"> نمایش {{ current_page.start_index }} تا {{ current_page.end_index }} از {{ current_page.paginator.count }} کالا</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row g-4">
+                    {% for package in current_page %}
+                    <div class="col-lg-4 col-sm-6">
+                        <div class="product-box pro-shadow">
+                            <a href="/product/{{package.product.id}}/{{package.product.name}}">
+                                <div class="product-box-image">
+                                    <img src="{{ package.product.image.url }}" alt="{{ package.product.name }}">
+                                </div>
+                                <div class="product-box-title">
+                                    <h5 class="text-overflow-2">
+                                        {{ package.product.name }}
+                                    </h5>
+                                </div>
+                                <div class="product-box-price">
+                                    <div class="product-box-price-discount">
+                                        {% if package.discount %}
+                                        <span class="d-block badge main-color-one-bg text-white font-14 rounded-pill">{{ package.discount }}%</span>
+                                        <del id="product-price">{{ package.price | intcomma }}</del>
+                                        {% endif %}
+                                    </div>
+                                    <div class="product-box-price-price">
+                                        <h5 class="title-font main-color-green-color h2 mb-0" id="product-price">{{ package.final_price | intcomma }}</h5>
+                                        <p class="mb-0 text-muted">تومان</p>
+                                    </div>
+                                </div>
+                                <div class="product-box-hover">
+                                    <nav class="navbar navbar-expand justify-content-center">
+                                        <ul class="navbar-nav align-items-center">
+                                            <li class="nav-item"><a href="/product/{{package.product.id}}/{{package.product.name}}" class="nav-item product-box-hover-item me-3">مشاهده محصول</a></li>
+                                            <li class="nav-item"><a href="/product/{{package.product.id}}/{{package.product.name}}" class="nav-item product-box-hover-item product-box-hover-item-btn me-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="افزودن به سبد خرید"><i class="bi bi-basket"></i></a></li>
+                                            <li class="nav-item"><a href="#" class="nav-item product-box-hover-item product-box-hover-item-btn" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="افزودن به علاقه ها"><i class="bi bi-heart"></i></a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    </div>
+
+                <div class="my-paginate mt-5">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            {% if current_page.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link rounded-3" href="?page={{ current_page.previous_page_number }}" aria-label="Previous">
+                                        <i class="bi bi-chevron-right"></i>
+                                    </a>
+                                </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                    <a class="page-link rounded-3" href="#" aria-label="Previous">
+                                        <i class="bi bi-chevron-right"></i>
+                                    </a>
+                            </li>
+                            {% endif %}
+                
+                            {% for page_num in current_page.paginator.page_range %}
+                                {% if current_page.number == page_num %}
+                                    <li class="page-item active"><a class="page-link rounded-3" href="#">{{ page_num }}</a></li>
+                                {% else %}
+                                    <li class="page-item"><a class="page-link rounded-3" href="?page={{ page_num }}">{{ page_num }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                
+                            {% if current_page.has_next %}
+                            <li class="page-item">
+                                    <a class="page-link rounded-3" href="?page={{ current_page.next_page_number }}" aria-label="Next">
+                                        <i class="bi bi-chevron-left"></i>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <a class="page-link rounded-3" href="#" aria-label="Next">
+                                        <i class="bi bi-chevron-left"></i>
+                                    </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end main content page -->
+
+{% endblock main %}
+
+<script>
+    $(document).ready(function () {
+        ////slider range
+        $(".catRange").slider({
+            id: "slider5b",
+            min: 0,
+            max: 10000000,
+            range: true,
+            step: 100000,
+            value: [0, 10000000],
+            rtl: 'false',
+            formatter: function formatter(val) {
+                if (Array.isArray(val)) {
+                    return val[0] + " تومان " + "  تا   " + val[1] + " تومان ";
+                } else {
+                    return val;
+                }
+            },
+        });
+    });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // تابع برای اطمینان از اینکه حداقل قیمت کمتر از حداکثر قیمت باشد
+    window.updatePriceRangeMinMax = function(device) {
+        const priceRangeMin = document.getElementById('priceRangeMin' + device);
+        const priceRangeMax = document.getElementById('priceRangeMax' + device);
+        const priceMin = document.getElementById('priceMin' + device);
+        const priceMax = document.getElementById('priceMax' + device);
+        
+        if (parseInt(priceRangeMin.value) > parseInt(priceRangeMax.value)) {
+            priceRangeMax.value = priceRangeMin.value;
+            priceMax.value = priceMin.value;
+        }
+        
+        if (parseInt(priceMin.value) > parseInt(priceMax.value)) {
+            priceMax.value = priceMin.value;
+            priceRangeMax.value = priceRangeMin.value;
+        }
+    };
+    
+    // تنظیم اولیه
+    updatePriceRangeMinMax('Desktop');
+    updatePriceRangeMinMax('Mobile');
+});
+</script>

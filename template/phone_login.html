@@ -1,0 +1,145 @@
+{% load static %}
+
+<!doctype html>
+
+<html class="no-js" lang="Fa_IR" dir="rtl">
+
+<head>
+    <meta charset="utf-8">
+    <title>ورود با پیامک</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16x16.png">
+
+    <!-- Place favicon.ico in the root directory -->
+
+    <link rel="stylesheet" href="{% static 'assets/css/normalize.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/font/bootstrap-icon/bootstrap-icons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/js/plugin/swiper/swiper-bundle.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/js/plugin/countdown/countdown.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/js/plugin/rasta-contact/style.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/js/plugin/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/responsive.css' %}">
+
+    <meta name="theme-color" content="#f4f5f9">
+</head>
+
+<body style="background: url('assets/img/bg-auth.jpg');background-repeat: no-repeat;background-size: cover">
+
+
+<!-- start content -->
+
+<div class="content vh-100">
+    <div class="container-fluid h-100">
+        <div class="auth h-100 d-flex align-items-center">
+            <div class="container-fluid">
+                <div class="auth-items">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-4">
+
+                            <div class="auth-logo text-center">
+                                <a href="">
+                                    <img src="{% static 'assets/img/logo.png' %}" width="200" alt="">
+                                </a>
+                            </div>
+                            <div class="auth-form shadow-xl rounded-3 mt-5 bg-white">
+                                <div class="auth-form-title mb-4 slider-title-desc-center">
+                                    <h2 class="text-center h4 text-muted title-font">ورود با پیامک</h2>
+                                </div>
+                                
+                                <!-- نمایش خطا -->
+                                {% if error %}
+                                <div class="alert alert-danger">
+                                    {{ error }}
+                                </div>
+                                {% endif %}
+                                
+                                <form action="/phone-login/" method="post">
+                                    {% csrf_token %}
+                                    <div class="comment-item mb-3">
+                                        <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="شماره تلفن همراه" pattern="09[0-9]{9}" maxlength="11" required>
+                                        <label for="phone_number" class="form-label label-float">شماره تلفن همراه خود را وارد کنید</label>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-success w-100 mt-4 btn-login">ارسال کد تأیید</button>
+                                    </div>
+                                </form>
+                                
+                                <div class="text-center mt-3">
+                                    <a href="/login/" class="text-decoration-none">بازگشت به صفحه ورود</a>
+                                </div>
+                            </div>
+
+                            <p class="loginTermsDesc">با ورود و یا ثبت نام در شاهان شما <a class="underlined main-color-one-color fw-bold" href="#" data-bs-toggle="modal" data-bs-target="#termsModal">شرایط و قوانین</a> استفاده از سرویس‌های سایت شاهان و <a class="underlined main-color-one-color fw-bold" href="/privacy-polices/">قوانین حریم خصوصی</a> آن را می‌پذیرید.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- end content -->
+
+<!-- Terms and Conditions Modal -->
+<div class="modal" id="termsModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">شرایط و قوانین</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p>قوانین</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'assets/js/vendor/modernizr-3.11.2.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/bootstrap.bundle-5.3.2.min.js' %}"></script>
+<script src="{% static 'assets/js/plugin/swiper/swiper-bundle.min.js' %}"></script>
+<script src="{% static 'assets/js/plugin/countdown/countdown.js' %}"></script>
+<script src="{% static 'assets/js/plugin/vanilla-tilt/vanilla-tilt.min.js' %}"></script>
+<script src="{% static 'assets/js/plugin/rasta-contact/script.js' %}"></script>
+<script src="{% static 'assets/js/plugin/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js' %}"></script>
+<script src="{% static 'assets/js/plugins.js' %}"></script>
+<script src="{% static 'assets/js/main.js' %}"></script>
+
+<script>
+  // اعتبارسنجی شماره تلفن همراه
+  document.addEventListener('DOMContentLoaded', function() {
+    const phoneInput = document.getElementById('phone_number');
+    
+    phoneInput.addEventListener('input', function() {
+      this.value = this.value.replace(/[^0-9]/g, '');
+      
+      if (this.value.length > 0 && this.value[0] !== '0') {
+        this.value = '0' + this.value;
+      }
+      
+      if (this.value.length > 11) {
+        this.value = this.value.slice(0, 11);
+      }
+    });
+  });
+</script>
+
+</body>
+
+</html> 

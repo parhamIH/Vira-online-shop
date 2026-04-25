@@ -1,0 +1,364 @@
+{% extends 'shared/_Main.html' %}
+{% load static %}
+
+جزئیات تیکت پشتیبانی
+
+{% block title %}پشتیبانی | فروشگاه fatima accessories{% endblock %}
+
+{% block main %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">خانه</a></li>
+                    {% if user.is_staff %}
+                    <li class="breadcrumb-item"><a href="{% url 'admin_tickets' %}">پنل مدیریت تیکت‌ها</a></li>
+                    {% else %}
+                    <li class="breadcrumb-item"><a href="{% url 'support' %}">پشتیبانی</a></li>
+                    {% endif %}
+                    <li class="breadcrumb-item active" aria-current="page">تیکت شماره {{ ticket.id }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <!-- پیام‌های موفقیت و خطا -->
+            {% if success_message %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ success_message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+            
+            {% if error_message %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ error_message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+        
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">{{ ticket.subject }}</h5>
+                    <div>
+                        {% if user.is_staff %}
+                        <!-- کنترل‌های مدیریتی برای ادمین -->
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                تغییر وضعیت
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <form method="post" action="{% url 'change_ticket_status' ticket.id 'pending' %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="dropdown-item {% if ticket.status == 'pending' %}active{% endif %}">
+                                            در انتظار بررسی
+                                        </button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form method="post" action="{% url 'change_ticket_status' ticket.id 'in_progress' %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="dropdown-item {% if ticket.status == 'in_progress' %}active{% endif %}">
+                                            در حال بررسی
+                                        </button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form method="post" action="{% url 'change_ticket_status' ticket.id 'resolved' %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="dropdown-item {% if ticket.status == 'resolved' %}active{% endif %}">
+                                            حل شده
+                                        </button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form method="post" action="{% url 'change_ticket_status' ticket.id 'closed' %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="dropdown-item {% if ticket.status == 'closed' %}active{% endif %}">
+                                            بسته شده
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                        {% endif %}
+                        <span class="badge ms-2
+                            {% if ticket.status == 'pending' %}bg-warning
+                            {% elif ticket.status == 'in_progress' %}bg-info
+                            {% elif ticket.status == 'resolved' %}bg-success
+                            {% elif ticket.status == 'closed' %}bg-secondary
+                            {% endif %}">
+                            {% if ticket.status == 'pending' %}در انتظار بررسی
+                            {% elif ticket.status == 'in_progress' %}در حال بررسی
+                            {% elif ticket.status == 'resolved' %}حل شده
+                            {% elif ticket.status == 'closed' %}بسته شده
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <strong>کاربر:</strong> {{ ticket.user.username }}
+                        </div>
+                        <div class="col-md-4">
+                            <strong>دپارتمان:</strong>
+                            {% if ticket.department == 'general' %}عمومی
+                            {% elif ticket.department == 'technical' %}فنی
+                            {% elif ticket.department == 'billing' %}مالی
+                            {% elif ticket.department == 'sales' %}فروش
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            <strong>اولویت:</strong>
+                            {% if ticket.priority == 'low' %}
+                                <span class="badge bg-success">کم</span>
+                            {% elif ticket.priority == 'medium' %}
+                                <span class="badge bg-info">متوسط</span>
+                            {% elif ticket.priority == 'high' %}
+                                <span class="badge bg-warning">زیاد</span>
+                            {% elif ticket.priority == 'urgent' %}
+                                <span class="badge bg-danger">فوری</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>تاریخ ایجاد:</strong> {{ ticket.created_at|date:"Y/m/d H:i" }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>آخرین بروزرسانی:</strong> {{ ticket.updated_at|date:"Y/m/d H:i" }}
+                        </div>
+                    </div>
+                    
+                    <!-- گفتگوها -->
+                    <div class="chat-container mt-4">
+                        <!-- پیام اصلی تیکت -->
+                        <div class="message user-message">
+                            <div class="message-header">
+                                <strong>{{ ticket.user.get_full_name|default:ticket.user.username }}</strong>
+                                <small class="text-muted">{{ ticket.created_at|date:"Y/m/d H:i" }}</small>
+                            </div>
+                            <div class="message-body card">
+                                <div class="card-body">
+                                    {{ ticket.message|linebreaks }}
+                                    
+                                    {% if ticket.attachment %}
+                                    <div class="mt-3">
+                                        <strong>فایل پیوست:</strong>
+                                        <a href="{{ ticket.attachment.url }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                                            <i class="bi bi-download"></i> دانلود فایل
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- پاسخ‌ها -->
+                        {% if replies %}
+                            {% for reply in replies %}
+                            <div class="message {% if reply.is_staff_reply %}staff-message{% else %}user-message{% endif %}">
+                                <div class="message-header">
+                                    <strong>
+                                        {% if reply.is_staff_reply %}
+                                            <i class="bi bi-shield-check"></i> 
+                                            {{ reply.user.get_full_name|default:reply.user.username }} (کارشناس پشتیبانی)
+                                        {% else %}
+                                            {{ reply.user.get_full_name|default:reply.user.username }}
+                                        {% endif %}
+                                    </strong>
+                                    <small class="text-muted">{{ reply.created_at|date:"Y/m/d H:i" }}</small>
+                                </div>
+                                <div class="message-body card {% if reply.is_staff_reply %}bg-light{% endif %}">
+                                    <div class="card-body">
+                                        {{ reply.message|linebreaks }}
+                                        
+                                        {% if reply.attachment %}
+                                        <div class="mt-3">
+                                            <strong>فایل پیوست:</strong>
+                                            <a href="{{ reply.attachment.url }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                                                <i class="bi bi-download"></i> دانلود فایل
+                                            </a>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="alert alert-info mt-3">
+                                هنوز پاسخی برای این تیکت ثبت نشده است.
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- فرم ارسال پاسخ جدید -->
+                    {% if ticket.status != 'closed' %}
+                    <div class="reply-form mt-4">
+                        <h5 class="mb-3">ارسال پاسخ</h5>
+                        <form method="post" action="{% url 'add_reply' ticket.id %}" enctype="multipart/form-data" id="replyForm">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="message" class="form-label">پیام</label>
+                                <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="attachment" class="form-label">فایل پیوست (اختیاری)</label>
+                                <input class="form-control" type="file" id="attachment" name="attachment">
+                                <div class="form-text">فرمت‌های مجاز: PDF, JPG, PNG (حداکثر 5MB)</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">ارسال پاسخ</button>
+                            
+                            {% if user.is_staff and ticket.status == 'pending' %}
+                            <!-- دکمه پاسخ و تغییر وضعیت برای ادمین -->
+                            <button type="submit" name="change_status" value="in_progress" class="btn btn-info">
+                                پاسخ و تغییر وضعیت به "در حال بررسی"
+                            </button>
+                            {% endif %}
+                            
+                            {% if user.is_staff and ticket.status == 'in_progress' %}
+                            <!-- دکمه پاسخ و تغییر وضعیت به حل شده برای ادمین -->
+                            <button type="submit" name="change_status" value="resolved" class="btn btn-success">
+                                پاسخ و تغییر وضعیت به "حل شده"
+                            </button>
+                            {% endif %}
+                        </form>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-warning mt-4">
+                        این تیکت بسته شده است و امکان ارسال پاسخ وجود ندارد.
+                        {% if user.is_staff %}
+                        <form method="post" action="{% url 'change_ticket_status' ticket.id 'in_progress' %}" class="d-inline ms-2">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-info">بازگشایی تیکت</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    
+                    <!-- دکمه‌های کنترلی -->
+                    <div class="mt-4">
+                        {% if user.is_staff %}
+                            <a href="{% url 'admin_tickets' %}" class="btn btn-secondary">بازگشت به لیست تیکت‌ها</a>
+                        {% else %}
+                            <a href="{% url 'support' %}" class="btn btn-secondary">بازگشت به لیست تیکت‌ها</a>
+                        {% endif %}
+                        
+                        {% if ticket.status != 'closed' and not user.is_staff %}
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#closeTicketModal">
+                            بستن تیکت
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- مودال بستن تیکت -->
+<div class="modal fade" id="closeTicketModal" tabindex="-1" aria-labelledby="closeTicketModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="closeTicketModalLabel">بستن تیکت</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                آیا مطمئن هستید که می‌خواهید این تیکت را ببندید؟ با بستن تیکت، امکان ارسال پاسخ جدید وجود نخواهد داشت.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                <form method="post" action="{% url 'close_ticket' ticket.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">بستن تیکت</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main %}
+
+<style>
+    .chat-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .message {
+        max-width: 80%;
+    }
+    
+    .user-message {
+        align-self: flex-start;
+    }
+    
+    .staff-message {
+        align-self: flex-end;
+    }
+    
+    .message-header {
+        margin-bottom: 5px;
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .message-body {
+        border-radius: 10px;
+    }
+    
+    .staff-message .message-body {
+        background-color: #f8f9fa;
+        border-color: #6c757d;
+    }
+</style>
+
+<script>
+$(document).ready(function() {
+    $('#replyForm').submit(function(e) {
+        e.preventDefault();
+        
+        var formData = new FormData(this);
+        
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                // نمایش پیام موفقیت
+                $('<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+                  response.message +
+                  '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                  '</div>').insertBefore('#replyForm');
+                
+                // پاک کردن فرم
+                $('#replyForm')[0].reset();
+                
+                // بروزرسانی صفحه بعد از چند ثانیه
+                setTimeout(function() {
+                    location.reload();
+                }, 2000);
+            },
+            error: function(xhr) {
+                var errorMsg = 'خطایی رخ داده است. لطفا دوباره تلاش کنید.';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMsg = xhr.responseJSON.message;
+                }
+                
+                $('<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                  errorMsg +
+                  '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                  '</div>').insertBefore('#replyForm');
+            }
+        });
+    });
+});
+</script>

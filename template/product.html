@@ -1,0 +1,1130 @@
+{% extends "shared/_Main.html" %}
+
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ page_title|default:"fatima accessories فروشگاه" }}{% endblock %}
+
+{% block main %}
+<!-- start breadcroumb -->
+<style>
+    
+        /* انیمیشن برای شمارنده‌های به‌روز شده */
+    .updated-count {
+        animation: counterPulse 0.5s ease-in-out;
+    }
+
+    .counter.updated {
+        animation: counterHighlight 0.5s ease-in-out;
+    }
+
+    @keyframes counterPulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.2); color: #28a745; }
+        100% { transform: scale(1); }
+    }
+
+    @keyframes counterHighlight {
+        0% { background-color: transparent; }
+        50% { background-color: rgba(40, 167, 69, 0.2); }
+        100% { background-color: transparent; }
+    }
+
+    /* استایل برای حالت در حال به‌روزرسانی */
+    .counter.updating {
+        opacity: 0.7;
+        position: relative;
+    }
+
+    .counter.updating::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.5) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8z" fill="%23000"/></svg>') no-repeat center;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    /* استایل کلی شمارنده */
+    .counter {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px;
+        border-radius: 5px;
+    }
+    
+    /* استایل وقتی محصول در سبد خرید است */
+    .counter.in-cart {
+        border: 2px solid #28a745; /* سبز خوش‌رنگ */
+        background-color: #f4fff4; /* پس‌زمینه روشن */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* سایه ملایم */
+        position: relative;
+    }
+    
+    .counter.in-cart::before {
+        content: "در سبد خرید";
+        color: #28a745;
+        font-weight: bold;
+        font-size: 12px;
+        display: block;
+        margin-bottom: 5px;
+    }
+    
+    /* استایل دکمه‌ها */
+    .counter button {
+        background-color: rgb(107, 72, 117);
+        color: white;
+        border: none;
+        padding: 5px 12px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 3px;
+        transition: background-color 0.3s;
+    }
+    
+    .counter button:hover {
+        background-color: rgb(87, 52, 97); /* رنگ تیره‌تر هنگام هاور */
+    }
+    
+    /* غیرفعال کردن دکمه‌ها */
+    .counter button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+    
+    /* استایل ورودی تعداد */
+    .counter input {
+        width: 50px;
+        text-align: center;
+        border: 1px solid #ccc;
+        padding: 5px;
+        border-radius: 3px;
+        font-size: 14px;
+    }
+    
+    /* استایل برای حالت در حال به‌روزرسانی */
+    .counter.updating {
+        opacity: 0.7;
+        pointer-events: none;
+    }
+
+    .counter.updating .counter-input {
+        background-color: #f5f5f5;
+    }
+
+    .cart-item-updated {
+        animation: highlight 1s ease-out;
+    }
+
+    @keyframes highlight {
+        0% { background-color: rgba(255, 255, 0, 0.3); }
+        100% { background-color: transparent; }
+    }
+    /* افکت بصری برای شمارنده سبد خرید */
+    #cartCounter.updated {
+        animation: pulse 0.5s ease-in-out;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.3); color: #28a745; }
+        100% { transform: scale(1); }
+    }
+    #cartCounter.updated {
+        animation: pulse 0.5s ease-in-out;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.3); color: #28a745; }
+        100% { transform: scale(1); }
+    }
+    
+    /* افکت حذف آیتم از سبد خرید */
+    .cart-item.removing {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+    
+    .cart-item.removed {
+        animation: fadeOut 0.5s ease-out forwards;
+    }
+    
+    @keyframes fadeOut {
+        from { opacity: 0.5; transform: translateX(0); }
+        to { opacity: 0; transform: translateX(-20px); }
+    }
+
+    /* استایل پیام‌ها */
+    .cart-message {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 12px 20px;
+        border-radius: 4px;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+        z-index: 9999;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: opacity 0.3s, transform 0.3s;
+    }
+    
+    .cart-message.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .cart-message-success {
+        background-color: #28a745;
+        color: white;
+    }
+    
+    .cart-message-error {
+        background-color: #dc3545;
+        color: white;
+    }
+    
+    /* استایل شمارنده سبد خرید */
+    #cartCounter, .cart-counter, .cart-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 20px;
+        height: 20px;
+        background-color: #ffffff;
+        color: rgb(0, 0, 0);
+        border-radius: 50%;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 0 5px;
+        transition: transform 0.3s, opacity 0.3s;
+    }
+    
+    #cartCounter.increased, .cart-counter.increased, .cart-count.increased {
+        animation: cartIncreased 0.5s ease;
+    }
+    
+    #cartCounter.decreased, .cart-counter.decreased, .cart-count.decreased {
+        animation: cartDecreased 0.5s ease;
+    }
+    
+    @keyframes cartIncreased {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.4); background-color: #28a745; }
+        100% { transform: scale(1); }
+    }
+    
+    @keyframes cartDecreased {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.4); background-color: #dc3545; }
+        100% { transform: scale(1); }
+    }
+    
+    /* استایل آیتم در حال حذف */
+    .cart-item.removing, tr.removing {
+        opacity: 0.6;
+        pointer-events: none;
+    }
+    
+    .cart-item.removed, tr.removed {
+        opacity: 0;
+        height: 0;
+        overflow: hidden;
+        transition: opacity 0.5s, height 0.5s;
+    }
+    
+    /* استایل ردیف در حال حذف */
+    tr.deleting, .cart-item.deleting {
+        opacity: 0.5;
+        transition: opacity 0.3s;
+    }
+    /* استایل برای نمایش وضعیت بارگذاری */
+    .counter.updating {
+        opacity: 0.7;
+        pointer-events: none;
+    }
+
+    /* انیمیشن برای به‌روزرسانی شمارنده سبد خرید */
+    .counter-updated {
+        animation: pulse 1s ease-in-out;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.2); color: #ff6b6b; }
+        100% { transform: scale(1); }
+    }
+
+    /* استایل‌های مشخصات محصول */
+    .specifications-container {
+        margin-top: 2rem;
+    }
+
+    .main-specifications {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 10px;
+        padding: 1.5rem;
+        border: 1px solid #dee2e6;
+    }
+
+    .specification-item {
+        background: white;
+        transition: all 0.3s ease;
+        border: 1px solid #e9ecef !important;
+    }
+
+    .specification-item:hover {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+    }
+
+    .spec-name {
+        color: #495057;
+        font-size: 0.95rem;
+    }
+
+    .spec-value {
+        font-weight: 600;
+        color: #212529;
+    }
+
+    .specification-group {
+        margin-bottom: 2rem;
+    }
+
+    .specification-group .box_list {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .specification-group .title {
+        background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px 8px 0 0;
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .specification-group .title svg {
+        margin-left: 0.5rem;
+    }
+
+    .empty-specifications {
+        padding: 3rem 1rem;
+    }
+
+    .empty-specifications i {
+        opacity: 0.5;
+    }
+
+    /* استایل برای badge های بله/خیر */
+    .badge.bg-success {
+        background-color: #28a745 !important;
+        color: white;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    .badge.bg-danger {
+        background-color: #dc3545 !important;
+        color: white;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    /* استایل برای آیکون مشخصه اصلی */
+    .bi-star-fill.text-warning {
+        color: #ffc107 !important;
+        font-size: 0.8rem;
+    }
+</style>
+
+<div class="bread-crumb py-4">
+    <div class="container-fluid">
+        <nav aria-label="breadcrumb" class="my-lg-0 my-2">
+            <ol class="breadcrumb mb-0">
+                {% for category  in categories  %}
+                <li class="breadcrumb-item"><a href="/" class="font-14 text-muted-two">خانه</a></li>
+                <li class="breadcrumb-item"><a href="/categories/{{category.base_catgory.en_name}}" class="font-14 text-muted-two">{{category.base_catgory}}</a></li>
+                {% if category.parent %}
+                <li class="breadcrumb-item"><a href="/categories/{{category.base_catgory.en_name}}/{{category.parent}}" class="font-14 text-muted-two">{{category.parent}}</a></li>
+                {% endif %}
+                <li class="breadcrumb-item active main-color-one-color font-14 fw-bold" aria-current="page">{{category.name}}
+                </li>
+                {% endfor %}
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<!-- end breadcroumb -->
+
+<!-- start main content -->
+
+<!-- start product meta -->
+
+<div class="product-meta py-20">
+    
+    <div class="container-fluid position-relative">
+        <div class="content-box">
+            <div class="container-fluid">
+                <div class="row gy-3">
+                    <div class="col-lg-4">
+                        <div class="pro_gallery">
+                            <div class="icon-product-box">
+                                <div class="icon-product-box-item" data-bs-toggle="modal" data-bs-target="#shareModal"
+                                     data-bs-placement="right" title="اشتراک گذاری">
+                                    <i class="bi bi-share"></i>
+                                </div>
+                                
+                                <!-- دکمه افزودن به علاقه‌مندی‌ها -->
+                                {% if user.is_authenticated %}
+                                    <div id="fav-add-{{ product.id }}" class="icon-product-box-item" onclick="addToFavorites({{ product.id }})" 
+                                         data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="افزودن به علاقه مندی"
+                                         {% if is_favorite %} style="display:none;" {% endif %}>
+                                        <i class="bi bi-heart"></i>
+                                    </div>
+                                    
+                                    <!-- دکمه حذف از علاقه‌مندی‌ها -->
+                                    <div id="fav-remove-{{ product.id }}" class="icon-product-box-item" onclick="removeFromFavorites({{ product.id }})" 
+                                         data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="حذف از علاقه مندی"
+                                         {% if not is_favorite %} style="display:none;" {% endif %}>
+                                        <i class="bi bi-heart-fill text-danger"></i>
+                                    </div>
+                                {% else %}
+                                    <!-- اگر کاربر لاگین نیست، هدایت به صفحه ورود -->
+                                    <div class="icon-product-box-item" onclick="window.location.href='/login/?next={{ request.path }}'"
+                                         data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="افزودن به علاقه مندی">
+                                        <i class="bi bi-heart"></i>
+                                    </div>
+                                {% endif %}
+                    
+                            </div>
+                            <div class="pro-gallery-parent">
+                                <div class="swiper product-gallery">
+                                    <div class="swiper-wrapper" title="برای بزرگنمایی تصویر دابل کلیک کنید">
+                                        <div class="swiper-slide">
+                                            <div class="swiper-zoom-container">
+                                                <img class="img-fluid" src="{{product.image.url}}"/>
+                                            </div>
+                                        </div>
+                                        {% for image in gallery %}
+
+                                        <div class="swiper-slide">
+                                            <div class="swiper-zoom-container">
+                                                <img class="img-fluid" src="{{image.image.url}}"/>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="swiper-button-next d-none d-lg-flex"></div>
+                                    <div class="swiper-button-prev d-none d-lg-flex"></div>
+                                    <div class="swiper-pagination d-none d-lg-block"></div>
+                                </div>
+                            </div>
+                            <div thumbsSlider="" class="swiper product-gallery-thumb">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide">
+                                        <img class="img-fluid" src="{{product.image.url}}"/>
+                                    </div>
+                                    {% for image in gallery %}
+                                    <div class="swiper-slide">
+                                        <img class="img-fluid" src="{{image.image.url}}"/>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="product-mete-title bottom-border">
+                            <h3 class="title-font h4">{{product.name}}</h3>
+                        </div>
+                        <div class="product-meta-overal my-3 bottom-border">
+                            <div class="row gy-3 align-items-center">
+                                <div class="col-md-4">
+                                    {% if product.is_active %}
+                                    <div class="label-site rounded-pill label-success">
+                                        <i class="bi bi-check-circle me-1"></i>
+                                        موجود در انبار
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-center">
+                                        <span class="text-muted-two me-2">دسته بندی</span>
+                                        <div class="label-site rounded-pill">
+                                            {% for category in categories  %} 
+                                            {% if category.parent %}
+                                           {{category.parent}}---{% endif %}{{category.name}}
+                                           {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% comment %} <div class="col-md-4">
+                                    <span class="text-muted-two me-2">کد محصول</span>
+                                    <span>sku-10006</span>
+                                </div>
+                                {% endcomment %}
+                            </div>
+                        </div>
+                        <div class="product-meta-feature bottom-border">
+                            <div class="row gy-3">
+                                <div class="col-lg-8">
+                                    <div class="product-meta-feature-items">
+                                        <h5 class="title font-16 mb-2">ویژگی های کالا</h5>
+                                        <ul class="navbar-nav">
+                                            <li class="nav item"><span>نوع اتصال:</span><strong>با سیم</strong></li>
+                                            <li class="nav item"><span>رابط ها:</span><strong>3.5 میلیمتری</strong></li>
+                                            <li class="nav item"><span>مقدار رم :</span><strong>8 گیگابایت</strong></li>
+                                            <li class="nav item"><span>نوع گوشی:</span><strong>دوگوشی</strong></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="product-meta-rating text-lg-end text-start">
+                                        <div class="label-site label-waring rounded-pill">
+                                            <span class="product-meta-rating-comment-count me-1">0</span>
+                                            <span class="product-meta-rating-comment-count-text me-3">نظر</span>
+                                            <span class="product-meta-rating-rating-count me-1">0</span>
+                                            <span class="product-meta-rating-rating-count-text"><i
+                                                    class="bi bi-star-fill"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="product-meta-rating mt-2 text-lg-end text-start">
+                                        <div class="label-site label-success rounded-pill">
+                                            آماده ارسال
+                                            <i class="bi bi-truck ms-2"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            
+                        
+                        <form method="post" name="package" id="add-to-cart-form">
+                            {% csrf_token %}
+                            
+                            <!-- انتخاب رنگ کالا -->
+                            <div class="product-meta-color bottom-border my-4">
+                                <h5 class="font-16">انتخاب رنگ کالا</h5>
+                                <div class="product-meta-color-items d-flex flex-wrap gap-2">
+                                    {% for color in unique_colors %}
+                                    
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input color-option" 
+                                             name="color-options" id="option{{color.id}}" 
+                                            value="{{color.id}}" onclick="filterSizes('{{color.id}}')"
+                                            {% if color.id == selected_color_id or forloop.first %} checked {% endif %}>
+
+                                        <label class="btn btn-outline-secondary" for="option{{color.id}}">
+                                            <span style="background-color: {{color.hex_code}}; width: 15px; height: 15px; display: inline-block; border-radius: 50%;"></span> 
+                                            {{color.name}}
+                                        </label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        
+                            <!-- فیلد مخفی برای package-id -->
+                            <input type="hidden" name="package-id" id="package-id" value="">
+                        
+                            <!-- انتخاب سایز کالا -->
+                            <h5 class="font-16">انتخاب سایز کالا</h5>
+                            <div class="product-meta-color-items d-flex flex-wrap gap-2" id="size-options-container">
+                                {% for package in packages %}
+                                <div class="size-option size-color-{{package.color.id}}" style="display: none;">
+                                    <input type="radio" class="form-check-input" 
+                                        name="size-options" id="size-option{{package.id}}" 
+                                        value="{{package.id}}" data-quantity="{{package.quantity}}"
+                                        onclick="setPackageId('{{package.id}}')">
+                                    <label class="btn btn-outline-secondary" for="size-option{{package.id}}">
+                                        {% if package.size.size %}
+                                            {{package.size.size}}
+                                        {% elif package.size.size_numrical %}
+                                            {{package.size.size_numrical}}
+                                        {% elif package.size.number_size %}
+                                            {{package.size.number_size}}
+                                        {% endif %}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="col-sm-6 text-center mt-4">
+                                <div class="counter">
+                                    <input type="hidden" class="package-id" value="{{ item.package.id|default:'' }}">
+                                    <button type="button" 
+                                            class="decrease-btn" 
+                                            data-max-quantity="{{ item.package.quantity|default:'1' }}">
+                                        -
+                                    </button>
+                                    <input type="text" 
+                                           class="counter-input" 
+                                           data-package-id="{{ item.package.id|default:'' }}" 
+                                           value="{{ item.count|default:'1' }}" 
+                                           readonly>
+                                    <button type="button" 
+                                            class="increase-btn" 
+                                            data-max-quantity="{{ item.package.quantity|default:'' }}">
+                                        +
+                                    </button>
+                                </div>
+                                
+                                              <!-- دکمه افزودن به سبد خرید -->
+                            </div>
+                            <div class="product-meta-add-to-cart mt-4">
+                                <button type="submit" id="submit-button" 
+                                        class="btn product-meta-add-to-cart-btn main-color-one-bg rounded-pill ">
+                                    افزودن به سبد خرید
+                                </button>
+                            </div>
+                        </form>
+
+                        <style>
+                            .form-check-input:checked + .btn {
+                                background-color: #007bff;
+                                color: white;
+                            }
+                        </style>
+
+
+                             <div class="product-meta-action mt-4 bottom-border">
+                            <div class="row align-items-center gy-3">
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-center justify-content-sm-start justify-content-center">
+                                        {% for package in packages  %}
+                                        {% if forloop.first %}
+                                        {% if package.discount %}
+                                        <p class="mb-0 old-price font-22 text-muted-two text-decoration-line-through me-3"  >
+                                            {{package.price | intcomma }}</p>
+                                        {% endif %}
+                                        <h6 class="font-30 title-font new-price main-color-one-color"  >
+                                            <span class="font-30 title-font new-price main-color-one-color" id="current-product-price">
+                                                {{package.final_price | intcomma }}
+                                            </span>
+                                            تومان</h6> 
+                                    </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="Dottedsquare-product d-lg-flex d-none"></div>
+    </div>
+</div>
+
+<!-- end product meta -->
+
+<!-- start product desc -->
+
+<div class="product-desc py-20">
+    <div class="container-fluid">
+        <div class="product-desc-tab">
+            <ul class="nav" id="productTab" role="tablist">
+                <li class="nav-item">
+                    <button class="active waves-effect waves-light" id="productDescLess"
+                            data-bs-toggle="tab" data-bs-target="#productDescLess-pane" role="button"
+                            type="button" aria-selected="true">
+                        توضیحات کالا
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class=" waves-effect waves-light" id="productTable"
+                            data-bs-toggle="tab" data-bs-target="#productTable-pane" role="button"
+                            type="button" aria-selected="false">
+                        توضیحات تکمیلی
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class=" waves-effect waves-light" id="productComment"
+                            data-bs-toggle="tab" data-bs-target="#productComment-pane" role="button"
+                            type="button" aria-selected="false">
+                        نظرات
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div class="content-box">
+            <div class="container-fluid">
+                <div class="product-descs" id="prodesc">
+                    <div class="product-desc">
+                        
+                        <div class="product-desc-tab-content">
+                            <div class="tab-content" id="productTabContent">
+                                <div class="tab-pane fade show active product-desc-less-contents"
+                                     id="productDescLess-pane">
+                                    <div class="product-desc-content">
+                                        <input type="checkbox" class="read-more-state" id="readMore3"/>
+                                        <!-- والد بیشتر ، کمتر ، تمام متن توضیحات باید داخل این تگ قرار بگیرند -->
+                                        <div class="read-more-wrap">
+                                            <h6 class="font-22 mb-2 title-font">معرفی محصول</h6>
+                                            {{product.description }}                                            <!-- متن بیشتر -->
+                                            <div class="read-more-target">
+                                                <p>
+                                                    {{product.description }}
+                                                </p>
+                                            </div>
+                                            <!-- پایان متن بیشتر -->
+                                        </div>
+                                        <!-- پایان والد بیشتر کمتر -->
+                                        <label for="readMore3" class="read-more-trigger"></label>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="productTable-pane">
+                                    <div class="tab-pane fade active show"
+                                         role="tabpanel" aria-labelledby="#productTable">
+                                        <h6 class="font-26 mb-2 title-font">مشخصات فنی</h6>
+                                        
+                                        <!-- نمایش مشخصات اصلی محصول -->
+                                        {% if product_specifications %}
+                                            <div class="specifications-container">
+                                                <!-- مشخصات اصلی -->
+                                                <div class="main-specifications mb-4">
+                                                    <h6 class="font-20 mb-3 title-font text-primary">
+                                                        <i class="bi bi-star-fill me-2"></i>مشخصات اصلی
+                                                    </h6>
+                                                    <div class="row">
+                                                        {% for spec_value in product_specifications %}
+                                                            {% if spec_value.is_main %}
+                                                                <div class="col-md-6 mb-3">
+                                                                    <div class="specification-item p-3 border rounded">
+                                                                        <div class="d-flex justify-content-between align-items-center">
+                                                                            <span class="spec-name font-weight-bold">{{ spec_value.specification.name }}</span>
+                                                                            <span class="spec-value">
+                                                                                {% if spec_value.specification.data_type == 'int' %}
+                                                                                    {{ spec_value.int_value }}
+                                                                                {% elif spec_value.specification.data_type == 'decimal' %}
+                                                                                    {{ spec_value.decimal_value }}
+                                                                                {% elif spec_value.specification.data_type == 'str' %}
+                                                                                    {{ spec_value.str_value }}
+                                                                                {% elif spec_value.specification.data_type == 'bool' %}
+                                                                                    {% if spec_value.bool_value %}
+                                                                                        <span class="badge bg-success">بله</span>
+                                                                                    {% else %}
+                                                                                        <span class="badge bg-danger">خیر</span>
+                                                                                    {% endif %}
+                                                                                {% endif %}
+                                                                                {% if spec_value.specification.unit %}
+                                                                                    <small class="text-muted ms-1">{{ spec_value.specification.unit }}</small>
+                                                                                {% endif %}
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+
+                                                <!-- گروه‌بندی مشخصات بر اساس دسته‌بندی -->
+                                                {% regroup product_specifications by specification.category as spec_groups %}
+                                                {% for spec_group in spec_groups %}
+                                                    <div class="specification-group mb-4">
+                                                        <div class="box_list">
+                                                            <p class="title">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+                                                                    <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"></path>
+                                                                </svg>
+                                                                {{ spec_group.grouper.name }}
+                                                            </p>
+                                                            <div>
+                                                                <ul class="param_list list-inline">
+                                                                    {% for spec_value in spec_group.list %}
+                                                                        {% if not spec_value.is_main %}
+                                                                            <li class="list-inline-item col-md-3 pe-md-1 pe-md-3 p-0 m-0">
+                                                                                <div class="box_params_list">
+                                                                                    <p class="block border_right_custom1">
+                                                                                        {{ spec_value.specification.name }}
+                                                                                        {% if spec_value.specification.is_main %}
+                                                                                            <i class="bi bi-star-fill text-warning ms-1" title="مشخصه اصلی"></i>
+                                                                                        {% endif %}
+                                                                                    </p>
+                                                                                </div>
+                                                                            </li>
+                                                                            <li class="list-inline-item col-md-8 p-0 m-0">
+                                                                                <div class="box_params_list">
+                                                                                    <p class="block border_right_custom2">
+                                                                                        {% if spec_value.specification.data_type == 'int' %}
+                                                                                            {{ spec_value.int_value }}
+                                                                                        {% elif spec_value.specification.data_type == 'decimal' %}
+                                                                                            {{ spec_value.decimal_value }}
+                                                                                        {% elif spec_value.specification.data_type == 'str' %}
+                                                                                            {{ spec_value.str_value }}
+                                                                                        {% elif spec_value.specification.data_type == 'bool' %}
+                                                                                            {% if spec_value.bool_value %}
+                                                                                                <span class="badge bg-success">بله</span>
+                                                                                            {% else %}
+                                                                                                <span class="badge bg-danger">خیر</span>
+                                                                                            {% endif %}
+                                                                                        {% endif %}
+                                                                                        {% if spec_value.specification.unit %}
+                                                                                            <small class="text-muted ms-1">{{ spec_value.specification.unit }}</small>
+                                                                                        {% endif %}
+                                                                                    </p>
+                                                                                </div>
+                                                                            </li>
+                                                                        {% endif %}
+                                                                    {% endfor %}
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            <!-- اگر مشخصاتی وجود ندارد -->
+                                            <div class="text-center py-5">
+                                                <div class="empty-specifications">
+                                                    <i class="bi bi-info-circle text-muted" style="font-size: 3rem;"></i>
+                                                    <h6 class="text-muted mt-3">هنوز مشخصاتی برای این محصول ثبت نشده است</h6>
+                                                    <p class="text-muted">مشخصات فنی این محصول به زودی اضافه خواهد شد.</p>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- end product desc -->
+
+
+<!-- start product boxs -->
+
+<div class="product-boxs site-slider py-30">
+    <div class="container-fluid">
+
+        <div class="slider-title">
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="slider-title-desc">
+                        <div class="slider-title-icon">
+                            <div class="slider-title-icon-parent">
+                                <div>
+                                    <span><i class="bi bi-caret-right-fill"></i></span>
+                                    <h6>تخفیفات</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slider-title-title">
+                            <h2 class="h1">محصولات <span class="main-color-one-color title-font">مشابه</span></h2>
+                            <p class="mb-0 mt-2 h5 text-muted">محصولات مشابه با این محصول را در پایین میتوانید مشاهده کنید</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="slider-title-link">
+                        <a href="" class="main-color-one-color font-16"> مشاهده همه <i
+                                class="bi bi-caret-left-fill"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slider-parent">
+            <div class="swiper" id="product-slider">
+
+                <div class="swiper-wrapper ">
+
+                    {% for package in more_products %}
+                    <div class="swiper-slide">
+                        <div class="product-box">
+                            <a href="/product/{{package.product.id}}/{{package.product.name}}">
+                                <div class="product-box-image">
+                                    <img src="{{package.product.image.url}}" alt="{{package.product.name}}">
+                                </div>
+                                <div class="product-box-title">
+                                    <h5 class="text-overflow-2">{{package.product.name}}</h5>
+                                </div>
+                                <div class="product-box-price">
+                                    {% if package.discount %}
+                                    <div class="product-box-price-discount">
+                                        <span class="d-block badge main-color-one-bg text-white font-14 rounded-pill">{{package.discount}}%</span>
+                                        <del>{{package.product.price |intcomma }}</del> 
+                                    </div>
+                                    {% endif %}
+                                    <div class="product-box-price-price">
+                                        <h5 class="title-font main-color-green-color h2 mb-0">{{package.final_price | intcomma }}</h5>
+                                        <p class="mb-0 text-muted">تومان</p>
+                                    </div>
+                                </div>
+                                <div class="product-box-hover">
+                                    <nav class="navbar navbar-expand justify-content-center">
+                                        <ul class="navbar-nav align-items-center">
+                                            <li class="nav-item"><a href="/product/{{package.product.id}}/{{package.product.name|slugify}}"
+                                            class="nav-item product-box-hover-item me-3">مشاهده
+                        محصول</a></li>
+                                            <li class="nav-item"><a href="#"
+                                            class="nav-item product-box-hover-item product-box-hover-item-btn me-1"
+                                            data-product-id="{{package.id}}"
+                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                            data-bs-title="افزودن به سبد خرید"><i
+                            class="bi bi-basket"></i></a></li>
+                                            <li class="nav-item"><a href="#"
+                                            class="nav-item product-box-hover-item product-box-hover-item-btn wishlist-btn"
+                                            data-product-id="{{package.product.id}}"
+                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                            data-bs-title="افزودن به علاقه ها"><i
+                            class="bi bi-heart"></i></a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    
+                </div>
+                
+                                <div class="swiper-button-next"></div>
+                                <div class="swiper-button-prev"></div>
+            </div>
+
+        <div class="text-center">
+            <button class="amazing-offer-btn" data-scroll-to="#banners"></button>
+        </div>
+
+    </div>
+</div>
+
+
+<style>
+.custom-alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    color: white;
+    z-index: 10000;
+    display: none;
+}
+.success {
+    background: #28a745;
+}
+.error {
+    background: #dc3545;
+}
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    window.cartItems = [
+        {% for item in cart_items %}
+        {
+            package_id: "{{item.package.id}}",
+            count: {{item.count}},
+            price: {{item.package.final_price}}
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+</script>
+<script>
+    // ذخیره اطلاعات سبد خرید
+    window.cartItems = {{ cart_items|safe }};
+</script>
+<script src="{% static 'js/cart-counter.js' %}"></script>
+<script src="{% static 'assets/js/cart.js' %}"></script>
+<script src="{% static 'assets/js/cart-fix.js' %}"></script>
+
+<!-- در انتهای صفحه قبل از تگ بسته body -->
+<script>
+// تعریف CSRF token برای استفاده در درخواست‌های AJAX
+var csrftoken = "{{ csrf_token }}";
+
+// اضافه کردن محصول به علاقه‌مندی‌ها با Ajax
+function addToFavorites(productId) {
+    $.ajax({
+        url: "{% url 'add_to_favorites' %}",
+        type: "POST",
+        data: {
+            'product_id': productId,
+            'csrfmiddlewaretoken': csrftoken
+        },
+        headers: {
+            "X-Requested-With": "XMLHttpRequest",
+        },
+        success: function(response) {
+            // نمایش پیام موفقیت
+            showNotification(response.message, response.status);
+            
+            // در صورت موفقیت‌آمیز بودن، دکمه‌ها را تغییر دهید
+            if (response.status === 'success') {
+                $("#fav-add-"+productId).hide();
+                $("#fav-remove-"+productId).show();
+            }
+        },
+        error: function(xhr, status, error) {
+            // نمایش پیام خطا
+            var errorMessage = "خطایی رخ داد. لطفاً مجدداً تلاش کنید.";
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                errorMessage = xhr.responseJSON.message;
+            }
+            showNotification(errorMessage, 'error');
+        }
+    });
+}
+
+// حذف محصول از علاقه‌مندی‌ها با Ajax
+function removeFromFavorites(productId) {
+    $.ajax({
+        url: "{% url 'remove_from_favorites' %}",
+        type: "POST",
+        data: {
+            'product_id': productId,
+            'csrfmiddlewaretoken': csrftoken
+        },
+        headers: {
+            "X-Requested-With": "XMLHttpRequest",
+        },
+        success: function(response) {
+            // نمایش پیام موفقیت
+            showNotification(response.message, response.status);
+            
+            // در صورت موفقیت‌آمیز بودن، دکمه‌ها را تغییر دهید
+            if (response.status === 'success') {
+                $("#fav-remove-"+productId).hide();
+                $("#fav-add-"+productId).show();
+            }
+        },
+        error: function(xhr, status, error) {
+            // نمایش پیام خطا
+            var errorMessage = "خطایی رخ داد. لطفاً مجدداً تلاش کنید.";
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                errorMessage = xhr.responseJSON.message;
+            }
+            showNotification(errorMessage, 'error');
+        }
+    });
+}
+
+// نمایش اعلان‌ها به کاربر
+function showNotification(message, type) {
+    // می‌توانید از کتابخانه‌های اعلان مانند Toastr یا SweetAlert استفاده کنید
+    // یا یک اعلان ساده بسازید
+    var notificationClass = 'alert-info';
+    if (type === 'success') notificationClass = 'alert-success';
+    if (type === 'error') notificationClass = 'alert-danger';
+    
+    var notification = $('<div class="alert ' + notificationClass + ' notification">' + message + '</div>');
+    $("body").append(notification);
+    
+    // مخفی کردن اعلان پس از چند ثانیه
+    setTimeout(function() {
+        notification.fadeOut(300, function() { $(this).remove(); });
+    }, 3000);
+}
+</script>
+
+<script>
+function setPackageId(packageId) {
+    document.getElementById('package-id').value = packageId;
+    // بروزرسانی قیمت محصول با استفاده از packageId
+    updateProductPrice(packageId);
+}
+
+function filterSizes(colorId) {
+    // نمایش loading state
+    const sizeContainer = document.getElementById('size-options-container');
+    sizeContainer.style.opacity = '0.5';
+
+    // درخواست AJAX برای دریافت سایزهای جدید
+    fetch(`/get-sizes/?color_id=${colorId}&product_id={{ product.id }}`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.html) {
+            // بروزرسانی container سایزها
+            sizeContainer.innerHTML = data.html;
+            sizeContainer.style.opacity = '1';
+            
+            // انتخاب اولین سایز به صورت خودکار
+            const firstSizeOption = sizeContainer.querySelector('input[type="radio"]');
+            if (firstSizeOption) {
+                firstSizeOption.checked = true;
+                setPackageId(firstSizeOption.value);
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        sizeContainer.style.opacity = '1';
+    });
+
+    // به‌روزرسانی URL بدون رفرش صفحه
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("color-options") !== colorId) {
+        params.set("color-options", colorId);
+        const newUrl = `${window.location.pathname}?${params.toString()}`;
+        window.history.pushState({ colorId: colorId }, '', newUrl);
+    }
+}
+
+// اجرای فیلتر سایزها برای رنگ پیش‌فرض در لود صفحه
+document.addEventListener('DOMContentLoaded', function() {
+    const defaultColor = document.querySelector('input[name="color-options"]:checked');
+    if (defaultColor) {
+        filterSizes(defaultColor.value);
+    } else {
+        // اگر هیچ رنگی انتخاب نشده، اولین رنگ را انتخاب کن
+        const firstColor = document.querySelector('input[name="color-options"]');
+        if (firstColor) {
+            firstColor.checked = true;
+            filterSizes(firstColor.value);
+        }
+    }
+});
+
+// مدیریت دکمه‌های مرورگر (برگشت/جلو)
+window.addEventListener('popstate', function(event) {
+    if (event.state && event.state.colorId) {
+        const colorInput = document.querySelector(`input[name="color-options"][value="${event.state.colorId}"]`);
+        if (colorInput) {
+            colorInput.checked = true;
+            filterSizes(event.state.colorId);
+        }
+    }
+});
+</script>
+
+<!-- استایل برای اعلان‌ها -->
+<style>
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    padding: 15px;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    max-width: 350px;
+}
+</style>
+
+{% endblock main %}

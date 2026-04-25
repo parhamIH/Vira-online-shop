@@ -1,0 +1,305 @@
+{% extends 'shared/_Main.html' %}
+{% load static %}
+
+پشتیبانی
+
+{% block main %}
+        <!-- منوی موبایل -->
+        <div class="custom-filter d-lg-none d-block">
+            <button class="btn btn-filter-float border-0 main-color-two-bg shadow-box px-4 rounded-3 position-fixed" style="z-index: 999;bottom:80px;" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                <i class="bi bi-list font-20 fw-bold text-white"></i>
+                <span class="d-block font-14 text-white">منو</span>
+            </button>
+        
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title">منو</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="panel-nav-logo">
+                        <a href="" class="text-center d-block mb-3">
+                            <img src="{% static 'assets/img/logo.png' %}" alt="" class="img-fluid" width="200">
+                        </a>
+                    </div>
+                    <div class="penel-nav">
+                        <div class="panel-nav-nav">
+                            <nav class="navbar profile-box-nav">
+                                <ul class="navbar-nav flex-column">
+                                    <li class="nav-item {% if request.path == '/profile' %}active{% endif %}"><a href="/profile" class="nav-link">
+                                        <i class="bi bi-house-door"></i>پروفایل</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/orders' %}active{% endif %}"><a href="/profile/orders" class="nav-link">
+                                        <i class="bi bi-cart-check"></i>سفارش های من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/address' %}active{% endif %}"><a href="/profile/address" class="nav-link">
+                                        <i class="bi bi-pin-map"></i>آدرس های من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/notification' %}active{% endif %}"><a href="/profile/notification" class="nav-link">
+                                        <i class="bi bi-bell"></i>پیام ها و اطلاعیه ها</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/comments' %}active{% endif %}"><a href="/profile/comments" class="nav-link">
+                                        <i class="bi bi-chat-dots"></i>نظرات من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/support' %}active{% endif %}"><a href="/support" class="nav-link">
+                                        <i class="bi bi-question-circle"></i>درخواست پشتیبانی</a>
+                                    </li>
+                                    {% if user.is_staff %}
+                                    <li class="nav-item {% if request.path == '/support/admin/' %}active{% endif %}"><a href="/support/admin/" class="nav-link">
+                                        <i class="bi bi-headset"></i>پنل مدیریت تیکت‌ها</a>
+                                    </li>
+                                    {% endif %}
+                                    <li class="nav-item {% if request.path == '/profile/list' %}active{% endif %}"><a href="/profile/list" class="nav-link">
+                                        <i class="bi bi-heart"></i>محصولات مورد علاقه</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/offers' %}active{% endif %}"><a href="/profile/offers" class="nav-link">
+                                        <i class="bi bi-gift"></i>کد های تخفیف من</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/logout/" class="nav-link">
+                                        <i class="bi bi-arrow-right-square"></i>خروج از حساب کاربری</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel position-relative">
+            <div class="row gy-4">
+                <!-- منوی دسکتاپ -->
+                <div class="col-lg-3 d-lg-block d-none">
+                    <div class="panel-nav-logo">
+                        <a href="" class="text-center d-block mb-3">
+                            <img src="{% static 'assets/img/logo.png' %}" alt="" class="img-fluid" width="200">
+                        </a>
+                    </div>
+                    <div class="penel-nav">
+                        <div class="panel-nav-nav">
+                            <nav class="navbar profile-box-nav">
+                                <ul class="navbar-nav flex-column">
+                                    <li class="nav-item {% if request.path == '/profile' %}active{% endif %}"><a href="/profile" class="nav-link">
+                                        <i class="bi bi-house-door"></i>پروفایل</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/orders' %}active{% endif %}"><a href="/profile/orders" class="nav-link">
+                                        <i class="bi bi-cart-check"></i>سفارش های من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/address' %}active{% endif %}"><a href="/profile/address" class="nav-link">
+                                        <i class="bi bi-pin-map"></i>آدرس های من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/notification' %}active{% endif %}"><a href="/profile/notification" class="nav-link">
+                                        <i class="bi bi-bell"></i>پیام ها و اطلاعیه ها</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/comments' %}active{% endif %}"><a href="/profile/comments" class="nav-link">
+                                        <i class="bi bi-chat-dots"></i>نظرات من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/support' %}active{% endif %}"><a href="/support" class="nav-link">
+                                        <i class="bi bi-question-circle"></i>درخواست پشتیبانی</a>
+                                    </li>
+                                    {% if user.is_staff %}
+                                    <li class="nav-item {% if request.path == '/support/admin/' %}active{% endif %}"><a href="/support/admin/" class="nav-link">
+                                        <i class="bi bi-headset"></i>پنل مدیریت تیکت‌ها</a>
+                                    </li>
+                                    {% endif %}
+                                    <li class="nav-item {% if request.path == '/profile/list' %}active{% endif %}"><a href="/profile/list" class="nav-link">
+                                        <i class="bi bi-heart"></i>محصولات مورد علاقه</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/offers' %}active{% endif %}"><a href="/profile/offers" class="nav-link">
+                                        <i class="bi bi-gift"></i>کد های تخفیف من</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/logout/" class="nav-link">
+                                        <i class="bi bi-arrow-right-square"></i>خروج از حساب کاربری</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- محتوای اصلی -->
+                <div class="col-md-9">
+                    <!-- پیام‌های موفقیت و خطا -->
+                    {% if success_message %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ success_message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endif %}
+                    
+                    {% if error_message %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ error_message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- فرم تیکت جدید -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">ارسال درخواست پشتیبانی جدید</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" enctype="multipart/form-data" id="supportForm">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label for="subject" class="form-label">موضوع</label>
+                                    <input type="text" class="form-control" id="subject" name="subject" required>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="department" class="form-label">دپارتمان</label>
+                                        <select class="form-select" id="department" name="department" required>
+                                            <option value="general">عمومی</option>
+                                            <option value="technical">فنی</option>
+                                            <option value="billing">مالی</option>
+                                            <option value="sales">فروش</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="priority" class="form-label">اولویت</label>
+                                        <select class="form-select" id="priority" name="priority" required>
+                                            <option value="low">کم</option>
+                                            <option value="medium" selected>متوسط</option>
+                                            <option value="high">زیاد</option>
+                                            <option value="urgent">فوری</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="message" class="form-label">پیام</label>
+                                    <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="attachment" class="form-label">فایل پیوست (اختیاری)</label>
+                                    <input class="form-control" type="file" id="attachment" name="attachment">
+                                    <div class="form-text">فرمت‌های مجاز: PDF, JPG, PNG (حداکثر 5MB)</div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">ارسال درخواست</button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- لیست تیکت‌های قبلی -->
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">تیکت‌های قبلی</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if tickets %}
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>شماره</th>
+                                            <th>موضوع</th>
+                                            <th>دپارتمان</th>
+                                            <th>اولویت</th>
+                                            <th>وضعیت</th>
+                                            <th>تاریخ</th>
+                                            <th>عملیات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for ticket in tickets %}
+                                        <tr>
+                                            <td>{{ ticket.id }}</td>
+                                            <td>{{ ticket.subject }}</td>
+                                            <td>
+                                                {% if ticket.department == 'general' %}عمومی
+                                                {% elif ticket.department == 'technical' %}فنی
+                                                {% elif ticket.department == 'billing' %}مالی
+                                                {% elif ticket.department == 'sales' %}فروش
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if ticket.priority == 'low' %}
+                                                    <span class="badge bg-success">کم</span>
+                                                {% elif ticket.priority == 'medium' %}
+                                                    <span class="badge bg-info">متوسط</span>
+                                                {% elif ticket.priority == 'high' %}
+                                                    <span class="badge bg-warning">زیاد</span>
+                                                {% elif ticket.priority == 'urgent' %}
+                                                    <span class="badge bg-danger">فوری</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if ticket.status == 'pending' %}
+                                                    <span class="badge bg-warning">در انتظار بررسی</span>
+                                                {% elif ticket.status == 'in_progress' %}
+                                                    <span class="badge bg-info">در حال بررسی</span>
+                                                {% elif ticket.status == 'resolved' %}
+                                                    <span class="badge bg-success">حل شده</span>
+                                                {% elif ticket.status == 'closed' %}
+                                                    <span class="badge bg-secondary">بسته شده</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ ticket.created_at|date:"Y/m/d H:i" }}</td>
+                                            <td>
+                                                <a href="{% url 'view_ticket' ticket.id %}" class="btn btn-sm btn-primary">مشاهده</a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <div class="alert alert-info">
+                                شما هنوز هیچ تیکت پشتیبانی ثبت نکرده‌اید.
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock main %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    $('#supportForm').submit(function(e) {
+        e.preventDefault();
+        
+        var formData = new FormData(this);
+        
+        $.ajax({
+            url: '{% url "support_ajax" %}',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                // نمایش پیام موفقیت
+                $('<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+                  response.message +
+                  '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                  '</div>').insertBefore('#supportForm');
+                
+                // پاک کردن فرم
+                $('#supportForm')[0].reset();
+                
+                // بروزرسانی شمارنده اعلان‌ها
+                $('#notification-counter').text(response.unread_count);
+                
+                // بروزرسانی صفحه بعد از چند ثانیه
+                setTimeout(function() {
+                    location.reload();
+                }, 2000);
+            },
+            error: function(xhr) {
+                var errorMsg = 'خطایی رخ داده است. لطفا دوباره تلاش کنید.';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMsg = xhr.responseJSON.message;
+                }
+                
+                $('<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                  errorMsg +
+                  '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                  '</div>').insertBefore('#supportForm');
+            }
+        });
+    });
+});
+</script>
+{% endblock %} 

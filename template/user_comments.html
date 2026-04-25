@@ -1,0 +1,230 @@
+{% extends 'shared/_Main.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block main %}
+<div class="content">
+    <div class="container-fluid">
+        <!-- منوی موبایل -->
+        <div class="custom-filter d-lg-none d-block">
+            <button class="btn btn-filter-float border-0 main-color-two-bg shadow-box px-4 rounded-3 position-fixed" style="z-index: 999;bottom:80px;" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                <i class="bi bi-list font-20 fw-bold text-white"></i>
+                <span class="d-block font-14 text-white">منو</span>
+            </button>
+
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title">منو</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="panel-nav-logo">
+                        <a href="/" class="text-center d-block mb-3">
+                            <img src="{% static 'assets/img/logo.png' %}" alt="" class="img-fluid" width="200">
+                        </a>
+                    </div>
+                    <div class="penel-nav">
+                        <div class="panel-nav-nav">
+                            <nav class="navbar profile-box-nav">
+                                <ul class="navbar-nav flex-column">
+                                    <li class="nav-item {% if request.path == '/profile' or request.path == '/profile/' %}active{% endif %}"><a href="/profile" class="nav-link">
+                                        <i class="bi bi-house-door"></i>پروفایل</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/orders' or request.path == '/profile/orders/' %}active{% endif %}"><a href="/profile/orders" class="nav-link">
+                                        <i class="bi bi-cart-check"></i>سفارش های من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/address' or request.path == '/profile/address/' %}active{% endif %}"><a href="/profile/address" class="nav-link">
+                                        <i class="bi bi-pin-map"></i>آدرس های من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/notification' or request.path == '/profile/notification/' %}active{% endif %}"><a href="/profile/notification" class="nav-link">
+                                        <i class="bi bi-bell"></i>پیام ها و اطلاعیه ها</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/comments' or request.path == '/profile/comments/' %}active{% endif %}"><a href="/profile/comments" class="nav-link">
+                                        <i class="bi bi-chat-dots"></i>نظرات من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/support' or request.path == '/support/' %}active{% endif %}"><a href="/support" class="nav-link">
+                                        <i class="bi bi-question-circle"></i>درخواست پشتیبانی</a>
+                                    </li>
+                                    {% if user.is_staff %}
+                                    <li class="nav-item {% if request.path == '/support/admin/' or request.path == '/support/admin' %}active{% endif %}"><a href="/support/admin/" class="nav-link">
+                                        <i class="bi bi-headset"></i>پنل مدیریت تیکت‌ها</a>
+                                    </li>
+                                    {% endif %}
+                                    <li class="nav-item {% if request.path == '/profile/list' or request.path == '/profile/list/' %}active{% endif %}"><a href="/profile/list" class="nav-link">
+                                        <i class="bi bi-heart"></i>محصولات مورد علاقه</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/offers' or request.path == '/profile/offers/' %}active{% endif %}"><a href="/profile/offers" class="nav-link">
+                                        <i class="bi bi-gift"></i>کد های تخفیف من</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/logout/" class="nav-link">
+                                        <i class="bi bi-arrow-right-square"></i>خروج از حساب کاربری</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel position-relative">
+            <div class="row gy-4">
+                <!-- منوی دسکتاپ -->
+                <div class="col-lg-3 d-lg-block d-none">
+                    <div class="panel-nav-logo">
+                        <a href="/" class="text-center d-block mb-3">
+                            <img src="{% static 'assets/img/logo.png' %}" alt="" class="img-fluid" width="200">
+                        </a>
+                    </div>
+                    <div class="penel-nav">
+                        <div class="panel-nav-nav">
+                            <nav class="navbar profile-box-nav">
+                                <ul class="navbar-nav flex-column">
+                                    <li class="nav-item {% if request.path == '/profile' or request.path == '/profile/' %}active{% endif %}"><a href="/profile" class="nav-link">
+                                        <i class="bi bi-house-door"></i>پروفایل</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/orders' or request.path == '/profile/orders/' %}active{% endif %}"><a href="/profile/orders" class="nav-link">
+                                        <i class="bi bi-cart-check"></i>سفارش های من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/address' or request.path == '/profile/address/' %}active{% endif %}"><a href="/profile/address" class="nav-link">
+                                        <i class="bi bi-pin-map"></i>آدرس های من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/notification' or request.path == '/profile/notification/' %}active{% endif %}"><a href="/profile/notification" class="nav-link">
+                                        <i class="bi bi-bell"></i>پیام ها و اطلاعیه ها</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/comments' or request.path == '/profile/comments/' %}active{% endif %}"><a href="/profile/comments" class="nav-link">
+                                        <i class="bi bi-chat-dots"></i>نظرات من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/support' or request.path == '/support/' %}active{% endif %}"><a href="/support" class="nav-link">
+                                        <i class="bi bi-question-circle"></i>درخواست پشتیبانی</a>
+                                    </li>
+                                    {% if user.is_staff %}
+                                    <li class="nav-item {% if request.path == '/support/admin/' or request.path == '/support/admin' %}active{% endif %}"><a href="/support/admin/" class="nav-link">
+                                        <i class="bi bi-headset"></i>پنل مدیریت تیکت‌ها</a>
+                                    </li>
+                                    {% endif %}
+                                    <li class="nav-item {% if request.path == '/profile/list' or request.path == '/profile/list/' %}active{% endif %}"><a href="/profile/list" class="nav-link">
+                                        <i class="bi bi-heart"></i>محصولات مورد علاقه</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/offers' or request.path == '/profile/offers/' %}active{% endif %}"><a href="/profile/offers" class="nav-link">
+                                        <i class="bi bi-gift"></i>کد های تخفیف من</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/logout/" class="nav-link">
+                                        <i class="bi bi-arrow-right-square"></i>خروج از حساب کاربری</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- محتوای اصلی -->
+                <div class="col-lg-9">
+                    <div class="position-sticky top-0">
+                        <!-- هدر پنل -->
+                        <div class="panel-header mb-3">
+                            <div class="content-box">
+                                <div class="container-fluid">
+                                    <div class="row gy-5 align-items-center">
+                                        <div class="col-md-6 col-8">
+                                            <div class="d-flex align-items-center">
+                                                <h6> {% if first_name %} {{first_name}} {% elif username %} {{username}} {% else %} کاربر {% endif %} عزیز به پنل کاربری خوش آمدید</h6>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-4">
+                                            <div class="panel-alert d-flex justify-content-end">
+                                                <a href="/profile/notification">
+                                                    <i class="bi bi-bell pointer"></i>
+                                                </a>
+                                                <span class="count-item rounded-circle"> {{notifications_count}} </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="d-flex align-items-center panel-profile">
+                                                <img src="{% static 'assets/img/user.png' %}" class="img-fluid img-profile-panel rounded-circle me-3 shadow-md" alt="">
+                                                <div class="d-grid gap-2">
+                                                    <h6 class="font-14 main-color-one-color">حساب کاربری من</h6>
+                                                    <div class="d-flex align-items-center">
+                                                        <h6 class="font-14">
+                                                            {{username}}</h6>
+                                                        <a href="/profile/informations" class="ms-2"><i class="bi bi-pencil-square"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- عنوان صفحه -->
+                        <div class="slider-title mt-4">
+                            <div class="slider-title-desc">
+                                <div class="slider-title-title pb-4">
+                                    <h2 class="h1"><span class="title-font main-color-one-color">نظرات</span> من </h2>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- لیست نظرات کاربر -->
+                        <div class="penel-form">
+                            <div class="bg-white p-4 rounded shadow-sm">
+                                <div class="container-fluid">
+                                    <div class="row g-3" id="comments-container">
+                                        {% if comments %}
+                                            {% for comment in comments %}
+                                                <div id="comment-card-{{ comment.id }}" class="col-12 comment-card mb-3">
+                                                    <div class="card h-100 border-0 rounded-4 shadow-sm">
+                                                        <div class="card-body p-3">
+                                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                                <h5 class="card-title font-16 fw-bold">{{ comment.title }}</h5>
+                                                                <small class="text-muted">{{ comment.create_at }}</small>
+                                                            </div>
+                                                            <p class="card-text mb-3">{{ comment.comment_txt }}</p>
+                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                <div>
+                                                                    <a href="/product/{{ comment.product.id }}/{{ comment.product.name }}" class="btn btn-sm btn-primary">
+                                                                        <i class="bi bi-eye me-1"></i> مشاهده محصول
+                                                                    </a>
+                                                                </div>
+                                                                <div>
+                                                                    <span class="badge bg-light text-dark">{{ comment.product.name }}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        {% else %}
+                                            <div class="col-12">
+                                                <div class="alert alert-info">شما هنوز هیچ نظری ثبت نکرده‌اید.</div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content-box">
+    <h2 class="content-title">نظرات</h2>
+    <div class="card-body">
+        {% if user_comments %}
+        <!-- ... existing code ... -->
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-state__icon">
+                <i class="fas fa-comment"></i>
+            </div>
+            <h4 class="empty-state__title">هیچ نظری ثبت نشده است</h4>
+            <p class="empty-state__description">نظرات شما اینجا نمایش داده می‌شود</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

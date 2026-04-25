@@ -1,0 +1,536 @@
+{% extends "shared/_Main.html" %}
+{% load static %}
+{% load humanize %}
+{% load jalali_tags %}
+
+
+
+<!-- start content -->
+{% block main %}
+
+<style>
+                            
+    .modal-backdrop {
+        display: none !important;
+    }
+    .modal-content {
+        max-height: 90vh; /* جلوگیری از بزرگ شدن بیش از حد */
+        overflow: hidden;
+    }
+    
+    .modal-body {
+        max-height: 60vh; /* کنترل ارتفاع محتوای داخلی */
+        overflow-y: auto; /* اسکرول برای محتوای اضافی */
+    }
+                              
+    .modal {
+        z-index: 1050;
+    }
+</style>
+<div class="content">
+    <div class="container-fluid">
+
+        <div class="custom-filter d-lg-none d-block">
+            <button class="btn btn-filter-float border-0 main-color-two-bg shadow-box px-4 rounded-3 position-fixed" style="z-index: 999;bottom:80px;" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                <i class="bi bi-list font-20 fw-bold text-white"></i>
+                <span class="d-block font-14 text-white">منو</span>
+            </button>
+        
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title">منو</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="panel-nav-logo">
+                        <a href="" class="text-center d-block mb-3">
+                            <img src="{% static 'assets/img/logo.png' %}" alt="" class="img-fluid" width="200">
+                        </a>
+                    </div>
+                    <div class="penel-nav">
+                        <div class="panel-nav-nav">
+                            <nav class="navbar profile-box-nav">
+                                <ul class="navbar-nav flex-column">
+                                    <li class="nav-item {% if request.path == '/profile' %}active{% endif %}"><a href="/profile" class="nav-link">
+                                        <i class="bi bi-house-door"></i>پروفایل</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/orders' %}active{% endif %}"><a href="/profile/orders" class="nav-link">
+                                        <i class="bi bi-cart-check"></i>سفارش های من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/address' %}active{% endif %}"><a href="/profile/address" class="nav-link">
+                                        <i class="bi bi-pin-map"></i>آدرس های من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/notification' %}active{% endif %}"><a href="/profile/notification" class="nav-link">
+                                        <i class="bi bi-bell"></i>پیام ها و اطلاعیه ها</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/comments' %}active{% endif %}"><a href="/profile/comments" class="nav-link">
+                                        <i class="bi bi-chat-dots"></i>نظرات من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/support' %}active{% endif %}"><a href="/support" class="nav-link">
+                                        <i class="bi bi-question-circle"></i>درخواست پشتیبانی</a>
+                                    </li>
+                                    {% if user.is_staff %}
+                                    <li class="nav-item {% if request.path == '/support/admin/' %}active{% endif %}"><a href="/support/admin/" class="nav-link">
+                                        <i class="bi bi-headset"></i>پنل مدیریت تیکت‌ها</a>
+                                    </li>
+                                    {% endif %}
+                                    <li class="nav-item {% if request.path == '/profile/list' %}active{% endif %}"><a href="/profile/list" class="nav-link">
+                                        <i class="bi bi-heart"></i>محصولات مورد علاقه</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/offers' %}active{% endif %}"><a href="/profile/offers" class="nav-link">
+                                        <i class="bi bi-gift"></i>کد های تخفیف من</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/logout/" class="nav-link">
+                                        <i class="bi bi-arrow-right-square"></i>خروج از حساب کاربری</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel position-relative">
+            <div class="row gy-4">
+
+                <div class="col-lg-3 d-lg-block d-none">
+                    <div class="panel-nav-logo">
+                        <a href="" class="text-center d-block mb-3">
+                            <img src="{% static 'assets/img/logo.png' %}" alt="" class="img-fluid" width="200">
+                        </a>
+                    </div>
+                    <div class="penel-nav">
+                        <div class="panel-nav-nav">
+                            <nav class="navbar profile-box-nav">
+                                <ul class="navbar-nav flex-column">
+                                    <li class="nav-item {% if request.path == '/profile' %}active{% endif %}"><a href="/profile" class="nav-link">
+                                        <i class="bi bi-house-door"></i>پروفایل</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/orders' %}active{% endif %}"><a href="/profile/orders" class="nav-link">
+                                        <i class="bi bi-cart-check"></i>سفارش های من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/address' %}active{% endif %}"><a href="/profile/address" class="nav-link">
+                                        <i class="bi bi-pin-map"></i>آدرس های من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/notification' %}active{% endif %}"><a href="/profile/notification" class="nav-link">
+                                        <i class="bi bi-bell"></i>پیام ها و اطلاعیه ها</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/comments' %}active{% endif %}"><a href="/profile/comments" class="nav-link">
+                                        <i class="bi bi-chat-dots"></i>نظرات من</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/support' %}active{% endif %}"><a href="/support" class="nav-link">
+                                        <i class="bi bi-question-circle"></i>درخواست پشتیبانی</a>
+                                    </li>
+                                    {% if user.is_staff %}
+                                    <li class="nav-item {% if request.path == '/support/admin/' %}active{% endif %}"><a href="/support/admin/" class="nav-link">
+                                        <i class="bi bi-headset"></i>پنل مدیریت تیکت‌ها</a>
+                                    </li>
+                                    {% endif %}
+                                    <li class="nav-item {% if request.path == '/profile/list' %}active{% endif %}"><a href="/profile/list" class="nav-link">
+                                        <i class="bi bi-heart"></i>محصولات مورد علاقه</a>
+                                    </li>
+                                    <li class="nav-item {% if request.path == '/profile/offers' %}active{% endif %}"><a href="/profile/offers" class="nav-link">
+                                        <i class="bi bi-gift"></i>کد های تخفیف من</a>
+                                    </li>
+                                    <li class="nav-item"><a href="/logout/" class="nav-link">
+                                        <i class="bi bi-arrow-right-square"></i>خروج از حساب کاربری</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="position-sticky top-0">
+
+                        <div class="panel-header mb-3">
+                            <div class="content-box">
+                                <div class="container-fluid">
+                                    <div class="row gy-5 align-items-center">
+                                        <div class="col-md-6 col-8">
+                                            <div class="d-flex align-items-center">
+                                                <h6> {% if first_name %} {{first_name}} {% elif username %} {{username}} {% else %} کاربر {% endif %} عزیز به پنل کاربری خوش آمدید</h6>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-4">
+                                            <div class="panel-alert d-flex justify-content-end">
+                                                
+                                                <a href="/profile/notification">
+                                                    <i class="bi bi-bell pointer"  ></i>
+                                                </a>
+                        
+                                                <span class="count-item rounded-circle"> {{notifications_count}} </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="d-flex align-items-center panel-profile">
+                                                <img src="{% static 'assets/img/user.png' %}" class="img-fluid img-profile-panel rounded-circle me-3 shadow-md" alt="">
+                                                <div class="d-grid gap-2">
+                                                    <h6 class="font-14 main-color-one-color">حساب کاربری من</h6>
+                                                    <div class="d-flex align-items-center">
+                                                        <h6 class="font-14">
+                                                            {{username}}</h6>
+                                                        <a href="profile/informations" class="ms-2"><i class="bi bi-pencil-square"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-latest-order">
+                            <div class="slider-title">
+                                <div class="slider-title-desc">
+                                    <div class="slider-title-title pb-4">
+                                        <h2 class="h1"><span class="title-font main-color-one-color">آخرین</span> سفارشات</h2>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive shadow-box roundedTable p-0">
+                                <table class="table  main-table rounded-0">
+                                    <thead class="text-center">
+                                    <tr>
+                                        <th class="title-font">#</th>
+                                        <th class="title-font">شماره سفارش</th>
+                                        <th class="title-font">تاریخ ثبت سفارش</th>
+                                        <th class="title-font">مبلغ پرداختی</th>
+                                        <th class="title-font">وضعیت سفارش</th>
+                                        <th class="title-font">وضعیت پرداخت</th>
+                                        <th class="title-font">جزییات</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="text-center">
+                                    {% for order in orders %}
+                                        {% if order.total_price > 0 %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ order.order_number }}</td>
+                                            <td>{{ order.order_date|to_jalali:'%Y/%m/%d' }}</td>
+                                            <td>{{ order.total_price|intcomma }} تومان</td>
+                                            <td>
+                                                {% if order.status == "در حال انتظار" %}
+                                                    <span class="badge bg-warning">در حال انتظار</span>
+                                                {% elif order.status == "تأیید شده" %}
+                                                    <span class="badge bg-info">تأیید شده</span>
+                                                {% elif order.status == "ارسال شده" %}
+                                                    <span class="badge bg-primary">ارسال شده</span>
+                                                {% elif order.status == "تحویل داده شده" %}
+                                                    <span class="badge bg-success">تحویل داده شده</span>
+                                                {% elif order.status == "لغو شده" %}
+                                                    <span class="badge bg-danger">لغو شده</span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="font-14">
+                                                {% if order.payment_status == "پرداخت شده" %}
+                                                    <span class="badge bg-success">{{ order.payment_status }}</span>
+                                                {% elif order.payment_status == "در انتظار پرداخت" %}
+                                                    <span class="badge bg-warning">{{ order.payment_status }}</span>
+                                                {% elif order.payment_status == "در انتظار تایید" %}
+                                                    <span class="badge bg-info">{{ order.payment_status }}</span>
+                                                {% elif order.payment_status == "ناموفق" %}
+                                                    <span class="badge bg-danger">{{ order.payment_status }}</span>
+                                                {% elif order.payment_status == "لغو شده" %}
+                                                    <span class="badge bg-secondary">{{ order.payment_status }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if not order.cart.is_paid %}
+                                                    <a href="/cart/" class="btn btn-success">پرداخت</a>
+                                                {% else %}
+                                                    <button class="btn btn-info view-cart-items" data-cart-id="{{ order.cart.id }}">
+                                                        مشاهده آیتم‌ها
+                                                    </button>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="7">
+                                            <div class="text-center py-5">
+                                                <div class="empty-orders-icon mb-3">
+                                                    <i class="bi bi-cart-x display-4 text-muted"></i>
+                                                </div>
+                                                <h5 class="text-muted mb-3">شما هنوز سفارشی ثبت نکرده‌اید</h5>
+                                                <p class="text-muted mb-4">برای مشاهده سفارش‌های خود، ابتدا باید یک سفارش ثبت کنید.</p>
+                                                <a href="/products" class="btn btn-primary">
+                                                    <i class="bi bi-bag-plus me-2"></i>
+                                                    مشاهده محصولات
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- end content -->
+
+<div class="modal fade" id="cartItemsModal" tabindex="-1" aria-labelledby="cartItemsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cartItemsModalLabel">جزئیات سفارش</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-title">اطلاعات سفارش</h6>
+                                <ul class="list-unstyled" id="orderInfo">
+                                    <li class="mb-2"><strong>تاریخ سفارش:</strong> <span id="orderDate">-</span></li>
+                                    <li class="mb-2"><strong>وضعیت سفارش:</strong> <span id="orderStatus">-</span></li>
+                                    <li class="mb-2"><strong>وضعیت پرداخت:</strong> <span id="paymentStatus">-</span></li>
+                                    <li class="mb-2"><strong>روش پرداخت:</strong> <span id="paymentMethod">-</span></li>
+                                    <li class="mb-2" id="paymentRefContainer" style="display: none;">
+                                        <strong>کد پیگیری پرداخت:</strong> <span id="paymentRef">-</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-title">اطلاعات ارسال</h6>
+                                <ul class="list-unstyled" id="shippingInfo">
+                                    <li class="mb-2"><strong>روش ارسال:</strong> <span id="shippingMethod">-</span></li>
+                                    <li class="mb-2"><strong>هزینه ارسال:</strong> <span id="shippingCost">-</span> تومان</li>
+                                    <li class="mb-2" id="shippingDateContainer" style="display: none;">
+                                        <strong>تاریخ ارسال:</strong> <span id="shippingDate">-</span>
+                                    </li>
+                                    <li class="mb-2" id="deliveryDateContainer" style="display: none;">
+                                        <strong>تاریخ تحویل:</strong> <span id="deliveryDate">-</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">محصولات سفارش</h6>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>تصویر</th>
+                                        <th>نام محصول</th>
+                                        <th>تعداد</th>
+                                        <th>قیمت واحد</th>
+                                        <th>قیمت کل</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cartItemsTable">
+                                    <!-- Cart items will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-unstyled" id="orderSummary">
+                                    <li class="mb-2"><strong>جمع کل:</strong> <span id="totalPrice">-</span> تومان</li>
+                                    <li class="mb-2" id="discountContainer" style="display: none;">
+                                        <strong>تخفیف:</strong> <span id="discountAmount">-</span> تومان
+                                    </li>
+                                    <li class="mb-2"><strong>هزینه ارسال:</strong> <span id="shippingCostSummary">-</span> تومان</li>
+                                    <li class="mb-2"><strong>مبلغ قابل پرداخت:</strong> <span id="finalPrice">-</span> تومان</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Initialize Bootstrap modal
+        const modalElement = document.getElementById("cartItemsModal");
+        const modal = new bootstrap.Modal(modalElement, {
+            backdrop: 'static',
+            keyboard: false
+        });
+
+        // تابع محاسبه رنگ متن متناسب با پس‌زمینه
+        function getContrastColor(hexColor) {
+            // اگر رنگ نال یا تعریف نشده باشد
+            if (!hexColor) return "#000000";
+            
+            // حذف # از ابتدای کد رنگ
+            hexColor = hexColor.replace("#", "");
+            
+            // اگر کد رنگ 3 کاراکتری باشد به 6 کاراکتر تبدیل شود
+            if (hexColor.length === 3) {
+                hexColor = hexColor.split('').map(c => c + c).join('');
+            }
+            
+            // تبدیل کد hex به RGB
+            const r = parseInt(hexColor.substr(0, 2), 16);
+            const g = parseInt(hexColor.substr(2, 2), 16);
+            const b = parseInt(hexColor.substr(4, 2), 16);
+            
+            // محاسبه روشنایی رنگ
+            // فرمول YIQ برای محاسبه روشنایی
+            const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+            
+            // اگر روشنایی بیشتر از 128 باشد، رنگ متن سیاه در غیر این صورت سفید
+            return (yiq >= 128) ? '#000000' : '#ffffff';
+        }
+
+        // Handle view cart items buttons
+        const viewButtons = document.querySelectorAll(".view-cart-items");
+        viewButtons.forEach(button => {
+            button.addEventListener("click", function (e) {
+                e.preventDefault();
+                const cartId = this.dataset.cartId;
+                console.log("Cart ID:", cartId);
+
+                fetch(`/cart/items/${cartId}/`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("خطا در دریافت اطلاعات سبد خرید");
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.error) {
+                            alert(data.error);
+                            return;
+                        }
+    
+                        // Update order information
+                        document.getElementById("orderDate").textContent = data.order_date || "-";
+                        document.getElementById("orderStatus").textContent = data.status || "-";
+                        document.getElementById("paymentStatus").textContent = data.payment_status || "-";
+                        document.getElementById("paymentMethod").textContent = data.payment_method || "-";
+                        
+                        if (data.payment_reference_id) {
+                            document.getElementById("paymentRef").textContent = data.payment_reference_id;
+                            document.getElementById("paymentRefContainer").style.display = "block";
+                        } else {
+                            document.getElementById("paymentRefContainer").style.display = "none";
+                        }
+
+                        // Update shipping information
+                        document.getElementById("shippingMethod").textContent = data.shipping_method || "-";
+                        document.getElementById("shippingCost").textContent = data.shipping_cost ? data.shipping_cost.toLocaleString() : "-";
+                        
+                        if (data.shipping_date) {
+                            document.getElementById("shippingDate").textContent = data.shipping_date;
+                            document.getElementById("shippingDateContainer").style.display = "block";
+                        } else {
+                            document.getElementById("shippingDateContainer").style.display = "none";
+                        }
+                        
+                        if (data.delivery_date) {
+                            document.getElementById("deliveryDate").textContent = data.delivery_date;
+                            document.getElementById("deliveryDateContainer").style.display = "block";
+                        } else {
+                            document.getElementById("deliveryDateContainer").style.display = "none";
+                        }
+
+                        // Update cart items table
+                        const cartItemsTable = document.getElementById("cartItemsTable");
+                        cartItemsTable.innerHTML = '';
+                        
+                        if (data.items && data.items.length > 0) {
+                            data.items.forEach(item => {
+                                const row = document.createElement('tr');
+                                
+                                // تصویر پیش‌فرض اگر تصویر محصول موجود نباشد
+                                const defaultImage = "{% static 'assets/img/no-image.png' %}";
+                                const imageUrl = item.image || defaultImage;
+                                
+                                // اطلاعات رنگ
+                                let colorInfo = '';
+                                if (item.color) {
+                                    colorInfo = `
+                                        <div class="mt-1">
+                                            <span>رنگ: </span>
+                                            <span class="badge rounded-pill" style="background-color: ${item.color.code}; color: ${getContrastColor(item.color.code)}">
+                                                ${item.color.name}
+                                            </span>
+                                        </div>
+                                    `;
+                                }
+                                
+                                row.innerHTML = `
+                                    <td>
+                                        <img src="${imageUrl}" alt="${item.name}" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
+                                    </td>
+                                    <td>
+                                        ${item.name || "-"}
+                                        ${colorInfo}
+                                    </td>
+                                    <td>${item.count || 0}</td>
+                                    <td>${item.price ? item.price.toLocaleString() : "-"} تومان</td>
+                                    <td>${item.total_price ? item.total_price.toLocaleString() : "-"} تومان</td>
+                                `;
+                                cartItemsTable.appendChild(row);
+                            });
+                        } else {
+                            cartItemsTable.innerHTML = '<tr><td colspan="5" class="text-center">هیچ محصولی یافت نشد</td></tr>';
+                        }
+
+                        // Update order summary
+                        document.getElementById("totalPrice").textContent = data.total_price ? data.total_price.toLocaleString() : "-";
+                        document.getElementById("shippingCostSummary").textContent = data.shipping_cost ? data.shipping_cost.toLocaleString() : "-";
+                        document.getElementById("finalPrice").textContent = data.final_price ? data.final_price.toLocaleString() : "-";
+                        
+                        if (data.discount_amount > 0) {
+                            document.getElementById("discountAmount").textContent = data.discount_amount.toLocaleString();
+                            document.getElementById("discountContainer").style.display = "block";
+                        } else {
+                            document.getElementById("discountContainer").style.display = "none";
+                        }
+    
+                        // Show modal using Bootstrap's modal instance
+                        modal.show();
+                    })
+                    .catch(error => {
+                        console.error("خطا در دریافت آیتم‌های سبد:", error);
+                        alert("مشکلی پیش آمده. لطفاً دوباره تلاش کنید.");
+                    });
+            });
+        });
+
+        // Close modal when the close button is clicked
+        document.querySelector('#cartItemsModal .btn-close').addEventListener('click', function() {
+            modal.hide();
+        });
+        
+        // Close modal when the "Close" button is clicked
+        document.querySelector('#cartItemsModal .modal-footer .btn-secondary').addEventListener('click', function() {
+            modal.hide();
+        });
+    });
+</script>
+   
+{% endblock main %}
+<!-- start footer -->

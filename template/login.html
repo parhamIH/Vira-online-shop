@@ -1,0 +1,526 @@
+{% load static %}
+
+<!doctype html>
+
+<html class="no-js" lang="Fa_IR" dir="rtl">
+
+<head>
+    <meta charset="utf-8">
+    <title>قالب شاهان</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16x16.png">
+
+    <!-- Place favicon.ico in the root directory -->
+
+    <link rel="stylesheet" href="{% static 'assets/css/normalize.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/font/bootstrap-icon/bootstrap-icons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/js/plugin/swiper/swiper-bundle.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/js/plugin/countdown/countdown.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/js/plugin/rasta-contact/style.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/js/plugin/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/responsive.css' %}">
+
+    <meta name="theme-color" content="#f4f5f9">
+</head>
+
+<body style="background: url('assets/img/bg-auth.jpg');background-repeat: no-repeat;background-size: cover">
+
+
+<!-- start content -->
+
+<div class="content vh-100">
+    <div class="container-fluid h-100">
+        <div class="auth h-100 d-flex align-items-center">
+            <div class="container-fluid">
+                <div class="auth-items">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-4">
+
+                            <div class="auth-logo text-center">
+                                <a href="">
+                                    <img src="{% static 'assets/img/logo.png' %}" width="200" alt="">
+                                </a>
+                            </div>
+                            <div class="auth-form shadow-xl rounded-3  mt-5 bg-white">
+                                <div class="auth-form-title mb-4 slider-title-desc-center">
+                                    <h2 class="text-center h4 text-muted title-font">ورود / ثبت نام</h2>
+                                </div>
+                                
+                                <!-- فقط نمایش پیام‌های خطای خاص لاگین -->
+                                {% if login_invalid %}
+                                <div class="alert alert-danger">
+                                    {{ login_invalid }}
+                                </div>
+                                {% endif %}
+                                
+                                <!-- نمایش پیام‌های خطا برای فرم ثبت‌نام -->
+                                <div id="register-errors-display" class="alert alert-danger" style="display: none;">
+                                    <span id="register-errors-text"></span>
+                                </div>
+                                
+                                <form action="/login/" method="post">
+                                    {% csrf_token %}
+                                    <div class="comment-item mb-3">
+                                        <input type="text" class="form-control" id="floatingInputUsername" name="username" placeholder="نام کاربری">
+                                        <label for="floatingInputUsername" class="form-label label-float">نام کاربری خود را وارد
+                                            کنید</label>
+                                    </div>
+
+                                    <div class="comment-item mt-4 position-relative">
+                                        <input type="password" class="form-control" id="floatingInputPasswd" name="password" placeholder="رمز عبور">
+
+                                        <label for="floatingInputPasswd" class="form-label label-float">رمز عبور خود را
+                                            وارد
+                                            کنید</label>
+                                        <div class="inline-btn-text">
+                                            <a href="/phone-login/" class="btn border-0 main-color-one-bg rounded-pill">ورود با پیامک</a>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-success w-100 mt-4 btn-login">ورود به
+                                            سایت
+                                        </button>
+                                    </div>
+                                    <!-- دکمه ثبت‌نام فقط modal شماره موبایل را باز کند -->
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerMobileModal">
+                                        ثبت نام
+                                    </button>
+
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#passwordResetModal">فراموشی رمز عبور</a>
+                                </form>
+                            </div>
+
+                            <p class="loginTermsDesc">با ورود و یا ثبت نام در شاهان شما <a class="underlined main-color-one-color fw-bold"
+                                                                                              href="#" data-bs-toggle="modal" data-bs-target="#termsModal">شرایط و
+                                قوانین</a> استفاده از سرویس‌های سایت شاهان و <a class="underlined main-color-one-color fw-bold"
+                                                                                   href="/privacy-polices/">قوانین حریم
+                                خصوصی</a> آن را می‌پذیرید.</p>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- end content -->
+ <!-- The Registration Modal -->
+<div class="modal" id="loginModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+  
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">   ثبت نام  </h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+  
+
+            <!-- Modal Body -->
+    <div class="modal-body">
+        <!-- Display register error messages -->
+        <div id="register-errors" class="alert alert-danger" style="display: none;"></div>
+        
+        <!-- نمایش پیام‌های خطای ارسالی از سرور -->
+        {% if messages %}
+        <div class="alert alert-danger">
+            {% for message in messages %}
+                {{ message }}<br>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <form method="post" action="/register/" id="registerForm">
+            {% csrf_token %}
+        <div class="mb-3">
+            <label for="username" class="form-label">نام کاربری</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="نام کاربری" required>
+        </div>
+        <div class="mb-3">
+            <label for="first_name" class="form-label">نام</label>
+            <input type="text" class="form-control" id="first_name" name="first_name" placeholder="نام" required>
+        </div>
+        <div class="mb-3">
+            <label for="last_name" class="form-label">نام خانوادگی</label>
+            <input type="text" class="form-control" id="last_name" name="last_name" placeholder="نام خانوادگی" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">ایمیل</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="ایمیل" required>
+        </div>
+        <div class="mb-3">
+            <label for="phone_number" class="form-label">شماره تلفن همراه</label>
+            <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="مثال: 09123456789" pattern="09[0-9]{9}" maxlength="11" required>
+            <div class="form-text text-muted">کد تأیید به این شماره ارسال خواهد شد</div>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">رمز عبور</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="رمز عبور" required>
+        </div>
+        <div class="mb-3">
+            <label for="password2" class="form-label">تکرار رمز عبور</label>
+            <input type="password" class="form-control" id="password2" name="password2" placeholder="تکرار رمز عبور" required>
+        </div>
+        <div class="mb-3">
+            <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="acceptTerms" name="terms" required>
+            <label class="form-check-label" for="acceptTerms">قبول <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">شرایط و قوانین</a></label>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success w-100" id="registerBtn" disabled>ثبت نام</button>
+        </form>
+    </div>
+  
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">بستن</button>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+
+<!-- Terms and Conditions Modal -->
+<div class="modal" id="termsModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">شرایط و قوانین</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p>قوانین</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Password Reset Modal -->
+<div class="modal" id="passwordResetModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">بازیابی رمز عبور</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <!-- Step 1: Phone Number Entry -->
+                <div id="reset-step-1">
+                    <div id="reset-phone-errors" class="alert alert-danger" style="display: none;"></div>
+                    <form id="resetPhoneForm" method="post" action="/reset-password-request/">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="reset_phone_number" class="form-label">شماره تلفن همراه خود را وارد کنید</label>
+                            <input type="text" class="form-control" id="reset_phone_number" name="phone_number" 
+                                placeholder="مثال: 09123456789" pattern="09[0-9]{9}" maxlength="11" required>
+                            <div class="form-text text-muted">کد تأیید به این شماره ارسال خواهد شد</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100" id="sendResetCodeBtn">ارسال کد تأیید</button>
+                    </form>
+                </div>
+
+                <!-- Step 2: Verification Code Entry -->
+                <div id="reset-step-2" style="display: none;">
+                    <div id="reset-code-errors" class="alert alert-danger" style="display: none;"></div>
+                    <form id="resetVerifyForm" method="post" action="/verify-reset-code/">
+                        {% csrf_token %}
+                        <input type="hidden" id="reset_phone_hidden" name="phone_number">
+                        <div class="mb-3">
+                            <label for="reset_verification_code" class="form-label">کد تأیید ارسال شده را وارد کنید</label>
+                            <input type="text" class="form-control" id="reset_verification_code" name="verification_code" 
+                                placeholder="کد 6 رقمی" pattern="[0-9]{6}" maxlength="6" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100" id="verifyResetCodeBtn">تأیید کد</button>
+                        <div class="mt-3 text-center">
+                            <p id="reset-timer" class="text-muted">زمان باقی‌مانده: 02:00</p>
+                            <button type="button" id="resendResetCodeBtn" class="btn btn-link" style="display: none;">ارسال مجدد کد</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Step 3: New Password Entry -->
+                <div id="reset-step-3" style="display: none;">
+                    <div id="reset-password-errors" class="alert alert-danger" style="display: none;"></div>
+                    <form id="resetPasswordForm" method="post" action="/set-new-password/">
+                        {% csrf_token %}
+                        <input type="hidden" id="reset_token_hidden" name="reset_token">
+                        <div class="mb-3">
+                            <label for="new_password" class="form-label">رمز عبور جدید</label>
+                            <input type="password" class="form-control" id="new_password" name="new_password" 
+                                placeholder="رمز عبور جدید" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirm_new_password" class="form-label">تکرار رمز عبور جدید</label>
+                            <input type="password" class="form-control" id="confirm_new_password" name="confirm_new_password" 
+                                placeholder="تکرار رمز عبور جدید" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100" id="setNewPasswordBtn">ثبت رمز عبور جدید</button>
+                    </form>
+                </div>
+
+                <!-- Success Message -->
+                <div id="reset-success" class="alert alert-success text-center" style="display: none;">
+                    رمز عبور شما با موفقیت تغییر یافت. اکنون می‌توانید با رمز عبور جدید وارد شوید.
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- متغیرهای جنگو برای استفاده در جاوااسکریپت -->
+<input type="hidden" id="hasMessages" value="{% if messages %}true{% else %}false{% endif %}">
+<input type="hidden" id="errorMessages" value="{% for message in messages %}{{ message }}{% if not forloop.last %}|{% endif %}{% endfor %}">
+
+<script src="{% static 'assets/js/vendor/modernizr-3.11.2.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/bootstrap.bundle-5.3.2.min.js' %}"></script>
+<script src="{% static 'assets/js/plugin/swiper/swiper-bundle.min.js' %}"></script>
+<script src="{% static 'assets/js/plugin/countdown/countdown.js' %}"></script>
+<script src="{% static 'assets/js/plugin/vanilla-tilt/vanilla-tilt.min.js' %}"></script>
+<script src="{% static 'assets/js/plugin/rasta-contact/script.js' %}"></script>
+<script src="{% static 'assets/js/plugin/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js' %}"></script>
+<script src="{% static 'assets/js/plugins.js' %}"></script>
+<script src="{% static 'assets/js/main.js' %}"></script>
+
+<script>
+  // Function to handle terms checkbox
+  document.addEventListener('DOMContentLoaded', function() {
+    // Enable/disable register button based on terms acceptance
+    const termsCheckbox = document.getElementById('acceptTerms');
+    const registerBtn = document.getElementById('registerBtn');
+    
+    termsCheckbox.addEventListener('change', function() {
+      registerBtn.disabled = !this.checked;
+    });
+    
+    // اعتبارسنجی شماره تلفن همراه
+    const phoneInput = document.getElementById('phone_number');
+    
+    phoneInput.addEventListener('input', function() {
+      this.value = this.value.replace(/[^0-9]/g, '');
+      
+      if (this.value.length > 0 && this.value[0] !== '0') {
+        this.value = '0' + this.value;
+      }
+      
+      if (this.value.length > 11) {
+        this.value = this.value.slice(0, 11);
+      }
+    });
+    
+    // Handle form submission and display errors
+    const registerForm = document.getElementById('registerForm');
+    const errorsDiv = document.getElementById('register-errors');
+    const registerErrorsDisplay = document.getElementById('register-errors-display');
+    const registerErrorsText = document.getElementById('register-errors-text');
+    
+    // حذف پیام‌های message و نمایش خطای ثبت‌نام در صورت وجود
+    const hasMessages = document.getElementById('hasMessages').value === 'true';
+    
+    if (hasMessages) {
+      // باز کردن مدال ثبت نام
+      var registerModal = new bootstrap.Modal(document.getElementById('loginModal'));
+      registerModal.show();
+      
+      // نمایش خطاها در div مربوطه
+      const errorMessages = document.getElementById('errorMessages').value.split('|');
+      let errorText = '';
+      
+      errorMessages.forEach(function(message) {
+        if (message.trim() !== '') {
+          errorText += message + '<br>';
+        }
+      });
+      
+      if (errorText) {
+        // انتقال پیام‌های خطا به نمایشگر خطای ثبت نام
+        registerErrorsDisplay.style.display = 'block';
+        registerErrorsText.innerHTML = errorText;
+      }
+    }
+    
+    // Submit handler for registration form
+    registerForm.addEventListener('submit', function(e) {
+      // Reset error display
+      errorsDiv.style.display = 'none';
+      errorsDiv.innerHTML = '';
+      
+      // Basic validation
+      const password = document.getElementById('password').value;
+      const password2 = document.getElementById('password2').value;
+      const phone = document.getElementById('phone_number').value;
+      
+      if (password !== password2) {
+        e.preventDefault();
+        errorsDiv.style.display = 'block';
+        errorsDiv.innerHTML = 'رمز عبور و تکرار آن مطابقت ندارند.';
+      }
+      
+      if (phone.length !== 11 || !phone.startsWith('09')) {
+        e.preventDefault();
+        errorsDiv.style.display = 'block';
+        errorsDiv.innerHTML = 'شماره موبایل باید 11 رقم باشد و با 09 شروع شود.';
+      }
+    });
+  });
+</script>
+
+<!-- Modal ثبت‌نام فقط با شماره موبایل -->
+<div class="modal" id="registerMobileModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">ثبت نام با شماره موبایل</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="/register/" id="registerMobileForm">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="register_phone_number" class="form-label">شماره تلفن همراه</label>
+            <input type="text" class="form-control" id="register_phone_number" name="phone_number" placeholder="مثال: 09123456789" pattern="09[0-9]{9}" maxlength="11" required>
+          </div>
+          <button type="submit" class="btn btn-success w-100" id="registerMobileBtn">ارسال کد تأیید</button>
+        </form>
+        <div id="register-mobile-errors" class="alert alert-danger mt-2" style="display: none;"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">بستن</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal وارد کردن کد OTP -->
+<div class="modal" id="otpModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">کد تأیید را وارد کنید</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="/verify-registration/" id="otpForm">
+          {% csrf_token %}
+          <input type="hidden" name="phone_number" id="otp_phone_number">
+          <div class="mb-3">
+            <label for="otp_code" class="form-label">کد تأیید</label>
+            <input type="text" class="form-control" id="otp_code" name="code" maxlength="6" required>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">تأیید</button>
+        </form>
+        <div id="otp-errors" class="alert alert-danger mt-2" style="display: none;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // ثبت‌نام فقط با شماره موبایل
+  const registerMobileForm = document.getElementById('registerMobileForm');
+  const registerMobileBtn = document.getElementById('registerMobileBtn');
+  const registerMobileErrors = document.getElementById('register-mobile-errors');
+  const otpModal = new bootstrap.Modal(document.getElementById('otpModal'));
+  const registerMobileModal = document.getElementById('registerMobileModal');
+  if (registerMobileForm) {
+    registerMobileForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      registerMobileErrors.style.display = 'none';
+      const phone = document.getElementById('register_phone_number').value;
+      if (phone.length !== 11 || !phone.startsWith('09')) {
+        registerMobileErrors.style.display = 'block';
+        registerMobileErrors.textContent = 'شماره موبایل باید 11 رقم باشد و با 09 شروع شود.';
+        return;
+      }
+      // ارسال فرم با AJAX
+      const formData = new FormData(registerMobileForm);
+      fetch('/register/', {
+        method: 'POST',
+        body: formData,
+        headers: {'X-Requested-With': 'XMLHttpRequest'}
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          // بستن modal شماره موبایل و باز کردن modal کد
+          bootstrap.Modal.getInstance(registerMobileModal).hide();
+          document.getElementById('otp_phone_number').value = phone;
+          otpModal.show();
+        } else {
+          registerMobileErrors.style.display = 'block';
+          registerMobileErrors.textContent = data.message || 'خطا در ارسال کد.';
+        }
+      })
+      .catch(error => {
+        registerMobileErrors.style.display = 'block';
+        registerMobileErrors.textContent = 'خطا در ارتباط با سرور.';
+      });
+    });
+  }
+  // ارسال کد OTP
+  const otpForm = document.getElementById('otpForm');
+  const otpErrors = document.getElementById('otp-errors');
+  if (otpForm) {
+    otpForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      otpErrors.style.display = 'none';
+      const code = document.getElementById('otp_code').value;
+      if (code.length !== 6 || !/^[0-9]+$/.test(code)) {
+        otpErrors.style.display = 'block';
+        otpErrors.textContent = 'کد تأیید باید 6 رقم باشد.';
+        return;
+      }
+      const formData = new FormData(otpForm);
+      fetch('/verify-registration/', {
+        method: 'POST',
+        body: formData,
+        headers: {'X-Requested-With': 'XMLHttpRequest'}
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          window.location.href = '/profile';
+        } else {
+          otpErrors.style.display = 'block';
+          otpErrors.textContent = data.message || 'کد تأیید اشتباه است.';
+        }
+      })
+      .catch(error => {
+        otpErrors.style.display = 'block';
+        otpErrors.textContent = 'خطا در ارتباط با سرور.';
+      });
+    });
+  }
+});
+</script>
+
+</body>
+
+</html>
