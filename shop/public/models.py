@@ -1,8 +1,8 @@
 from django.db import models
 from colorfield.fields import ColorField
-from shop.categories.models import Category
 from PIL import Image
-from utils.image_uploders import upload_brand_image_path , upload_color_image_path
+from shop.utils.image_uploders import upload_brand_image_path , upload_color_image_path
+from shop.categories.models import Category
 import os
 
 # Create your models here.

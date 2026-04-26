@@ -59,7 +59,8 @@ INSTALLED_APPS = [
     'shop.reviews',
     'shop.sitesettings',
     'shop.support',
-
+    'shop.utils',
+    
     #-----them
     "unfold.contrib.filters",  # optional, if special filters are needed
     "unfold.contrib.forms",  # optional, if special form elements are needed

@@ -1,23 +1,19 @@
 from django.shortcuts import render
-
-# Create your views here.
 from django.shortcuts import render, redirect, get_object_or_404
-from utils import get_cart_info
-from cart.models import Cart, CartItem
+from utils.cart_utils import get_cart_info
+from utils.sms import send_sms  # فرض بر این است که چنین utility دارید
+from shop.cart.models import Cart, CartItem
 from django.contrib.auth.decorators import login_required
-from account.models import Notification 
-from account.views import get_common_context
+from shop.support.models import SupportTicket, TicketReply
+from shop.account.models import Notification 
+from shop.account.views import get_common_context
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-from support.models import SupportTicket, TicketReply
 from django.contrib.auth.models import User
 from django.db import models
-from sms import send_sms  # فرض بر این است که چنین utility دارید
 from django.contrib.admin.views.decorators import staff_member_required
 
-
-
-
+# Create your views here.
 
 
 @login_required(login_url='/login/')

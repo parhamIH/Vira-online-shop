@@ -1,9 +1,10 @@
 from django.db import models
 from PIL import Image  # pillow
 from mptt.models import MPTTModel, TreeForeignKey
-from shop.public.models import Brand
 from utils.image_uploders import upload_BaseCategory_image_path , upload_cat_image_path
+from shop.public.models import Brand
 import os 
+
 # Create your models here.
 
 
