@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import render, redirect, get_object_or_404
-from utils.cart_utils import get_cart_info
-from utils.sms import send_sms  # فرض بر این است که چنین utility دارید
+from shop.utils.cart_utils import get_cart_info
+from shop.utils.sms import send_sms  # فرض بر این است که چنین utility دارید
 from shop.cart.models import Cart, CartItem
 from django.contrib.auth.decorators import login_required
 from shop.support.models import SupportTicket, TicketReply

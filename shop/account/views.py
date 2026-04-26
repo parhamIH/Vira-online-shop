@@ -4,19 +4,19 @@ from django.contrib.auth import authenticate, login , logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Favourite_products , ClientAddress, Notification, Profile
-from cart.models import Cart , CartItem, Order
-from shopApp.models import Comment, Product , ProductPackage
-from utils import * 
+from shop.account.models import Favourite_products, ClientAddress, Notification, Profile, UserCoupon
+from shop.cart.models import Cart, CartItem
+from shop.order.models import Order
+from shop.reviews.models import Comment
 from django.db.models import Min, F
 from django.views.decorators.http import require_POST
 from datetime import datetime
 from django.utils import timezone
-from sms import generate_verification_code, send_verification_sms, is_verification_code_expired
+from shop.utils.sms import generate_verification_code, send_verification_sms, is_verification_code_expired
 from django.core.exceptions import ValidationError
-from account.models import validate_iranian_national_id
-from .models import UserCoupon
-
+from shop.account.models import validate_iranian_national_id
+from shop.products.models import Product , ProductPackage
+from shop.utils.cart_utils import get_cart_info
 
 @login_required(login_url='/login/')
 def user_logout(request):
@@ -125,7 +125,7 @@ def verify_registration(request):
             return render(request, 'template/verify_registration.html', {'phone_number': phone_number})
         # بررسی انقضای کد
         from datetime import datetime
-        from sms import is_verification_code_expired
+        from utils.sms import is_verification_code_expired
         if code_created_at:
             code_created_at_dt = datetime.fromtimestamp(code_created_at)
             if is_verification_code_expired(code_created_at_dt):
@@ -830,7 +830,7 @@ def reset_password_request(request):
             return redirect('login')
         
         # Generate verification code using your existing utility
-        from sms import generate_verification_code, send_verification_sms
+        from utils.sms import generate_verification_code, send_verification_sms
         verification_code = generate_verification_code()
         
         # Store verification code in the session with a timestamp
@@ -894,7 +894,7 @@ def verify_reset_code(request):
         
         # Check if code has expired using your utility function
         from datetime import datetime
-        from sms import is_verification_code_expired
+        from utils.sms import is_verification_code_expired
         
         timestamp = reset_data.get('timestamp', 0)
         code_created_at = datetime.fromtimestamp(timestamp)

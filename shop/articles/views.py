@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
-from .models import Article
-from account.views import get_common_context
+from shop.articles.models import Article
+from shop.account.views import get_common_context
 
 def articles(request):
     articles_list = Article.objects.filter(is_published=True)

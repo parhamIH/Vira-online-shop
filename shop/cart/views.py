@@ -3,11 +3,11 @@ from django.http import JsonResponse
 from shop.cart.models import Cart, CartItem
 from shop.products.models import  ProductPackage
 from shop.order.models import Order
-from utils.sms import send_sms
-from utils.cart_utils import get_cart_count , get_cart_info 
+from shop.utils.sms import send_sms
+from shop.utils.cart_utils import get_cart_count , get_cart_info 
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
-from account.models import ClientAddress
+from shop.account.models import ClientAddress
 from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required

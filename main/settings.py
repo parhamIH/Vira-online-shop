@@ -178,7 +178,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "uploads"
 
 
-DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
 
 
 # jal default settings (optional)
