@@ -1,6 +1,4 @@
 from django.db import models
-from shop.products.models import  ProductPackage  # فرض بر این است که این مدل‌ها در shopApp موجود هستند
-from account.models import ClientAddress
 from django.contrib.auth.models import User
 import uuid
 from model_utils import FieldTracker  # Add this import
@@ -64,8 +62,8 @@ class Cart(models.Model):
         return f'Cart of {self.user.username} - Status: {self.get_status_display()}'
 
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    package = models.ForeignKey(ProductPackage, on_delete=models.CASCADE)
+    cart = models.ForeignKey('cart.Cart', on_delete=models.CASCADE)
+    package = models.ForeignKey('products.ProductPackage', on_delete=models.CASCADE)
     count = models.PositiveIntegerField(default=1)
     final_price = models.PositiveIntegerField(null=True, blank=True)
 

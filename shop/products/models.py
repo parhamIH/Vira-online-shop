@@ -3,7 +3,7 @@ from PIL import Image
 from shop.public.models import Size , Color
 from django.core.validators import MinValueValidator, MaxValueValidator
 from model_utils import FieldTracker  # Add this import
-from utils.image_uploders import upload_image_path
+from shop.utils.image_uploders import upload_image_path
 import os 
 # Create your models here.
 
@@ -39,11 +39,11 @@ class Product(models.Model):
 
 # مدل ویژگی های محصول product 
 class ProductPackage(models.Model):
-    product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='product_packages')
+    product = models.ForeignKey('products.Product', on_delete=models.CASCADE, related_name='product_packages')
     # ____________________________________________________*product attributes *___________________________________________
-    size = models.ForeignKey(Size, on_delete=models.CASCADE, default=None, blank=True, null=True)
-    brand = models.ForeignKey('Brand', on_delete=models.CASCADE, default=None, blank=True, null=True, verbose_name="برند")
-    color = models.ForeignKey(Color,verbose_name="رنگ", blank= True,null=True, on_delete=models.CASCADE)
+    size = models.ForeignKey('public.Size', on_delete=models.CASCADE, default=None, blank=True, null=True)
+    brand = models.ForeignKey('public.Brand', on_delete=models.CASCADE, default=None, blank=True, null=True, verbose_name="برند")
+    color = models.ForeignKey('public.Color',verbose_name="رنگ", blank= True,null=True, on_delete=models.CASCADE)
 
     quantity = models.PositiveIntegerField(default=0, verbose_name="تعداد" , blank= False)
     weight = models.PositiveIntegerField(verbose_name="وزن به گرم" , default= 0 , blank= True,null=True)
@@ -91,7 +91,7 @@ class ProductPackage(models.Model):
 # مدل گالری محصول  product
 class Gallery(models.Model):
 
-    product = models.ForeignKey(Product,on_delete=models.CASCADE,verbose_name="محصول")
+    product = models.ForeignKey('products.Product',on_delete=models.CASCADE,verbose_name="محصول")
 
     image = models.ImageField(upload_to=upload_image_path,verbose_name="عکس", blank=True, null=True)
 

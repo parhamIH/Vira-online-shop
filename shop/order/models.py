@@ -2,6 +2,10 @@ from django.db import models
 from model_utils import FieldTracker  # Add this import
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.contrib.auth.models import User
+from shop.cart.models import Cart
+import uuid
+
 # Create your models here.
 class Order(models.Model):
     SHIPPING_CHOICES = [
@@ -10,9 +14,9 @@ class Order(models.Model):
         ('express', 'پیک موتوری'),
     ]
     
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    cart = models.OneToOneField(Cart, on_delete=models.PROTECT)
-    address = models.ForeignKey(ClientAddress, on_delete=models.PROTECT)
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    cart = models.OneToOneField('cart.Cart', on_delete=models.PROTECT)
+    address = models.ForeignKey('account.ClientAddress', on_delete=models.PROTECT)
     
     order_number = models.CharField(max_length=100, unique=True, editable=False, default=uuid.uuid4)
     order_date = models.DateTimeField(auto_now_add=True)

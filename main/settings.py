@@ -157,7 +157,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [BASE_DIR / 'template', BASE_DIR / 'templateAdmin']
+STATICFILES_DIRS = [BASE_DIR / 'template', ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STORAGES = {

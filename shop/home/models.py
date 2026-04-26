@@ -1,7 +1,7 @@
 from django.db import models
 from PIL import Image
 from shop.public.models import Brand
-from utils.image_uploders import upload_slider_image_path , upload_banner_image_path
+from shop.utils.image_uploders import upload_slider_image_path , upload_banner_image_path
 import os
 
 # Create your models here.

@@ -1,5 +1,4 @@
 from django.db import models
-from shop.products.models import Product
 from model_utils import FieldTracker  # Add this import
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
@@ -10,7 +9,7 @@ from django.contrib.auth.models import User
 class Comment(models.Model): 
     
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="کاربر")
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="محصول")
+    product = models.ForeignKey('products.Product', on_delete=models.CASCADE, verbose_name="محصول")
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies', verbose_name="پاسخ به")
     text = models.TextField(verbose_name="متن نظر")
     rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], verbose_name="امتیاز")

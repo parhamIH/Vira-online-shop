@@ -1,9 +1,11 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin, TabularInline, StackedInline
-from .models import Cart, CartItem, Order
+from shop.cart.models import Cart, CartItem
+from shop.order.models import Order
 from django.utils.html import format_html
 from django.utils import timezone
 import jdatetime
+
 @admin.register(Cart)
 class CartAdmin(ModelAdmin):
     list_display = ('cart_number', 'user', 'status', 'is_paid_colored', 'total_price', 'created_date_jalali', 'updated_date_jalali')

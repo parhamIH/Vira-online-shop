@@ -42,7 +42,7 @@ class SupportTicket(models.Model):
         return f"{self.subject} - {self.user.username}"
 
 class TicketReply(models.Model):
-    ticket = models.ForeignKey(SupportTicket, on_delete=models.CASCADE, related_name='replies', verbose_name='تیکت')
+    ticket = models.ForeignKey('SupportTicket', on_delete=models.CASCADE, related_name='replies', verbose_name='تیکت')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ticket_replies', verbose_name='کاربر')
     message = models.TextField(verbose_name='پیام')
     attachment = models.FileField(upload_to='support_reply_attachments/', null=True, blank=True, verbose_name='فایل پیوست')

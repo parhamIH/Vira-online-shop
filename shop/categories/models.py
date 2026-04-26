@@ -1,8 +1,7 @@
 from django.db import models
 from PIL import Image  # pillow
 from mptt.models import MPTTModel, TreeForeignKey
-from utils.image_uploders import upload_BaseCategory_image_path , upload_cat_image_path
-from shop.public.models import Brand
+from shop.utils.image_uploders import upload_BaseCategory_image_path , upload_cat_image_path
 import os 
 
 # Create your models here.
@@ -13,7 +12,7 @@ class BaseCategorys(models.Model):
     en_name = models.CharField(max_length=50, unique=True, verbose_name="اسم- --انگلیسی-- دسته بندی اصلی")
     description = models.TextField(verbose_name="توضیحات دسته بندی اصلی")
     image = models.ImageField(upload_to=upload_BaseCategory_image_path, verbose_name="عکس دسته بندی اصلی", blank=True, null=True)
-    brands = models.ManyToManyField('Brand', verbose_name="برند های دسته بندی", related_name='base_categories', blank=True)
+    brands = models.ManyToManyField('public.Brand', verbose_name="برند های دسته بندی", related_name='base_categories', blank=True)
 
     class Meta:
         verbose_name = "دسته بندی  اصلی "
@@ -33,12 +32,12 @@ class BaseCategorys(models.Model):
 class Category(MPTTModel):
 
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
-    base_catgory = models.ForeignKey(BaseCategorys, verbose_name="دسته بندی اصلی", on_delete=models.CASCADE, related_name='categories')
+    base_catgory = models.ForeignKey('categories.BaseCategorys', verbose_name="دسته بندی اصلی", on_delete=models.CASCADE, related_name='categories')
 
     name = models.CharField(max_length=100,unique=True, verbose_name='نام دسته‌بندی')
     en_name = models.CharField(max_length=20, unique=True, verbose_name="نام دسته بندی ---انگلیسی")
     description = models.TextField(blank=True, null=True)
-    brand = models.ManyToManyField(Brand, blank=True, related_name='categories')
+    brand = models.ManyToManyField('public.Brand', blank=True, related_name='categories')
     image = models.ImageField(upload_to=upload_cat_image_path, verbose_name="عکس دسته بندی", blank=True, null=True)
 
     class MPTTMeta:

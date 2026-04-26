@@ -12,7 +12,7 @@ class Brand(models.Model):
     name = models.CharField(max_length=50, unique=True, verbose_name="نام ---فارسی")
     en_name = models.CharField(max_length=50, unique=True, verbose_name="نام ---انگلیسی")
     logo = models.ImageField(upload_to=upload_brand_image_path, verbose_name="لوگو برند", blank=True, null=True)
-    category = models.ManyToManyField(Category, blank=True, verbose_name="دسته بندی")
+    category = models.ManyToManyField('Category', blank=True, verbose_name="دسته بندی")
 
     class Meta:
         verbose_name = "برند"
@@ -53,7 +53,7 @@ class Color(models.Model):
     name = models.CharField(max_length=50, verbose_name= "نام رنگ")
     hex_code = models.CharField(max_length=7, verbose_name= "کد هگز رنگ",help_text=" مثال: #FFFFFF")
     image = models.ImageField(upload_to=upload_color_image_path, verbose_name="تصویر رنگ", blank=True, null=True)
-    base_color = models.ForeignKey(BaseColor, on_delete=models.CASCADE, verbose_name="رنگ پایه", related_name="colors", null=True, blank=True)
+    base_color = models.ForeignKey('public.BaseColor', on_delete=models.CASCADE, verbose_name="رنگ پایه", related_name="colors", null=True, blank=True)
 
     class Meta:
         verbose_name = "رنگ"

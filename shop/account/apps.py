@@ -6,4 +6,4 @@ class AccountConfig(AppConfig):
     name = 'shop.account'
 
     def ready(self):
-        import account.signals  # ثبت سیگنال‌ها
+        import shop.account.signals  # ثبت سیگنال‌ها

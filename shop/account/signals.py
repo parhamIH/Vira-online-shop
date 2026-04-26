@@ -6,6 +6,8 @@ from shop.order.models import  Order
 from shop.account.models import Notification, Favourite_products
 from shop.products.models import ProductPackage
 from model_utils import FieldTracker
+from shop.reviews.models import Comment
+
 
 # ایجاد اعلان برای تغییر وضعیت سفارش
 @receiver(post_save, sender=Order)
