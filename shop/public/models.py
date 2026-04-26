@@ -12,7 +12,7 @@ class Brand(models.Model):
     name = models.CharField(max_length=50, unique=True, verbose_name="نام ---فارسی")
     en_name = models.CharField(max_length=50, unique=True, verbose_name="نام ---انگلیسی")
     logo = models.ImageField(upload_to=upload_brand_image_path, verbose_name="لوگو برند", blank=True, null=True)
-    category = models.ManyToManyField('Category', blank=True, verbose_name="دسته بندی")
+    category = models.ManyToManyField('categories.Category', blank=True, verbose_name="دسته بندی", related_name='Brand')
 
     class Meta:
         verbose_name = "برند"

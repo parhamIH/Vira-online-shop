@@ -14,7 +14,7 @@ class Order(models.Model):
         ('express', 'پیک موتوری'),
     ]
     
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     cart = models.OneToOneField('cart.Cart', on_delete=models.PROTECT)
     address = models.ForeignKey('account.ClientAddress', on_delete=models.PROTECT)
     

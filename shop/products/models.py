@@ -12,7 +12,7 @@ class Product(models.Model):
     name = models.CharField(max_length=150, unique= True, verbose_name="نام محصول")
     description = models.TextField(verbose_name="توضیحات")
     is_active = models.BooleanField(default=False, verbose_name="موجود")
-    categories = models.ManyToManyField('Category', verbose_name="دسته بندی")
+    categories = models.ManyToManyField('categories.Category', verbose_name="دسته بندی")
     
     created_date = models.DateTimeField(auto_now_add=True, verbose_name="زمان اضافه شدن")
     updated_date = models.DateTimeField(auto_now=True, verbose_name="آخرین تغییر")
