@@ -1,9 +1,10 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
-from cart.models import Cart, Order
-from account.models import Notification, Favourite_products
-from shopApp.models import ProductPackage, Comment
+from shop.cart.models import CartItem , Cart
+from shop.order.models import  Order
+from shop.account.models import Notification, Favourite_products
+from shop.products.models import ProductPackage
 from model_utils import FieldTracker
 
 # ایجاد اعلان برای تغییر وضعیت سفارش

@@ -1,7 +1,10 @@
-from django.shortcuts import render, redirect , get_object_or_404
-from django.http import JsonResponse, HttpResponseRedirect
-from .models import Cart , Order , CartItem
-from  utils.sms import send_sms
+from django.shortcuts import render, redirect 
+from django.http import JsonResponse
+from shop.cart.models import Cart, CartItem
+from shop.products.models import  ProductPackage
+from shop.order.models import Order
+from utils.sms import send_sms
+from utils.cart_utils import get_cart_count , get_cart_info 
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from account.models import ClientAddress

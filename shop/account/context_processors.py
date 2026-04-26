@@ -1,7 +1,7 @@
 from account.models import Notification, Favourite_products
 from cart.models import Cart
-from shopApp.models import Comment
-from utils import get_cart_info
+from shop.reviews.models import Comment
+from utils.cart_utils import get_cart_info
 
 
 def user_data(request):
