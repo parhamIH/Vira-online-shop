@@ -2,6 +2,7 @@ from django.contrib import admin
 from shop.categories.models import *
 from mptt.admin import DraggableMPTTAdmin
 from unfold.admin import ModelAdmin
+from django.utils.html import format_html
 
 @admin.register(BaseCategorys)
 class BaseCategorysAdmin(ModelAdmin):
