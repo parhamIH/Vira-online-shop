@@ -1,16 +1,9 @@
 from django.shortcuts import render , redirect
 from shop.utils.cart_utils import get_cart_info
-from django.contrib.auth.decorators import login_required
-from shop.account.models import Notification 
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST
-from shop.support.models import SupportTicket
-from django.contrib.auth.models import User
-from shop.products.models import  ProductPackage, Product 
+from shop.products.models import  ProductPackage
 from shop.cart.models import Cart, CartItem
-from shop.categories.models import BaseCategorys, Category
+from shop.categories.models import BaseCategorys
 from shop.home.models import  HomeSlider, FeaturedBrand, PromotionalBanner
-from shop.public.models import Brand
 
 
 def home(request):

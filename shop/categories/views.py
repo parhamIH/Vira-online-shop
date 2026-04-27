@@ -1,7 +1,7 @@
 from django.shortcuts import render , get_object_or_404
 from django.core.paginator import Paginator
 from .models import BaseCategorys , Category
-from shop.cart.utils import get_cart_info
+from shop.utils.cart_utils import get_cart_info
 from shop.public.models import Brand , BaseColor
 from shop.products.models import Size , ProductPackage
 from shop.cart.models import Cart
