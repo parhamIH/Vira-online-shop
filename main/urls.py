@@ -18,7 +18,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path , include
-from main.views import home 
+from shop.home.views import home 
 
 
 urlpatterns = [
@@ -26,6 +26,7 @@ urlpatterns = [
     path("", home, name='home'),
     path("",include("shop.account.urls")),
     path("",include("shop.cart.urls")),
+    path("",include("shop.order.urls")),
     path("",include("shop.products.urls")),
     path("blog/",include("shop.articles.urls")),
     path("support/",include("shop.support.urls")),

@@ -1,11 +1,8 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.contrib.auth.models import User
-from shop.cart.models import CartItem , Cart
 from shop.order.models import  Order
 from shop.account.models import Notification, Favourite_products
 from shop.products.models import ProductPackage
-from model_utils import FieldTracker
 from shop.reviews.models import Comment
 
 

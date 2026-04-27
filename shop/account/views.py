@@ -13,7 +13,6 @@ from django.views.decorators.http import require_POST
 from datetime import datetime
 from django.utils import timezone
 from shop.utils.sms import generate_verification_code, send_verification_sms, is_verification_code_expired
-from django.core.exceptions import ValidationError
 from shop.account.models import validate_iranian_national_id
 from shop.products.models import Product , ProductPackage
 from shop.utils.cart_utils import get_cart_info
