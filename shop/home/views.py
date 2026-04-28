@@ -2,7 +2,7 @@ from django.shortcuts import render , redirect
 from shop.utils.cart_utils import get_cart_info
 from shop.products.models import  ProductPackage
 from shop.cart.models import Cart, CartItem
-from shop.categories.models import BaseCategorys
+from shop.categories.models import BaseCategories
 from shop.home.models import  HomeSlider, FeaturedBrand, PromotionalBanner
 
 
@@ -24,7 +24,7 @@ def home(request):
         }
     
     # دریافت دسته‌بندی‌های اصلی
-    base_categories = BaseCategorys.objects.all()
+    base_categories = BaseCategories.objects.all()
     
     # دریافت اسلایدرهای فعال برای صفحه اصلی
     sliders = HomeSlider.objects.filter(active=True).order_by('order')

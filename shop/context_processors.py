@@ -1,6 +1,6 @@
 from datetime import datetime
 from shop.sitesettings.models import SiteSettings, StaticPage
-from shop.categories.models import Category, BaseCategorys
+from shop.categories.models import Category, BaseCategories
 
 def site_settings(request):
     """
@@ -34,5 +34,5 @@ def categories(request):
     return {
         'all_categories': Category.objects.filter(parent=None),  # فقط دسته‌بندی‌های اصلی
         'all_categories_list': Category.objects.all(),  # همه دسته‌بندی‌ها
-        'base_categories': BaseCategorys.objects.all()  # دسته‌بندی‌های پایه
+        'base_categories': BaseCategories.objects.all()  # دسته‌بندی‌های پایه
     } 

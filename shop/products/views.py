@@ -1,6 +1,6 @@
 from django.shortcuts import render , redirect ,get_object_or_404
 from django.core.paginator import Paginator
-from shop.categories.models import BaseCategorys, Category
+from shop.categories.models import BaseCategories, Category
 from shop.cart.models import  CartItem ,Cart
 from shop.products.models import Product, ProductPackage, Gallery
 from shop.public.models import Size, Brand, BaseColor
@@ -22,7 +22,7 @@ from django.utils.text import slugify
 def products_list(request):
 
     # ORM
-    base_categories = BaseCategorys.objects.all()
+    base_categories = BaseCategories.objects.all()
     categories = Category.objects.all()
     all_sizes = Size.objects.all()
     base_colors = BaseColor.objects.all()
@@ -263,10 +263,10 @@ def product_detail(request, *args, **kwargs):
 #category
 def category_products(request, en_name):
     # دریافت دسته‌بندی اصلی
-    base_category = get_object_or_404(BaseCategorys, en_name=en_name)
+    base_category = get_object_or_404(BaseCategories, en_name=en_name)
     
     # ORM - دریافت اطلاعات مورد نیاز
-    base_categories = BaseCategorys.objects.all()
+    base_categories = BaseCategories.objects.all()
     categories = Category.objects.filter(base_catgory=base_category)
     all_sizes = Size.objects.all()
     base_colors = BaseColor.objects.all()

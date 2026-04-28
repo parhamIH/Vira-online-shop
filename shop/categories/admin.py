@@ -4,8 +4,8 @@ from mptt.admin import DraggableMPTTAdmin
 from unfold.admin import ModelAdmin
 from django.utils.html import format_html
 
-@admin.register(BaseCategorys)
-class BaseCategorysAdmin(ModelAdmin):
+@admin.register(BaseCategories)
+class BaseCategoriesAdmin(ModelAdmin):
     list_display = ("name", "en_name", "get_brands", "image_preview")
     list_filter = ("en_name", "name")
     ordering = ("name",)
@@ -39,5 +39,3 @@ class CategoryAdmin(DraggableMPTTAdmin):
     list_display_links = ('indented_title',)
     search_fields = ['name', 'description']
     list_filter = ['parent']
-    filter_horizontal = ['brand']
-

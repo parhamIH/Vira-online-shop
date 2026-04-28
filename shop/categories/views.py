@@ -1,6 +1,6 @@
 from django.shortcuts import render , get_object_or_404
 from django.core.paginator import Paginator
-from .models import BaseCategorys , Category
+from .models import BaseCategories , Category
 from shop.utils.cart_utils import get_cart_info
 from shop.public.models import Brand , BaseColor
 from shop.products.models import Size , ProductPackage
@@ -11,10 +11,10 @@ from shop.cart.models import Cart
 #category
 def category_products(request, en_name):
     # دریافت دسته‌بندی اصلی
-    base_category = get_object_or_404(BaseCategorys, en_name=en_name)
+    base_category = get_object_or_404(BaseCategories, en_name=en_name)
     
     # ORM - دریافت اطلاعات مورد نیاز
-    base_categories = BaseCategorys.objects.all()
+    base_categories = BaseCategories.objects.all()
     categories = Category.objects.filter(base_catgory=base_category)
     all_sizes = Size.objects.all()
     base_colors = BaseColor.objects.all()
