@@ -58,7 +58,7 @@ def validate_national_id(value):
 
 class FavouriteProducts(models.Model):
     user=models.ForeignKey(User, on_delete=models.CASCADE)
-    products=models.ManyToManyField(Product, verbose_name=("Favourite_products"))
+    products=models.ManyToManyField(Product, verbose_name=("FavouriteProducts"))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

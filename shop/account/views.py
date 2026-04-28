@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login , logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from shop.account.models import Favourite_products, ClientAddress, Notification, Profile, UserCoupon
+from shop.account.models import FavouriteProducts, ClientAddress, Notification, Profile, UserCoupon
 from shop.cart.models import Cart, CartItem
 from shop.order.models import Order
 from shop.reviews.models import Comment
@@ -609,10 +609,10 @@ def liked_list(request):
     context = get_common_context(request)
     
     # دریافت محصولات مورد علاقه کاربر با اطلاعات کامل
-    favourites = Favourite_products.objects.filter(user=request.user)
+    favourites = FavouriteProducts.objects.filter(user=request.user)
     
     # استخراج محصولات واقعی از آبجکت‌های محبوب با اطلاعات رنگ
-    favourite_products = []
+    FavouriteProducts = []
     for fav in favourites:
         for product in fav.products.all():
             # دریافت اولین بسته محصول فعال برای رنگ
@@ -629,10 +629,10 @@ def liked_list(request):
                 } if package and package.color else None,
                 'is_available': package.is_active_package if package else False,
             }
-            favourite_products.append(product_data)
+            FavouriteProducts.append(product_data)
     
     # اضافه کردن محصولات مورد علاقه به context
-    context['favourite_products'] = favourite_products
+    context['FavouriteProducts'] = FavouriteProducts
     
     return render(request, 'template/favorites.html', context)
 
@@ -644,8 +644,8 @@ def add_to_favorites(request):
         try:
             product = Product.objects.get(id=product_id)
             
-            # بررسی وجود یا ایجاد آبجکت Favourite_products برای کاربر
-            fav_obj, created = Favourite_products.objects.get_or_create(user=request.user)
+            # بررسی وجود یا ایجاد آبجکت FavouriteProducts برای کاربر
+            fav_obj, created = FavouriteProducts.objects.get_or_create(user=request.user)
             
             # اضافه کردن محصول به لیست علاقه‌مندی‌ها
             if product not in fav_obj.products.all():
@@ -668,7 +668,7 @@ def remove_from_favorites(request):
         
     try:
         product = Product.objects.get(id=product_id)
-        favorite = Favourite_products.objects.filter(user=request.user, products=product)
+        favorite = FavouriteProducts.objects.filter(user=request.user, products=product)
         if favorite.exists():
             # حذف محصول از لیست محبوب‌ها
             for fav in favorite:
@@ -718,8 +718,8 @@ def get_common_context(request):
     all_orders_count = Order.objects.filter(user=request.user).count()
     
     # Count user's favorite products
-    fav_products = Favourite_products.objects.filter(user=request.user)
-    favourite_products_count = fav_products.count()
+    fav_products = FavouriteProducts.objects.filter(user=request.user)
+    FavouriteProducts_count = fav_products.count()
     
     # Categorize orders by status and payment status
     orders_pending = []
@@ -790,7 +790,7 @@ def get_common_context(request):
         'orders_unpaid_count': len(orders_unpaid),
         
         # Favorites
-        'favourite_products_count': favourite_products_count,
+        'FavouriteProducts_count': FavouriteProducts_count,
     }
 
 def reset_password_request(request):

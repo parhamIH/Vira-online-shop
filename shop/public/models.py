@@ -82,8 +82,8 @@ class Size(models.Model):
         ("accessories","اکسسوری"),
     ]
     size= models.CharField(choices=SIZE_CHOICES, max_length=10, blank= True, null=True, verbose_name="ware size ")
-    number_size = models.PositiveSmallIntegerField(blank=True, null=True, verbose_name="Numrical size " help_text="for shoes or etc... (*postive int*) ")
-    size_numrical = models.CharField(max_length=10, verbose_name="Numrical size " help_text="write able")
+    number_size = models.PositiveSmallIntegerField(blank=True, null=True, verbose_name="Numrical size ", help_text="for shoes or etc... (*postive int*) ")
+    size_numrical = models.CharField(max_length=10, verbose_name="Numrical size ", help_text="write able")
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=20, blank=True, null=True, verbose_name="category")
     
     class Meta:

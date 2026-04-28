@@ -1,7 +1,7 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin, TabularInline, StackedInline
 from django.contrib.auth.models import User
-from .models import ClientAddress, Profile, Notification, Favourite_products, UserCoupon
+from .models import ClientAddress, Profile, Notification, FavouriteProducts, UserCoupon
 
 class ProfileInline(StackedInline):
     model = Profile
@@ -66,4 +66,4 @@ admin.site.register(User, CustomUserAdmin)
 admin.site.register(ClientAddress, ClientAddressAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Notification, NotificationAdmin)
-admin.site.register(Favourite_products)
+admin.site.register(FavouriteProducts)

@@ -13,7 +13,7 @@ import json
 from django.db.models import Count, Q
 from django.views.decorators.csrf import csrf_exempt  # اگر با CSRF مشکل دارید
 from django.contrib.auth.decorators import login_required
-from shop.account.models import Favourite_products 
+from shop.account.models import FavouriteProducts 
 from django.template.loader import render_to_string
 from django.utils.text import slugify
 
@@ -188,14 +188,14 @@ def product_detail(request, *args, **kwargs):
 
     user_favorites = []
     if request.user.is_authenticated:
-        fav_obj = Favourite_products.objects.filter(user=request.user).first()
+        fav_obj = FavouriteProducts.objects.filter(user=request.user).first()
         if fav_obj:
             user_favorites = fav_obj.products.all()
 
     # بررسی اینکه آیا محصول در لیست علاقه‌مندی‌های کاربر است یا خیر
     is_favorite = False
     if request.user.is_authenticated:
-        fav_obj = Favourite_products.objects.filter(user=request.user).first()
+        fav_obj = FavouriteProducts.objects.filter(user=request.user).first()
         if fav_obj and product in fav_obj.products.all():
             is_favorite = True
 

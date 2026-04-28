@@ -1,4 +1,4 @@
-from account.models import Notification, Favourite_products
+from account.models import Notification, FavouriteProducts
 from cart.models import Cart
 from shop.reviews.models import Comment
 from utils.cart_utils import get_cart_info
@@ -29,11 +29,11 @@ def user_data(request):
     all_carts_count = len(carts)
     
     # Count user's favorite products
-    fav_products = Favourite_products.objects.filter(user=request.user)
-    favourite_products_count = fav_products.count()
+    fav_products = FavouriteProducts.objects.filter(user=request.user)
+    FavouriteProducts_count = fav_products.count()
     
     # برای اشکال‌زدایی، مقادیر را چاپ کنیم
-    print(f"User: {request.user.username}, Favorites query: {fav_products}, Count: {favourite_products_count}")
+    print(f"User: {request.user.username}, Favorites query: {fav_products}, Count: {FavouriteProducts_count}")
     
     # Categorize carts by status
     carts_pending = []
@@ -89,5 +89,5 @@ def user_data(request):
         'carts_canceled_count': len(carts_canceled),
         
         # Favorites
-        'favourite_products_count': favourite_products_count,
+        'FavouriteProducts_count': FavouriteProducts_count,
     } 

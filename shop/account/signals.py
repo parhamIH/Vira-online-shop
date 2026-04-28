@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from shop.order.models import  Order
-from shop.account.models import Notification, Favourite_products
+from shop.account.models import Notification, FavouriteProducts
 from shop.products.models import ProductPackage
 from shop.reviews.models import Comment
 
@@ -62,7 +62,7 @@ def product_availability_notification(sender, instance, created, **kwargs):
         # اگر محصول فعال شده و قبلاً غیرفعال بوده
         if instance.tracker.has_changed('is_active_package') and not instance.tracker.previous('is_active_package'):
             # پیدا کردن کاربرانی که این محصول را به علاقه‌مندی‌ها اضافه کرده‌اند
-            favorite_users = Favourite_products.objects.filter(products=instance.product)
+            favorite_users = FavouriteProducts.objects.filter(products=instance.product)
             
             for fav in favorite_users:
                 Notification.objects.create(
