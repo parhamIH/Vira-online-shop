@@ -23,35 +23,35 @@ class SupportTicket(models.Model):
         ('sales', 'فروش'),
     )
     
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='support_tickets', verbose_name='کاربر')
-    subject = models.CharField(max_length=255, verbose_name='موضوع')
-    message = models.TextField(verbose_name='پیام')
-    department = models.CharField(max_length=50, choices=DEPARTMENT_CHOICES, default='general', verbose_name='دپارتمان')
-    priority = models.CharField(max_length=50, choices=PRIORITY_CHOICES, default='medium', verbose_name='اولویت')
-    attachment = models.FileField(upload_to='support_attachments/', null=True, blank=True, verbose_name='فایل پیوست')
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='pending', verbose_name='وضعیت')
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    updated_at = models.DateTimeField(auto_now=True, verbose_name='آخرین بروزرسانی')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='support_tickets', verbose_name='client ')
+    subject = models.CharField(max_length=255, verbose_name='subject')
+    message = models.TextField(verbose_name='message')
+    department = models.CharField(max_length=50, choices=DEPARTMENT_CHOICES, default='general', verbose_name='department')
+    priority = models.CharField(max_length=50, choices=PRIORITY_CHOICES, default='medium', verbose_name='priority')
+    attachment = models.FileField(upload_to='support_attachments/', null=True, blank=True, verbose_name="attachment")
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='pending', verbose_name='status')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='created_at')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='updated_at')
     
     class Meta:
-        verbose_name = 'تیکت پشتیبانی'
-        verbose_name_plural = 'تیکت‌های پشتیبانی'
+        verbose_name = 'support ticket '
+        verbose_name_plural = "support tickets"
         ordering = ['-created_at']
     
     def __str__(self):
         return f"{self.subject} - {self.user.username}"
 
 class TicketReply(models.Model):
-    ticket = models.ForeignKey('SupportTicket', on_delete=models.CASCADE, related_name='replies', verbose_name='تیکت')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ticket_replies', verbose_name='کاربر')
-    message = models.TextField(verbose_name='پیام')
-    attachment = models.FileField(upload_to='support_reply_attachments/', null=True, blank=True, verbose_name='فایل پیوست')
-    is_staff_reply = models.BooleanField(default=False, verbose_name='پاسخ کارمند')
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
+    ticket = models.ForeignKey('SupportTicket', on_delete=models.CASCADE, related_name='replies', verbose_name='ticket')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ticket_replies', verbose_name='client')
+    message = models.TextField(verbose_name="message")
+    attachment = models.FileField(upload_to='support_reply_attachments/', null=True, blank=True, verbose_name='attachment')
+    is_staff_reply = models.BooleanField(default=False, verbose_name='is_staff_reply')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='created_at')
     
     class Meta:
-        verbose_name = 'پاسخ تیکت'
-        verbose_name_plural = 'پاسخ‌های تیکت'
+        verbose_name = 'ticket response '
+        verbose_name_plural =" ticket responses"
         ordering = ['created_at']
     
     def __str__(self):

@@ -9,18 +9,18 @@ import os
 
 # مدل محصول product
 class Product(models.Model):
-    name = models.CharField(max_length=150, unique= True, verbose_name="نام محصول")
-    description = models.TextField(verbose_name="توضیحات")
-    is_active = models.BooleanField(default=False, verbose_name="موجود")
-    categories = models.ManyToManyField('categories.Category', verbose_name="دسته بندی")
+    name = models.CharField(max_length=150, unique= True, verbose_name="name")
+    description = models.TextField(verbose_name="description")
+    is_active = models.BooleanField(default=False, verbose_name="active")
+    categories = models.ManyToManyField('categories.Category', verbose_name="categories")
     
-    created_date = models.DateTimeField(auto_now_add=True, verbose_name="زمان اضافه شدن")
-    updated_date = models.DateTimeField(auto_now=True, verbose_name="آخرین تغییر")
-    image = models.ImageField(upload_to='uploads/', verbose_name="عکس", blank=True, null=True)  # مسیر بارگذاری تصویر را تنظیم کنید
+    created_date = models.DateTimeField(auto_now_add=True, verbose_name="created_date")
+    updated_date = models.DateTimeField(auto_now=True, verbose_name="last update")
+    image = models.ImageField(upload_to='uploads/', verbose_name="image", blank=True, null=True)  # مسیر بارگذاری تصویر را تنظیم کنید
 
     class Meta:
-        verbose_name = "محصول"
-        verbose_name_plural = "محصولات"
+        verbose_name = "product"
+        verbose_name_plural = "products"
 
     def __str__(self):
         return f"نام محصول: {self.name}"
@@ -42,36 +42,36 @@ class ProductPackage(models.Model):
     product = models.ForeignKey('products.Product', on_delete=models.CASCADE, related_name='product_packages')
     # ____________________________________________________*product attributes *___________________________________________
     size = models.ForeignKey('public.Size', on_delete=models.CASCADE, default=None, blank=True, null=True)
-    brand = models.ForeignKey('public.Brand', on_delete=models.CASCADE, default=None, blank=True, null=True, verbose_name="برند")
-    color = models.ForeignKey('public.Color',verbose_name="رنگ", blank= True,null=True, on_delete=models.CASCADE)
+    brand = models.ForeignKey('public.Brand', on_delete=models.CASCADE, default=None, blank=True, null=True, verbose_name="brand")
+    color = models.ForeignKey('public.Color',verbose_name="color", blank= True,null=True, on_delete=models.CASCADE)
 
-    quantity = models.PositiveIntegerField(default=0, verbose_name="تعداد" , blank= False)
-    weight = models.PositiveIntegerField(verbose_name="وزن به گرم" , default= 0 , blank= True,null=True)
+    quantity = models.PositiveIntegerField(default=0, verbose_name="quantity" , blank= False)
+    weight = models.PositiveIntegerField(verbose_name="weight to geram" , default= 0 , blank= True,null=True)
 
-    is_active_package=models.BooleanField(default=False ,  verbose_name=" موجود ؟" , )
+    is_active_package=models.BooleanField(default=False, verbose_name="is active" )
 
     created_date = models.DateTimeField(auto_now_add=True)
     
     # _________________________________________________*price*_____________________________________________________
-    price = models.BigIntegerField(null=False, verbose_name="قیمت برای این ویژگی ها")
-    final_price = models.BigIntegerField(default= 0 , verbose_name= "  قیمت نهایی با این ویژگی ها ",editable=False)
-    discount = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(99)], null=True, blank=True ,default=0, verbose_name="درصد تخفیف")
-    is_active_discount = models.BooleanField(default=False, verbose_name="اعمال تخفیف")
+    price = models.BigIntegerField(null=False, verbose_name="base price")
+    final_price = models.BigIntegerField(default= 0 , verbose_name= "final price ",editable=False)
+    discount = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(99)], null=True, blank=True ,default=0, verbose_name="discount percentage")
+    is_active_discount = models.BooleanField(default=False, verbose_name="active discount ")
     
     # آمار فروش
-    sold_count = models.PositiveIntegerField(default=0, verbose_name="تعداد فروش")
-    views_count = models.PositiveIntegerField(default=0, verbose_name="تعداد بازدید")
-    rating = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)], verbose_name="امتیاز")
+    sold_count = models.PositiveIntegerField(default=0, verbose_name="sold_count")
+    views_count = models.PositiveIntegerField(default=0, verbose_name="views_count")
+    rating = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)], verbose_name="rate")
 
     # Add field tracker to track changes
     tracker = FieldTracker(fields=['is_active_package'])
 
     class Meta:
-        verbose_name = " ویژگی های محصول"
-        verbose_name_plural = " ویژگی های محصولات"
+        verbose_name = "product package  "
+        verbose_name_plural = " product packages"
 
     def __str__(self):
-        size_str = self.size.size if self.size else "بدون سایز"
+        size_str = self.size.size if self.size else "size less "
         return f"{self.product.id} - {self.product.name} - {size_str} - {self.quantity} - {self.weight} - "
 
 
@@ -91,13 +91,13 @@ class ProductPackage(models.Model):
 # مدل گالری محصول  product
 class Gallery(models.Model):
 
-    product = models.ForeignKey('products.Product',on_delete=models.CASCADE,verbose_name="محصول")
+    product = models.ForeignKey('products.Product',on_delete=models.CASCADE,verbose_name="product")
 
-    image = models.ImageField(upload_to=upload_image_path,verbose_name="عکس", blank=True, null=True)
+    image = models.ImageField(upload_to=upload_image_path,verbose_name="image", blank=True, null=True)
 
     class Meta :
-        verbose_name ="عکس"
-        verbose_name_plural = "گالری"
+        verbose_name ="image"
+        verbose_name_plural = "gallery"
     
     def __str__(self):
         return f"{self.product}"

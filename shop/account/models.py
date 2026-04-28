@@ -56,9 +56,9 @@ def validate_national_id(value):
 
 # Create your models here.
 
-class Favourite_products(models.Model):
+class FavouriteProducts(models.Model):
     user=models.ForeignKey(User, on_delete=models.CASCADE)
-    products=models.ManyToManyField(Product, verbose_name=("محصولات مورد علاقه"))
+    products=models.ManyToManyField(Product, verbose_name=("Favourite_products"))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -86,13 +86,13 @@ class Notification(models.Model):
         ('danger', 'خطر'),
     )
     
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications', verbose_name="کاربر")
-    title = models.CharField(max_length=255, verbose_name="عنوان")
-    message = models.TextField(verbose_name="متن پیام")
-    notification_type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES, default='info', verbose_name="نوع اعلان")
-    is_read = models.BooleanField(default=False, verbose_name="خوانده شده")
-    related_url = models.CharField(max_length=255, blank=True, null=True, verbose_name="لینک مرتبط")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications', verbose_name="Client")
+    title = models.CharField(max_length=255, verbose_name="Notification title")
+    message = models.TextField(verbose_name="Notification message")
+    notification_type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES, default='info', verbose_name="Notification Type ")
+    is_read = models.BooleanField(default=False, verbose_name="is_read")
+    related_url = models.CharField(max_length=255, blank=True, null=True, verbose_name="related_url")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="created_at")
     
     class Meta:
         verbose_name = "اعلان"
@@ -109,10 +109,10 @@ class Notification(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    phone_number = models.CharField(max_length=15, unique=True, null=True, blank=True, verbose_name="شماره تلفن")
-    is_phone_verified = models.BooleanField(default=False, verbose_name="تأیید شماره تلفن")
-    verification_code = models.CharField(max_length=6, null=True, blank=True, verbose_name="کد تأیید")
-    verification_code_created_at = models.DateTimeField(null=True, blank=True, verbose_name="زمان ایجاد کد تأیید")
+    phone_number = models.CharField(max_length=15, unique=True, null=True, blank=True, verbose_name="phone_number")
+    is_phone_verified = models.BooleanField(default=False, verbose_name="is_phone_verified")
+    verification_code = models.CharField(max_length=6, null=True, blank=True, verbose_name="verification_code")
+    verification_code_created_at = models.DateTimeField(null=True, blank=True, verbose_name="verification_code_created_at")
     national_id = models.CharField(
         max_length=10, 
         null=True, 
@@ -124,17 +124,17 @@ class Profile(models.Model):
             ),
             validate_national_id
         ],
-        verbose_name="کد ملی"
+        verbose_name="national_id"
     )
-    birth_date = models.DateField(null=True, blank=True, verbose_name="تاریخ تولد")
-    job = models.CharField(max_length=100, null=True, blank=True, verbose_name="شغل")
-    economic_code = models.CharField(max_length=12, null=True, blank=True, verbose_name="کد اقتصادی")
-    legal_info = models.TextField(null=True, blank=True, verbose_name="اطلاعات حقوقی")
-    refund_method = models.CharField(max_length=100, null=True, blank=True, verbose_name="روش بازگرداندن پول")
+    birth_date = models.DateField(null=True, blank=True, verbose_name=" birth_date")
+    job = models.CharField(max_length=100, null=True, blank=True, verbose_name="job")
+    economic_code = models.CharField(max_length=12, null=True, blank=True, verbose_name="economic_code")
+    legal_info = models.TextField(null=True, blank=True, verbose_name="legal_info")
+    refund_method = models.CharField(max_length=100, null=True, blank=True, verbose_name="refund_method")
     
     class Meta:
-        verbose_name = "پروفایل"
-        verbose_name_plural = "پروفایل‌ها"
+        verbose_name = "Profile"
+        verbose_name_plural = "Profiles"
     
     def __str__(self):
         return f"{self.user.username} - {self.phone_number}"
@@ -152,7 +152,7 @@ def save_user_profile(sender, instance, **kwargs):
 class UserCoupon(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='offer_coupons')
     code = models.CharField(max_length=50)
-    discount = models.PositiveIntegerField(help_text="درصد یا مبلغ تخفیف")
+    discount = models.PositiveIntegerField(help_text="discount")
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     expire_at = models.DateTimeField(null=True, blank=True)

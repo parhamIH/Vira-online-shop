@@ -9,14 +9,14 @@ import os
 
 # مدل برند  public
 class Brand(models.Model):
-    name = models.CharField(max_length=50, unique=True, verbose_name="نام ---فارسی")
-    en_name = models.CharField(max_length=50, unique=True, verbose_name="نام ---انگلیسی")
-    logo = models.ImageField(upload_to=upload_brand_image_path, verbose_name="لوگو برند", blank=True, null=True)
-    category = models.ManyToManyField(Category, blank=True, verbose_name="دسته بندی")
+    name = models.CharField(max_length=50, unique=True, verbose_name="name---fasri")
+    en_name = models.CharField(max_length=50, unique=True, verbose_name="name---english")
+    logo = models.ImageField(upload_to=upload_brand_image_path, verbose_name="Brand logo", blank=True, null=True)
+    category = models.ManyToManyField(Category, blank=True, verbose_name="Brand caregory")
 
     class Meta:
-        verbose_name = "برند"
-        verbose_name_plural = "برندها"
+        verbose_name = "Brand"
+        verbose_name_plural = "Brands"
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -39,26 +39,26 @@ class BaseColor(models.Model):
         ("#008000", "green"),
         ("#0000FF", "blue"),
     ]
-    name = models.CharField(max_length=50, verbose_name="نام رنگ", null=True, blank=True)
-    color = ColorField(samples=COLOR_PALETTE, default="#FFFFFF", verbose_name="رنگ")
+    name = models.CharField(max_length=50, verbose_name="base color name ", null=True, blank=True)
+    color = ColorField(samples=COLOR_PALETTE, default="#FFFFFF", verbose_name="color value <-->(hex)")
     
     class Meta:
-        verbose_name = "رنگ پایه"
-        verbose_name_plural = "رنگ های پایه"
+        verbose_name = "Base Color"
+        verbose_name_plural = "Base Colors"
         
     def __str__(self):
-        return f"{self.name}" if self.name else "بدون نام"
+        return f"{self.name}" if self.name else "name less"
    
 # مدل رنگ  public
 class Color(models.Model):
-    name = models.CharField(max_length=50, verbose_name= "نام رنگ")
-    hex_code = models.CharField(max_length=7, verbose_name= "کد هگز رنگ",help_text=" مثال: #FFFFFF")
-    image = models.ImageField(upload_to=upload_color_image_path, verbose_name="تصویر رنگ", blank=True, null=True)
-    base_color = models.ForeignKey('public.BaseColor', on_delete=models.CASCADE, verbose_name="رنگ پایه", related_name="colors", null=True, blank=True)
+    name = models.CharField(max_length=50, verbose_name="colr name")
+    hex_code = models.CharField(max_length=7, verbose_name="color value <-->(hex)" ,help_text=" مثال: #FFFFFF")
+    image = models.ImageField(upload_to=upload_color_image_path, verbose_name="image for color ", blank=True, null=True)
+    base_color = models.ForeignKey('public.BaseColor', on_delete=models.CASCADE, verbose_name="base color  ", related_name="colors", null=True, blank=True)
 
     class Meta:
-        verbose_name = "رنگ"
-        verbose_name_plural = "رنگ ها"
+        verbose_name = "color"
+        verbose_name_plural = "colors"
     
     def __str__(self):
         return self.name
@@ -81,14 +81,14 @@ class Size(models.Model):
         ("shoes","کفش"),
         ("accessories","اکسسوری"),
     ]
-    size= models.CharField(choices=SIZE_CHOICES, max_length=10, blank= True, null=True, verbose_name="سایز")
-    number_size = models.PositiveSmallIntegerField(blank=True, null=True, verbose_name="سایز عددی (برای مواردی مثل کفش)")
-    size_numrical = models.CharField(max_length=10, verbose_name="سایز عددی نوشتاری")
-    category = models.CharField(choices=CATEGORY_CHOICES, max_length=20, blank=True, null=True, verbose_name="دسته بندی")
+    size= models.CharField(choices=SIZE_CHOICES, max_length=10, blank= True, null=True, verbose_name="ware size ")
+    number_size = models.PositiveSmallIntegerField(blank=True, null=True, verbose_name="Numrical size " help_text="for shoes or etc... (*postive int*) ")
+    size_numrical = models.CharField(max_length=10, verbose_name="Numrical size " help_text="write able")
+    category = models.CharField(choices=CATEGORY_CHOICES, max_length=20, blank=True, null=True, verbose_name="category")
     
     class Meta:
-        verbose_name = "سایز"
-        verbose_name_plural = "سایزها"
+        verbose_name = "size"
+        verbose_name_plural = "sizes "
         ordering = ['number_size']  # چیدمان پیش‌فرض
         
     def __str__(self):
@@ -97,4 +97,4 @@ class Size(models.Model):
         elif self.number_size:
             return str(self.number_size)
         else:
-            return self.size_numrical or "بدون سایز"
+            return self.size_numrical or "size less "

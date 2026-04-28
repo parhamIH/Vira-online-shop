@@ -28,7 +28,7 @@ class Order(models.Model):
     payment_id = models.CharField(max_length=100, blank=True, null=True)  # شناسه پرداخت از درگاه
     payment_date = models.DateTimeField(null=True, blank=True)  # زمان پرداخت موفق
     payment_reference_id = models.CharField(max_length=100, blank=True, null=True)  # کد پیگیری پرداخت
-    payment_status = models.CharField(max_length=20, default='در انتظار پرداخت', blank=True , verbose_name='وضعیت پرداخت',choices=[
+    payment_status = models.CharField(max_length=20, default='در انتظار پرداخت', blank=True , verbose_name='payment_status',choices=[
         ('پرداخت شده', 'پرداخت شده'),
         ('در انتظار پرداخت', 'در انتظار پرداخت'),
         ('در انتظار تایید', 'در انتظار تایید'),
