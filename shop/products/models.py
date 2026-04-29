@@ -44,13 +44,11 @@ class ProductPackage(models.Model):
     size = models.ForeignKey('public.Size', on_delete=models.CASCADE, default=None, blank=True, null=True)
     brand = models.ForeignKey('public.Brand', on_delete=models.CASCADE, default=None, blank=True, null=True, verbose_name="brand")
     color = models.ForeignKey('public.Color',verbose_name="color", blank= True,null=True, on_delete=models.CASCADE)
-
     quantity = models.PositiveIntegerField(default=0, verbose_name="quantity" , blank= False)
     weight = models.PositiveIntegerField(verbose_name="weight to geram" , default= 0 , blank= True,null=True)
-
     is_active_package=models.BooleanField(default=False, verbose_name="is active" )
-
     created_date = models.DateTimeField(auto_now_add=True)
+    attributs = models.JSONField (default=dict, blank=True, null=True)
     
     # _________________________________________________*price*_____________________________________________________
     price = models.BigIntegerField(null=False, verbose_name="base price")

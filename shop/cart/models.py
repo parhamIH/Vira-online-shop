@@ -29,7 +29,7 @@ class Cart(models.Model):
         # وقتی پرداخت شد، تمام آیتم‌ها قیمتشان را فیکس کنند
         if self.is_paid:
             for item in self.cartitem_set.all():
-                if item.final_price is None:
+                if item.final_price is None or item.final_price > item.price :
                     item.final_price = item.package.price
                     item.save()
 
