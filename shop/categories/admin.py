@@ -33,9 +33,8 @@ class BaseCategoriesAdmin(ModelAdmin):
 
 
 @admin.register(Category)
-class CategoryAdmin(DraggableMPTTAdmin):
+class CategoryAdmin(ModelAdmin):
     mptt_indent_field = "name"
-    list_display = ('tree_actions', 'indented_title', 'parent', 'description',)
-    list_display_links = ('indented_title',)
+    list_display = ('parent', 'description',)
     search_fields = ['name', 'description']
     list_filter = ['parent']

@@ -31,3 +31,5 @@ urlpatterns = [
     path("blog/",include("shop.articles.urls")),
     path("support/",include("shop.support.urls")),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
