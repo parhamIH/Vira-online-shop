@@ -1,39 +1,42 @@
 from django.http import JsonResponse
 from shop.cart.models import CartItem , Cart
+from shop.products.models import ProductPackage
 
 def get_cart_info(cart):
-    valid_statuses = ['pending', 'confirmed', 'shipped', 'delivered', 'canceled' ,
-                       'لغو شده','تحویل داده شده','ارسال شده','تأیید شده','در حال انتظار']
+    valid_statuses = [
+        'pending', 'confirmed', 'shipped', 'delivered', 'canceled',
+        'لغو شده', 'تحویل داده شده', 'ارسال شده', 'تأیید شده', 'در حال انتظار'
+    ]
+    
     if cart and cart.status in valid_statuses:
         cart_items = CartItem.objects.filter(cart=cart)
-        cart_items_new = []
-        
-        # ایجاد دیکشنری برای نگهداری تعداد آیتم‌ها بر اساس پکیج
         package_counts = {}
 
-        # شمارش تعداد آیتم‌ها بر اساس پکیج
+        # شمارش بر اساس package_id
         for item in cart_items:
             if item.package:
-                package_id = item.package.id  # شناسه پکیج
-                if package_id in package_counts:
-                    package_counts[package_id] += item.count  # افزایش تعداد
-                else:
-                    package_counts[package_id] = item.count  # شروع شمارش
+                pid = item.package.id
+                package_counts[pid] = package_counts.get(pid, 0) + item.count
 
-        # ایجاد لیست جدید با آیتم‌ها و تعداد آن‌ها
-        for package_id, count in package_counts.items():
-            new_item = CartItem(package_id=package_id, count=count)
-            cart_items_new.append(new_item)
+        cart_items_new = []
+        total_price = 0
 
-        return {
-            'cart_items': cart_items_new,
-            "cart_total": cart.total_price(),
-        }
-    else:
-        return {
-            'cart_items': [],
-            "cart_total": 0,
-        }
+        # ساخت ساختار تمیز برای پاسخ
+        for pid, count in package_counts.items():
+            package = ProductPackage.objects.get(id=pid)
+            total = package.final_price * count  
+            cart_items_new.append({
+                'package': package,
+                'count': count,
+                'price': package.price,
+                'total_price': total,
+            })
+            total_price += total
+
+        return {'cart_items': cart_items_new, 'cart_total': total_price}
+
+    return {'cart_items': [], 'cart_total': 0}
+
 
 def get_cart_count(request):
     if request.user.is_authenticated:

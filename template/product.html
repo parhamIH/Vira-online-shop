@@ -485,10 +485,9 @@
                                         <h5 class="title font-16 mb-2">ویژگی های کالا</h5>
                                         <ul class="navbar-nav">
                                              <!--for attribute.key , value  in package attributs  -->
-                                            <li class="nav item"><span>نوع اتصال:</span><strong>با سیم</strong></li>
-                                            <li class="nav item"><span>رابط ها:</span><strong>3.5 میلیمتری</strong></li>
-                                            <li class="nav item"><span>مقدار رم :</span><strong>8 گیگابایت</strong></li>
-                                            <li class="nav item"><span>نوع گوشی:</span><strong>دوگوشی</strong></li>
+                                            {% for key, value in packages.attributs.items %}
+                                            <li class="nav item"><span> {{key}}: </span><strong>{{value}}</strong></li>
+                                            {% endfor %}
                                         </ul>
                                     </div>
                                 </div>
@@ -931,7 +930,8 @@
     background: #dc3545;
 }
 </style>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'assets/js/vendor/jquery-3.7.1.min.js' %}"></script>
+
 <script>
     window.cartItems = [
         {% for item in cart_items %}

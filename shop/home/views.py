@@ -57,19 +57,19 @@ def home(request):
     if search:
         return redirect(f"/products?q={search}")  # فرض بر این است که مسیر URL برای نتایج جستجو "/products" است
         
-    context={
-        "cart_items": [item for item in cart_info['cart_items']],  # اگر cart_items لیستی از CartItem باشد
-        'cart_count': sum(item.count for item in cart_info['cart_items']),  # استفاده از ویژگی count از CartItem
-        "cart_total": cart_info['cart_total'],  # استفاده از cart_total از تابع get_cart_info
-        "base_categories": base_categories,  # دسته‌بندی‌های اصلی برای نمایش در صفحه اصلی
-        "special_products": special_products,  # محصولات با تخفیف
-        "new_products": new_products,  # جدیدترین محصولات
-        "top_selling_products": top_selling_products,  # محصولات پرفروش
-        "sliders": sliders,  # اسلایدرهای صفحه اصلی
-        "top_banners": top_banners,  # بنرهای بالای صفحه
-        "middle_banners": middle_banners,  # بنرهای وسط صفحه
-        "bottom_banners": bottom_banners,  # بنرهای پایین صفحه
-        "featured_brands": featured_brands,  # برندهای ویژه
-    }
-    
+    context = {
+    "cart_items": cart_info['cart_items'],  # دیگر نیازی به [item for item in …] نیست
+    "cart_count": sum(item['count'] for item in cart_info['cart_items']),  # ← اصلاح اصلی
+    "cart_total": cart_info['cart_total'],
+    "base_categories": base_categories,
+    "special_products": special_products,
+    "new_products": new_products,
+    "top_selling_products": top_selling_products,
+    "sliders": sliders,
+    "top_banners": top_banners,
+    "middle_banners": middle_banners,
+    "bottom_banners": bottom_banners,
+    "featured_brands": featured_brands,
+}
+
     return render (request,"../template/index.html",context) 

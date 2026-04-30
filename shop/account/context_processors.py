@@ -71,7 +71,7 @@ def user_data(request):
         
         # Cart information
         'cart_items': cart_info['cart_items'],
-        'cart_count': sum(item.count for item in cart_info['cart_items']),
+        'cart_count': sum(item['count'] for item in cart_info['cart_items']),
         'cart_total': cart_info['cart_total'],
         
         # All carts and their status counts

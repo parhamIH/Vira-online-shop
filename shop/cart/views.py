@@ -236,7 +236,7 @@ def add_to_cart(request):
         cart_item = CartItem.objects.create(cart=cart, package=package, count=count)
         
         # آماده‌سازی داده‌های پاسخ
-        from utils import get_cart_info  # مسیر درست را وارد کنید
+        from utils.cart_utils import get_cart_info  # مسیر درست را وارد کنید
         cart_info = get_cart_info(cart)
         
         # تبدیل آبجکت‌های CartItem به دیکشنری ساده
