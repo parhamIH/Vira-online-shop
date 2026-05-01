@@ -120,7 +120,7 @@ def products_list(request):
         "brands": brands,
         "base_colors": base_colors,
         "cart_items": cart_info['cart_items'] if cart_info else [],
-        'cart_count': sum(item.count for item in cart_info['cart_items']) if cart_info else 0,
+        'cart_count': sum(item['count'] for item in cart_info['cart_items']) if cart_info else 0,
         "cart_total": cart_info['cart_total'] if cart_info else 0,
         # اضافه کردن لیست مقادیر فیلتر شده به context
         "selected_categories": selected_categories,

@@ -203,7 +203,7 @@ def add_to_cart(request):
         # اعتبارسنجی داده‌های ورودی
         if not package_id:
             return JsonResponse({'status': 'error', 'message': 'شناسه پکیج الزامی است'}, status=400)
-        
+        x
         if count < 1:
             count = 1
         
@@ -226,7 +226,9 @@ def add_to_cart(request):
             return JsonResponse({'status': 'error', 'message': 'پکیج مورد نظر یافت نشد'}, status=404)
         
         # بررسی موجودی محصول
-        if hasattr(package, 'quantity') and count > package.quantity:
+        # if hasattr(package, 'quantity') and count > package.quantity:
+
+        if getattr(package, 'quantity', None) is not None and count > package.quantity:
             return JsonResponse({
                 'status': 'error',
                 'message': f'موجودی محصول کافی نیست (حداکثر: {package.quantity})'
@@ -238,7 +240,9 @@ def add_to_cart(request):
         # آماده‌سازی داده‌های پاسخ
         from utils.cart_utils import get_cart_info  # مسیر درست را وارد کنید
         cart_info = get_cart_info(cart)
-        
+        print("package_id:", package_id)
+        print("count:", request.POST.get('count'))
+
         # تبدیل آبجکت‌های CartItem به دیکشنری ساده
         cart_items = []
         for item in cart_info['cart_items']:
