@@ -296,21 +296,21 @@ def get_cart_content(request):
         # استفاده از تابع get_cart_info برای دریافت اطلاعات سبد خرید
         cart_info = get_cart_info(cart)
         
-        # تبدیل آبجکت‌های CartItem به دیکشنری ساده
         cart_items = []
         for item in cart_info['cart_items']:
+            package = item['package']
             cart_items.append({
-                'package_id': item.package.id,
-                'product_id': item.package.product.id if hasattr(item.package, 'product') else None,
-                'name': item.package.product.name if hasattr(item.package, 'product') else 'محصول',
-                'count': item.count,
-                'price': item.package.final_price,
-                'original_price': item.package.price,
-                'discount_price': item.package.discount_price if hasattr(item.package, 'discount_price') else None,
-                'image': item.package.product.image.url if hasattr(item.package, 'product') and hasattr(item.package.product, 'image') else None,
-                'is_active_discount': item.package.is_active_discount if hasattr(item.package, 'is_active_discount') else False
+                'package_id': package.id,
+                'product_id': package.product.id if hasattr(package, 'product') else None,
+                'name': package.product.name if hasattr(package, 'product') else 'محصول',
+                'count': item['count'],
+                'price': package.final_price,   # یا item['price']
+                'original_price': package.price,
+                'discount_price': package.discount_price if hasattr(package, 'discount_price') else None,
+                'image': package.product.image.url if hasattr(package, 'product') and hasattr(package.product, 'image') else None,
+                'is_active_discount': package.is_active_discount if hasattr(package, 'is_active_discount') else False
             })
-        
+
         return JsonResponse({
             'status': 'success',
             'cart_items_count': len(cart_items),

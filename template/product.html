@@ -569,10 +569,11 @@
                                             data-max-quantity="{{ item.package.quantity|default:'1' }}">
                                         -
                                     </button>
-                                    <input type="text" 
-                                           class="counter-input" 
-                                           data-package-id="{{ item.package.id|default:'' }}" 
-                                           value="{{ item.count|default:'1' }}" 
+                                    <input type="text"
+                                           class="counter-input"
+                                           data-package-id="{{ item.package.id|default:'' }}"
+                                           value="{{ item.count|default:'1' }}"
+                                           name="count"
                                            readonly>
                                     <button type="button" 
                                             class="increase-btn" 
