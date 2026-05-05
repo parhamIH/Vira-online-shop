@@ -203,7 +203,7 @@ def add_to_cart(request):
         # اعتبارسنجی داده‌های ورودی
         if not package_id:
             return JsonResponse({'status': 'error', 'message': 'شناسه پکیج الزامی است'}, status=400)
-        x
+        
         if count < 1:
             count = 1
         

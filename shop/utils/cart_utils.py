@@ -1,42 +1,52 @@
 from django.http import JsonResponse
 from shop.cart.models import CartItem , Cart
 from shop.products.models import ProductPackage
+from django.db.models import Sum, F, FloatField, ExpressionWrapper
 
 def get_cart_info(cart):
     valid_statuses = [
         'pending', 'confirmed', 'shipped', 'delivered', 'canceled',
         'لغو شده', 'تحویل داده شده', 'ارسال شده', 'تأیید شده', 'در حال انتظار'
     ]
-    
-    if cart and cart.status in valid_statuses:
-        cart_items = CartItem.objects.filter(cart=cart)
-        package_counts = {}
 
-        # شمارش بر اساس package_id
-        for item in cart_items:
-            if item.package:
-                pid = item.package.id
-                package_counts[pid] = package_counts.get(pid, 0) + item.count
+    if not (cart and cart.status in valid_statuses):
+        return {'cart_items': [], 'cart_total': 0}
 
-        cart_items_new = []
-        total_price = 0
+    # گروه‌بندی و جمع‌بندی
+    qs = (
+        CartItem.objects
+        .filter(cart=cart, package__isnull=False)
+        .values('package_id')
+        .annotate(
+            total_count=Sum('count'),  # تعداد کل بر اساس پکیج
+            unit_price=F('package__final_price'),  # قیمت واحد پکیج
+            total_price=F('package__final_price') * Sum('count')  # قیمت کل پکیج
+        )
+    )
 
-        # ساخت ساختار تمیز برای پاسخ
-        for pid, count in package_counts.items():
-            package = ProductPackage.objects.get(id=pid)
-            total = package.final_price * count  
-            cart_items_new.append({
-                'package': package,
-                'count': count,
-                'price': package.price,
-                'total_price': total,
-            })
-            total_price += total
+    # گرفتن جزئیات پکیج‌ها
+    package_ids = [row['package_id'] for row in qs]
+    packages = ProductPackage.objects.in_bulk(package_ids)
 
-        return {'cart_items': cart_items_new, 'cart_total': total_price}
+    cart_items = []
+    cart_total = 0
 
-    return {'cart_items': [], 'cart_total': 0}
+    for row in qs:
+        pid = row['package_id']
+        package = packages.get(pid)
+        if not package:
+            continue
 
+        total_price = row['total_price']
+        cart_items.append({
+            'package': package,
+            'count': row['total_count'],
+            'price': package.price,
+            'total_price': total_price,
+        })
+        cart_total += total_price
+
+    return {'cart_items': cart_items, 'cart_total': cart_total}
 
 def get_cart_count(request):
     if request.user.is_authenticated:
