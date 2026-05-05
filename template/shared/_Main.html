@@ -578,36 +578,30 @@
 
     <div class="offcanvas-body">
         <ul class="navbar-nav cart-canvas-parent">
-            {% for item in cart_items  %}
+            {% for item in cart_items %}
             <li class="nav-item">
                 <div class="cart-canvas">
                     <div class="row align-items-center">
                         <div class="col-4 ps-0">
-                            <img src="{{item.package.product.image.url}}" alt="">
+                            <img src="{{ item.image }}" alt="">
                         </div>
                         <div class="col-8">
-                            <a href="">
-                                <h3 class="text-overflow-1 title-font font-14">{{item.package.product.name}}
-                                </h3>
-                                <div class="cart-canvas-price my-3 d-flex align-items-center">
-                                    {% if item.package.is_active_discount %}
-                                    <p class="mb-0 text-muted me-2 font-16 text-decoration-line-through">{{item.package.price| intcomma}}</p>
-                                    
-                                    <h6 class="title-font main-color-one-color">{{item.package.final_price | intcomma}}</h6>
-                                    {% else %}
-                                    <h6 class="title-font main-color-one-color">{{item.package.final_price | intcomma}}</h6>
-
-                                    {% endif %}
-                                </div>
-                            </a>
+                            <h3 class="text-overflow-1 title-font font-14">{{ item.name }}</h3>
+                            <div class="cart-canvas-price my-3 d-flex align-items-center">
+                                {% if item.is_active_discount %}
+                                    <p class="mb-0 text-muted me-2 font-16 text-decoration-line-through">{{ item.original_price|intcomma }}</p>
+                                    <h6 class="title-font main-color-one-color">{{ item.price|intcomma }}</h6>
+                                {% else %}
+                                    <h6 class="title-font main-color-one-color">{{ item.price|intcomma }}</h6>
+                                {% endif %}
+                            </div>
                             <div class="cart-canvas-foot d-flex align-items-center justify-content-between">
                                 <div class="cart-canvas-count">
                                     <span>تعداد:</span>
-                                    <span class="fw-bold main-color-one-color">{{item.count}}</span>
-                                    
+                                    <span class="fw-bold main-color-one-color">{{ item.count }}</span>
                                 </div>
                                 <div class="cart-canvas-delete">
-                                    <button class="btn delete-cart-item" data-package-id="{{ item.package.id }}"><i class="bi bi-x"></i></button>
+                                    <button class="btn delete-cart-item" data-package-id="{{ item.package_id }}"><i class="bi bi-x"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -615,6 +609,7 @@
                 </div>
             </li>
             {% endfor %}
+
         </ul>
 
         <div class="cart-canvas-foots bg-white shadow-md">
@@ -660,8 +655,7 @@
 <script src="{% static 'assets/js/plugin/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js' %}"></script>
 <script src="{% static 'assets/js/plugins.js' %}"></script>
 <script src="{% static 'assets/js/main.js' %}"></script>
-
-<script src="{% static 'js/cart-handler.js' %}"></script>
+<script src="{% static 'assets/js/cart-counter.js' %}"></script>
 <script src="{% static 'assets/js/delete_cartiteam.js' %}"></script>
 
 </body>
