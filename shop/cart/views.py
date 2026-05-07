@@ -241,7 +241,7 @@ def add_to_cart(request):
         from shop.utils.cart_utils import get_cart_info  # مسیر درست را وارد کنید
         cart_info = get_cart_info(cart)
         print("package_id:", package_id)
-        print("count:", request.POST.get('count'))
+        print("count:", request.POST.get('countt'))
 
         cart_items = []
         for item in cart_info['cart_items']:
