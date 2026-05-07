@@ -249,7 +249,7 @@ $(document).ready(function () {
         e.preventDefault();
         const userAuth = $("#login-status").data("authenticated");
         const packageId = $("#package-id").val();
-        const count = $("input[name='count']").val();
+        const count = $("input[name='countt']").val();
         const csrfToken = getCookie("csrftoken");
 
         if (!packageId) {
