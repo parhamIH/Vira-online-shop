@@ -265,17 +265,17 @@
                     <div class="cart-summary position-sticky top-0">
                         <div class="summary-item">
                             <div class="d-flex justify-content-between mb-3">
-                                <h5>قیمت کالاها</h5>
-                                <p id="total-goods-price">{{ cart_total | intcomma }} تومان</p>
-                            </div>
-                            <div class="d-flex justify-content-between mb-3">
-                                <h5>تخفیف کالاها</h5>
-                                <p id="total-discount">0 تومان</p>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                <h5>مجموع</h5>
-                                <p id="total-price">{{ cart_total | intcomma }} تومان</p>
-                            </div>
+                                   <h5>قیمت کالاها</h5>
+                                        <p id="total-goods-price">{{ total_base_price|intcomma }} تومان</p>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <h5>تخفیف کالاها</h5>
+                                        <p id="total-discount">{{ total_discount|intcomma }} تومان</p>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <h5>مجموع</h5>
+                                        <p id="total-price">{{ cart_total|intcomma }} تومان</p>
+                                    </div>
                             <!-- ... existing code ... -->
                             <div class="d-flex justify-content-center mt-4 mb-3">
                                 <a href="/checkout" class="btn main-color-one-bg border-0 px-5 py-2">پرداخت</a>

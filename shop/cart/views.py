@@ -32,13 +32,12 @@ def show_cart(request):
         
         # استفاده از تابع get_cart_info برای دریافت اطلاعات سبد خرید
         cart_info = get_cart_info(cart)
-        # print("\n\n\n\n\ncart_info['cart_items'] in cart.views.showcart cart\n\n\n\n",cart_info['cart_items'])
         
         context = {
         'cart': cart,
         #_______________________________
         "cart_items": cart_info['cart_items'],  # اگر cart_items لیستی از CartItem باشد
-        'cart_count': sum(item.count for item in cart_info['cart_items']),  # استفاده از ویژگی count از CartItem
+        'cart_count': sum(item["count"] for item in cart_info['cart_items']),  # استفاده از ویژگی count از CartItem
         "cart_total": cart_info['cart_total'],  # استفاده از cart_total از تابع get_cart_info
         
         }
