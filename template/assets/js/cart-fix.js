@@ -47,7 +47,7 @@
 
         // ایجاد درخواست
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/delete-cart-item/', true);
+        xhr.open('POST', 'cart/delete-cart-item/', true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         

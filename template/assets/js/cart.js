@@ -771,7 +771,7 @@ function removeFromCart(packageId) {
     formData.append('csrfmiddlewaretoken', csrfToken);
 
     // استفاده از URL صحیح براساس view موجود در Django
-    fetch("/delete-cart-item/", {
+    fetch("cart/delete-cart-item/", {
         method: "POST",
         headers: {
             "X-CSRFToken": csrfToken,

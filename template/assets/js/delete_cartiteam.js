@@ -25,7 +25,7 @@ $(document).ready(function() {
 
         // درخواست AJAX برای حذف
         $.ajax({
-            url: '/delete-cart-item/',
+            url: 'cart/delete-cart-item/',
             type: 'POST',
             data: {
                 'package_id': packageId,
@@ -50,13 +50,13 @@ $(document).ready(function() {
                 }
 
                 // نمایش صفحه سبد خرید خالی در صورت صفر شدن قیمت کل
-                if (response.total_price === 0) {
-                    $('.content').html('<div class="empty-cart text-center py-5">' +
-                        '<h3>سبد خرید شما خالی است</h3>' +
-                        '<p>لطفاً محصولات مورد نظر خود را به سبد خرید اضافه کنید.</p>' +
-                        '<a href="/products" class="btn main-color-one-bg">بازگشت به فروشگاه</a>' +
-                        '</div>');
-                }
+                // if (response.total_price === 0) {
+                //     $('.content').html('<div class="empty-cart text-center py-5">' +
+                //         '<h3>سبد خرید شما خالی است</h3>' +
+                //         '<p>لطفاً محصولات مورد نظر خود را به سبد خرید اضافه کنید.</p>' +
+                //         '<a href="/products" class="btn main-color-one-bg">بازگشت به فروشگاه</a>' +
+                //         '</div>');
+                // }
             },
             error: function(xhr, status, error) {
                 console.log('خطا:', error);

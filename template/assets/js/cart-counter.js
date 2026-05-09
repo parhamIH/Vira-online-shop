@@ -91,7 +91,7 @@ function deleteCartItem(packageId, element) {
     formData.append('package_id', packageId);
     
     // ارسال درخواست به سرور
-    fetch('/delete-cart-item/', {
+    fetch('cart/delete-cart-item/', {
         method: 'POST',
         body: formData,
         headers: {
@@ -223,7 +223,7 @@ function showEmptyCartMessage() {
     `;
     
     // اضافه کردن پیام به صفحه
-    cartTable.parentNode.insertBefore(emptyMessage, cartTable);
+    // cartTable.parentNode.insertBefore(emptyMessage, cartTable);
 }
 
 // تابع ایجاد فرم مخفی برای ارسال درخواست
