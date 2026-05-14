@@ -766,7 +766,7 @@ def get_common_context(request):
         
         # Cart information
         'cart_items': cart_info['cart_items'],
-        'cart_count': sum(item.count for item in cart_info['cart_items']),
+        'cart_count': sum(item['count'] for item in cart_info['cart_items']),
         'cart_total': cart_info['cart_total'],
         
         # All orders and their status counts
