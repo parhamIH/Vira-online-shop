@@ -1,6 +1,6 @@
 from django.db import models
 from PIL import Image
-from shop.public.models import Warranty
+from shop.public.models import Warranty, Size, Color
 from shop.providers.models import Provider
 from django.core.validators import MinValueValidator, MaxValueValidator
 from model_utils import FieldTracker  # Add this import
