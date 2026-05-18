@@ -7,7 +7,30 @@ import os
 
 # Create your models here.
 
-# مدل برند  public
+
+
+#__________________________________________ ------warranty------ _______________________________________
+class Warranty(models.Model):
+    name = models.CharField(max_length=100, verbose_name='نام گارانتی')
+    company = models.CharField(max_length=100, verbose_name='شرکت ارائه دهنده', blank=True, null=True)
+    duration = models.PositiveIntegerField(verbose_name='مدت گارانتی (ماه)', help_text='مدت زمان گارانتی به ماه')
+    is_active = models.BooleanField(default=True, verbose_name='فعال')
+    description = models.TextField(blank=True, verbose_name='توضیحات')
+    terms_conditions = models.TextField(verbose_name='شرایط و ضوابط', blank=True)
+    support_phone = models.CharField(max_length=20, verbose_name='شماره تماس پشتیبانی', blank=True)
+    registration_required = models.BooleanField(default=False, verbose_name='نیاز به ثبت گارانتی')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='تاریخ بروزرسانی')
+
+    class Meta:
+        verbose_name = 'گارانتی'
+        verbose_name_plural = 'گارانتی‌ها'
+        ordering = ['name']
+
+    def __str__(self):
+        return f"{self.company} - {self.name} - {self.duration} ماه"
+
+#__________________________________________ ------Brand------ _______________________________________
 class Brand(models.Model):
     name = models.CharField(max_length=50, unique=True, verbose_name="name---fasri")
     en_name = models.CharField(max_length=50, unique=True, verbose_name="name---english")
@@ -30,7 +53,7 @@ class Brand(models.Model):
         return self.en_name
 
 
-# ادامه مدل‌ها public
+#__________________________________________ ------Base color------ _______________________________________
 class BaseColor(models.Model):
     COLOR_PALETTE = [
         ("#FFFFFF", "white"),
@@ -49,7 +72,7 @@ class BaseColor(models.Model):
     def __str__(self):
         return f"{self.name}" if self.name else "name less"
    
-# مدل رنگ  public
+#__________________________________________ ------color------ _______________________________________
 class Color(models.Model):
     name = models.CharField(max_length=50, verbose_name="colr name")
     hex_code = models.CharField(max_length=7, verbose_name="color value <-->(hex)" ,help_text=" مثال: #FFFFFF")
@@ -63,7 +86,7 @@ class Color(models.Model):
     def __str__(self):
         return self.name
 
-# مدل سایز  public
+#__________________________________________ ------Size------ _______________________________________
 class Size(models.Model):
     SIZE_CHOICES= [
         ("XS","XS"),

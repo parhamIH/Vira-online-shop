@@ -7,6 +7,7 @@ from shop.cart.models import Cart
 import uuid
 
 # Create your models here.
+#__________________________________________ ------Order------ _______________________________________
 class Order(models.Model):
     SHIPPING_CHOICES = [
         ('post', 'پست'),

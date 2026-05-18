@@ -4,7 +4,7 @@ import os
 # Create your models here.
 
 
-
+#__________________________________________ ------SiteSettings------ _______________________________________
 # مدل تنظیمات کلی سایت
 class SiteSettings(models.Model):
     site_name = models.CharField(max_length=100, verbose_name="site name")
@@ -56,7 +56,8 @@ class SiteSettings(models.Model):
             output_size = (32, 32)
             img = img.resize(output_size, Image.LANCZOS)
             img.save(self.favicon.path)
-
+            
+#__________________________________________ ------StaticPage------ _______________________________________
 # مدل صفحات استاتیک (مانند قوانین و مقررات، درباره ما)
 class StaticPage(models.Model):
     title = models.CharField(max_length=200, verbose_name="page title ")

@@ -1,13 +1,14 @@
 from django.db import models
 from PIL import Image
 from shop.public.models import Size , Color
+from shop.providers.models import Provider
 from django.core.validators import MinValueValidator, MaxValueValidator
 from model_utils import FieldTracker  # Add this import
 from shop.utils.image_uploders import upload_image_path
 import os 
 # Create your models here.
 
-# مدل محصول product
+#__________________________________________ ------Product------ _______________________________________
 class Product(models.Model):
     name = models.CharField(max_length=150, unique= True, verbose_name="name")
     description = models.TextField(verbose_name="description")
@@ -37,11 +38,11 @@ class Product(models.Model):
             # ذخیره تصویر با ابعاد جدید
             img.save(self.image.path)
 
-# مدل ویژگی های محصول product 
+#__________________________________________ ------ProductPackage------ _______________________________________
 class ProductPackage(models.Model):
     product = models.ForeignKey('products.Product', on_delete=models.CASCADE, related_name='product_packages')
-    # provider = modles foreignkey  Provider 
-    # waranty = ... 
+    provider = models.OneToOneField(Provider,n_delete=models.CASCADE, related_name='provider')
+    waranty = models.ForeignKey(... , on_delete=models.CASCADE, related_name='product_packages')
 
     # ____________________________________________________*product attributes *___________________________________________
     size = models.ForeignKey('public.Size', on_delete=models.CASCADE, default=None, blank=True, null=True)
@@ -90,7 +91,7 @@ class ProductPackage(models.Model):
         super().save(*args, **kwargs)
 
 
-# مدل گالری محصول  product
+#__________________________________________ ------Gallery------ _______________________________________
 class Gallery(models.Model):
 
     product = models.ForeignKey('products.Product',on_delete=models.CASCADE,verbose_name="product")

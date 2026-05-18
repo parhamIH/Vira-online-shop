@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+#__________________________________________ ------SupportTicket------ _______________________________________
 class SupportTicket(models.Model):
     STATUS_CHOICES = (
         ('pending', 'در انتظار بررسی'),
@@ -40,7 +41,8 @@ class SupportTicket(models.Model):
     
     def __str__(self):
         return f"{self.subject} - {self.user.username}"
-
+    
+#__________________________________________ ------TicketReply------ _______________________________________
 class TicketReply(models.Model):
     ticket = models.ForeignKey('SupportTicket', on_delete=models.CASCADE, related_name='replies', verbose_name='ticket')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ticket_replies', verbose_name='client')

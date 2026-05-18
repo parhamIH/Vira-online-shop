@@ -5,6 +5,7 @@ import os
 
 # Create your models here.
 
+#__________________________________________ ------BaseCategories------ _______________________________________
 class BaseCategories(models.Model):
     name = models.CharField(max_length=50, unique=True, verbose_name="base category name --- farsi")
     en_name = models.CharField(max_length=50, unique=True, verbose_name="base category name --- english")
@@ -27,7 +28,7 @@ class BaseCategories(models.Model):
     def __str__(self):
         return self.name
 
-# مدل دسته بندی
+#__________________________________________ ------Category------ _______________________________________
 class Category(models.Model):
     parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, verbose_name=" parent category ", related_name='subcategories')
     base_catgory = models.ForeignKey(BaseCategories, verbose_name="main category", on_delete=models.CASCADE, related_name='categories')

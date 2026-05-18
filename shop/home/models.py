@@ -5,7 +5,7 @@ from shop.utils.image_uploders import upload_slider_image_path , upload_banner_i
 import os
 
 # Create your models here.
-
+#__________________________________________ ------HomeSlider------ _______________________________________
 class HomeSlider(models.Model):
     title = models.CharField(max_length=100, blank=True, null=True, verbose_name="Slide title")
     subtitle = models.CharField(max_length=200, blank=True, null=True, verbose_name="Slide subtitle  ")
@@ -30,7 +30,7 @@ class HomeSlider(models.Model):
             img = img.resize(output_size, Image.LANCZOS)
             img.save(self.image.path)
 
-
+#__________________________________________ ------PromotionalBanner------ _______________________________________
 class PromotionalBanner(models.Model):
     
     POSITION_CHOICES = [
@@ -74,7 +74,7 @@ class PromotionalBanner(models.Model):
                 output_size = (400, 300)
             img = img.resize(output_size, Image.LANCZOS)
             img.save(self.image.path)
-
+#__________________________________________ ------FeaturedBrand------ _______________________________________
 # مدل برای نمایش ویژه برندها در صفحه اصلی
 class FeaturedBrand(models.Model):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, verbose_name="Brand")

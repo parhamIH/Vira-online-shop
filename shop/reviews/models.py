@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+#__________________________________________ ------Comment------ _______________________________________
 class Comment(models.Model): 
     
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="client")

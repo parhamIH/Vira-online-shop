@@ -5,6 +5,7 @@ from model_utils import FieldTracker  # Add this import
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+#__________________________________________ ------Cart------ _______________________________________
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     is_paid = models.BooleanField(default=False)
@@ -61,6 +62,7 @@ class Cart(models.Model):
     def __str__(self):
         return f'Cart of {self.user.username} - Status: {self.get_status_display()}'
 
+#__________________________________________ ------CartItem------ _______________________________________
 class CartItem(models.Model):
     cart = models.ForeignKey('cart.Cart', on_delete=models.CASCADE)
     package = models.ForeignKey('products.ProductPackage', on_delete=models.CASCADE)
