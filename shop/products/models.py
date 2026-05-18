@@ -40,6 +40,9 @@ class Product(models.Model):
 # مدل ویژگی های محصول product 
 class ProductPackage(models.Model):
     product = models.ForeignKey('products.Product', on_delete=models.CASCADE, related_name='product_packages')
+    # provider = modles foreignkey  Provider 
+    # waranty = ... 
+
     # ____________________________________________________*product attributes *___________________________________________
     size = models.ForeignKey('public.Size', on_delete=models.CASCADE, default=None, blank=True, null=True)
     brand = models.ForeignKey('public.Brand', on_delete=models.CASCADE, default=None, blank=True, null=True, verbose_name="brand")
