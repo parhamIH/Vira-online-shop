@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'shop.sitesettings',
     'shop.support',
     'shop.utils',
+    'shop.providers',
     
     #-----them
     "unfold.contrib.filters",  # optional, if special filters are needed
