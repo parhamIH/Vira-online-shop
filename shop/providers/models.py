@@ -36,8 +36,10 @@ class Provider(models.Model):
     )
 
     company_name = models.CharField(
+        unique=True,
         max_length=255,
         help_text="Display name of the provider"
+
     )
 
     legal_name = models.CharField(
