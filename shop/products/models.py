@@ -40,8 +40,8 @@ class Product(models.Model):
 
 #__________________________________________ ------ProductPackage------ _______________________________________
 class ProductPackage(models.Model):
-    product = models.ForeignKey('products.Product', on_delete=models.CASCADE, related_name='product_packages')
-    provider = models.OneToOneField(Provider,n_delete=models.CASCADE, related_name='provider')
+    product = models.ForeignKey('products.Product', on_delete=models.CASCADE, related_name='product_packages',  null=True)
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE, related_name='provider')
     waranty = models.ForeignKey( Warranty , on_delete=models.CASCADE, related_name='product_packages')
 
     # ____________________________________________________*product attributes *___________________________________________

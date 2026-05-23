@@ -44,8 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.humanize' , 
     #//////////////////// installeds  /////////////////////
     "colorfield",
-    'django_jalali',
-    'jalali_date',
+    "django_jalali",
+    "jalali_date",
+    "guardian",
     # /////////////////////////////////////
     
     'shop.account',
