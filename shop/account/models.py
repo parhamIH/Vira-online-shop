@@ -55,7 +55,7 @@ def validate_national_id(value):
         )
 
 # Create your models here.
-#__________________________________________ ------FavouriteProducts------ _______________________________________
+#__________________________________________ ------Favourite-Products------ _______________________________________
 
 class FavouriteProducts(models.Model):
     user=models.ForeignKey(User, on_delete=models.CASCADE)
@@ -66,7 +66,7 @@ class FavouriteProducts(models.Model):
     def __str__(self):
         return f"{self.user.username}'s Favorites"
 
-#__________________________________________ ------ClientAddress------ _______________________________________
+#__________________________________________ ------Client-Address------ _______________________________________
 class ClientAddress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title_address= models.CharField(max_length=50)
@@ -107,7 +107,7 @@ class Notification(models.Model):
         self.is_read = True
         self.save()
 
-#__________________________________________ ------Profile------ _______________________________________
+#__________________________________________ ------Client-Profile------ _______________________________________
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     phone_number = models.CharField(max_length=15, unique=True, null=True, blank=True, verbose_name="phone_number")
@@ -149,7 +149,7 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
-#__________________________________________ ------UserCoupon------ _______________________________________
+#__________________________________________ ------User-Coupons------ _______________________________________
 class UserCoupon(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='offer_coupons')
     code = models.CharField(max_length=50)
