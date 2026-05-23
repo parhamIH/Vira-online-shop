@@ -1,3 +1,25 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from django.db.models import Sum
+from shop.products.models import Product, ProductPackage
+from shop.providers.permissions import provider_required
 
-# Create your views here.
+@login_required
+@provider_required
+def provider_panel(request):
+    if not hasattr(request.user, 'provider_profile'):
+        return render(request, '403.html', status=403)
+
+    provider = request.user.provider_profile
+
+    products = Product.objects.filter(product_packages__provider=provider).distinct()
+    packages = ProductPackage.objects.filter(provider=provider)
+
+    total_sales = packages.aggregate(total=Sum('sold_count'))['total'] or 0
+
+    return render(request, 'provider/panel.html', {
+        'provider': provider,
+        'products': products,
+        'packages': packages,
+        'total_sales': total_sales,
+    })

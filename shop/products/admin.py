@@ -2,6 +2,9 @@ from django.contrib import admin
 from unfold.admin import ModelAdmin, TabularInline
 from .models import *
 from django.utils.html import format_html
+from guardian.admin import GuardedModelAdmin
+
+### admin 
 
 class GalleryInline(TabularInline):
     model = Gallery
@@ -29,6 +32,14 @@ class ProductPackageInline(TabularInline):
     fields = ('size', 'brand', 'color', 'quantity', 'price', 'discount', 'is_active_discount', 'is_active_package', 'final_price')
     readonly_fields = ('final_price',)
 
+    def get_queryset(self, request):
+        # دریافت کوئری‌ست پایه
+        qs = super().get_queryset(request)
+        # اگر سوپریوزر است همه را ببیند، در غیر این صورت فقط بسته‌های خودش را ببیند
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(provider__user=request.user)
+
 
 class ProductAdmin(ModelAdmin):
     inlines = [ProductPackageInline, GalleryInline]
@@ -49,7 +60,6 @@ class ProductAdmin(ModelAdmin):
     ordering = ("-created_date", "is_active")
 
     list_display = ("id", "name", "is_active", "get_categories", "created_date", "updated_date", "image_preview")
-
     list_editable = ("is_active",)
     list_display_links = ("name",)
     
@@ -60,8 +70,17 @@ class ProductAdmin(ModelAdmin):
         ("زمان", {"fields": ("created_date", "updated_date")}),
     )
 
+    def get_queryset(self, request):
+        # دریافت کوئری‌ست پایه
+        qs = super().get_queryset(request)
+        # اگر سوپریوزر است همه محصولات را ببیند
+        if request.user.is_superuser:
+            return qs
+        # در غیر این صورت فقط محصولاتی را ببیند که حداقل یک پکیج از این Provider دارند
+        return qs.filter(product_packages__provider__user=request.user).distinct()
 
-class ProductPackageAdmin(ModelAdmin): 
+
+class ProductPackageAdmin(GuardedModelAdmin): # تغییر به GuardedModelAdmin
     list_display = ('product', 'size', 'brand', 'color', 'quantity', 'price', 'discount', 'final_price', 'is_active_discount', "is_active_package", "sold_count")
     search_fields = ('product__name', 'brand__name', 'color__name')
     list_filter = ('product', 'size', 'brand', 'is_active_discount', "is_active_package")
@@ -70,22 +89,26 @@ class ProductPackageAdmin(ModelAdmin):
     readonly_fields = ('final_price', 'views_count', 'sold_count')
     
     fieldsets = (
-        ("محصول و ویژگی‌ها", {
-            'fields': ('product', 'size', 'brand', 'color')
-        }),
-        ("موجودی و وزن", {
-            'fields': ('quantity', 'weight')
-        }),
-        ("قیمت‌گذاری", {
-            'fields': ('price', 'discount', 'is_active_discount', 'final_price')
-        }),
-        ("وضعیت", {
-            'fields': ('is_active_package',)
-        }),
-        ("آمار", {
-            'fields': ('sold_count', 'views_count', 'rating')
-        }),
+        ("محصول و ویژگی‌ها", {'fields': ('product', 'size', 'brand', 'color')}),
+        ("موجودی و وزن", {'fields': ('quantity', 'weight')}),
+        ("قیمت‌گذاری", {'fields': ('price', 'discount', 'is_active_discount', 'final_price')}),
+        ("وضعیت", {'fields': ('is_active_package',)}),
+        ("آمار", {'fields': ('sold_count', 'views_count', 'rating')}),
     )
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        # محدود کردن به پکیج‌های متعلق به این provider
+        return qs.filter(provider__user=request.user)
+
+    def save_model(self, request, obj, form, change):
+        if not request.user.is_superuser:
+            # تخصیص خودکار provider هنگام ایجاد پکیج توسط خودش
+            obj.provider = request.user.provider_profile 
+        super().save_model(request, obj, form, change)
+
 
 # Register your models here.
 admin.site.register(ProductPackage, ProductPackageAdmin)

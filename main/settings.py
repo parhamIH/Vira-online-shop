@@ -282,3 +282,11 @@ UNFOLD = {
     "STYLES": [lambda request: static("assets/css/admin-logo.css")],
 }
 
+#guardian configs
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'guardian.backends.ObjectPermissionBackend',
+)
+
+ANONYMOUS_USER_NAME = None
