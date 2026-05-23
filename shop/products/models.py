@@ -72,11 +72,15 @@ class ProductPackage(models.Model):
         verbose_name = "product package  "
         verbose_name_plural = " product packages"
 
+        permissions = [
+            ("can_publish_product", "Can publish product"),
+            ("can_see_sales_stats", "Can see sales statistics"),
+        ]
+
     def __str__(self):
         size_str = self.size.size if self.size else "size less "
         return f"{self.product.id} - {self.product.name} - {size_str} - {self.quantity} - {self.weight} - "
-
-
+    
     @property
     def discounted_price(self):
         return (self.price * self.discount) / 100
