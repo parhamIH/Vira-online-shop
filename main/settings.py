@@ -34,7 +34,7 @@ ALLOWED_HOSTS = ["*",""]
 
 INSTALLED_APPS = [
     
-    "unfold",  # before django.contrib.admin
+    # "unfold",  # before django.contrib.admin
     "django.contrib.admin",
     "django.contrib.contenttypes",  # <-- added as required by Django
     "django.contrib.auth",  # <-- add this line
@@ -63,14 +63,14 @@ INSTALLED_APPS = [
     'shop.utils',
     'shop.providers',
     
-    #-----them
-    "unfold.contrib.filters",  # optional, if special filters are needed
-    "unfold.contrib.forms",  # optional, if special form elements are needed
-    "unfold.contrib.inlines",  # optional, if special inlines are needed
-    "unfold.contrib.import_export",  # optional, if django-import-export package is used
-    "unfold.contrib.guardian",  # optional, if django-guardian package is used
-    "unfold.contrib.simple_history",  # optional, if django-simple-history package is used
-    "unfold.contrib.location_field",  # optional, if django-location-field package is used
+    # #-----them
+    # "unfold.contrib.filters",  # optional, if special filters are needed
+    # "unfold.contrib.forms",  # optional, if special form elements are needed
+    # "unfold.contrib.inlines",  # optional, if special inlines are needed
+    # "unfold.contrib.import_export",  # optional, if django-import-export package is used
+    # "unfold.contrib.guardian",  # optional, if django-guardian package is used
+    # "unfold.contrib.simple_history",  # optional, if django-simple-history package is used
+    # "unfold.contrib.location_field",  # optional, if django-location-field package is used
 ]
 
 
@@ -255,32 +255,32 @@ X_FRAME_OPTIONS = 'DENY'
 
 
 
-UNFOLD = {
-    "SITE_TITLE": "پنل مدیریت ",
-    "SITE_HEADER": "پنل مدیریت ",
-    "SITE_LOGO": {
-        "light": lambda request: static("assets/img/logo.png"),
-        "dark": lambda request: static("assets/img/logo.png"),
-    },
-    "SITE_SYMBOL": "star",  # نماد ستاره
-    "SITE_FAVICONS": [
-        {
-            "rel": "icon",
-            "sizes": "32x32",
-            "type": "image/png",
-            "href": lambda request: static("assets/img/favicon.png"),
-        },
-        {
-            "rel": "icon",
-            "sizes": "any",
-            "type": "image/svg+xml",
-            "href": lambda request: static("assets/img/favicon.svg"),
-        },
-    ],
-    "SHOW_HISTORY": True,
-    "SHOW_BACK_BUTTON": False,
-    "STYLES": [lambda request: static("assets/css/admin-logo.css")],
-}
+# UNFOLD = {
+#     "SITE_TITLE": "پنل مدیریت ",
+#     "SITE_HEADER": "پنل مدیریت ",
+#     "SITE_LOGO": {
+#         "light": lambda request: static("assets/img/logo.png"),
+#         "dark": lambda request: static("assets/img/logo.png"),
+#     },
+#     "SITE_SYMBOL": "star",  # نماد ستاره
+#     "SITE_FAVICONS": [
+#         {
+#             "rel": "icon",
+#             "sizes": "32x32",
+#             "type": "image/png",
+#             "href": lambda request: static("assets/img/favicon.png"),
+#         },
+#         {
+#             "rel": "icon",
+#             "sizes": "any",
+#             "type": "image/svg+xml",
+#             "href": lambda request: static("assets/img/favicon.svg"),
+#         },
+#     ],
+#     "SHOW_HISTORY": True,
+#     "SHOW_BACK_BUTTON": False,
+#     "STYLES": [lambda request: static("assets/css/admin-logo.css")],
+# }
 
 #guardian configs
 
