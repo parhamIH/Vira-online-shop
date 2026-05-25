@@ -35,7 +35,7 @@ ALLOWED_HOSTS = ["*",""]
 INSTALLED_APPS = [
     
     # "unfold",  # before django.contrib.admin
-    'django_admin_tailwind',
+    # 'django_admin_tailwind',
     
     "django.contrib.admin",
     "django.contrib.contenttypes",  # <-- added as required by Django
