@@ -1,11 +1,10 @@
 from django.contrib import admin
-from unfold.admin import ModelAdmin
 from shop.public.models import *
 from django.utils.html import format_html
 
 
 
-class SizeAdmin(ModelAdmin):
+class SizeAdmin(admin.ModelAdmin):
     list_display = ('size', 'size_numrical', 'category')
     search_fields = ('size', 'size_numrical')
     list_filter = ('category',)
@@ -16,7 +15,7 @@ class SizeAdmin(ModelAdmin):
     )
 
 
-class BrandAdmin(ModelAdmin):
+class BrandAdmin(admin.ModelAdmin):
     list_filter = ("category", "name")
     ordering = ("en_name",)
     list_editable = ("name",)
@@ -37,7 +36,7 @@ class BrandAdmin(ModelAdmin):
     )
 
 
-class BaseColorAdmin(ModelAdmin):
+class BaseColorAdmin(admin.ModelAdmin):
     list_display = ('name', 'color_preview')
     search_fields = ('name',)
     
@@ -52,7 +51,7 @@ class BaseColorAdmin(ModelAdmin):
     )
 
 
-class ColorAdmin(ModelAdmin):
+class ColorAdmin(admin.ModelAdmin):
     list_filter = ("base_color",)
     list_display = ("name", "hex_code", "hex_preview", "base_color", "image_preview")
     list_editable = ("hex_code",)

@@ -1,5 +1,4 @@
 from django.contrib import admin
-from unfold.admin import ModelAdmin
 from shop.order.models import Order
 from django.utils.html import format_html
 import jdatetime
@@ -8,7 +7,7 @@ import jdatetime
 
 
 @admin.register(Order)
-class OrderAdmin(ModelAdmin):
+class OrderAdmin(admin.ModelAdmin):
     list_display = ('order_number', 'user', 'status_colored', 'payment_status_colored', 'total_price', 'order_date_jalali', 'payment_date_jalali', 'shipping_method_display')
     list_filter = ('status', 'payment_status', 'payment_method', 'shipping_method', 'order_date')
     search_fields = ('order_number', 'user__username', 'user__email', 'payment_reference_id')

@@ -1,10 +1,9 @@
 from django.contrib import admin
-from unfold.admin import ModelAdmin
 from shop.reviews.models import *
 
 # Register your models here.
 
-class CommentAdmin(ModelAdmin):
+class CommentAdmin(admin.ModelAdmin):
     readonly_fields = ("created_at",)
     list_display = ("product", "user", "created_at", "text_preview", "rating", "is_approved")
     list_display_links = ("product",)

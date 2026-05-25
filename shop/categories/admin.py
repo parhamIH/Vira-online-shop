@@ -1,11 +1,10 @@
 from django.contrib import admin
 from shop.categories.models import *
 from mptt.admin import DraggableMPTTAdmin
-from unfold.admin import ModelAdmin
 from django.utils.html import format_html
 
 @admin.register(BaseCategories)
-class BaseCategoriesAdmin(ModelAdmin):
+class BaseCategoriesAdmin(admin.ModelAdmin):
     list_display = ("name", "en_name", "get_brands", "image_preview")
     list_filter = ("en_name", "name")
     ordering = ("name",)
@@ -33,7 +32,7 @@ class BaseCategoriesAdmin(ModelAdmin):
 
 
 @admin.register(Category)
-class CategoryAdmin(ModelAdmin):
+class CategoryAdmin(admin.ModelAdmin):
     mptt_indent_field = "name"
     list_display = ('parent', 'description',)
     search_fields = ['name', 'description']

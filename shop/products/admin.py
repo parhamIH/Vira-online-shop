@@ -1,16 +1,15 @@
 from django.contrib import admin
-from unfold.admin import ModelAdmin, TabularInline
 from .models import *
 from django.utils.html import format_html
 from guardian.admin import GuardedModelAdmin
 
 ### admin 
 
-class GalleryInline(TabularInline):
+class GalleryInline(admin.TabularInline):
     model = Gallery
     extra = 1
 
-class GalleryAdmin(ModelAdmin):
+class GalleryAdmin(admin.ModelAdmin):
     list_display = ["product", 'image_preview']
     list_display_links = ("product",)
     list_filter = ("product",)
@@ -26,7 +25,7 @@ class GalleryAdmin(ModelAdmin):
         ("محصول / عکس", {"fields": ("product", "image")}),
     )
 
-class ProductPackageInline(TabularInline):
+class ProductPackageInline(admin.TabularInline):
     model = ProductPackage
     extra = 1
     fields = ('size', 'brand', 'color', 'quantity', 'price', 'discount', 'is_active_discount', 'is_active_package', 'final_price')
@@ -41,7 +40,7 @@ class ProductPackageInline(TabularInline):
         return qs.filter(provider__user=request.user)
 
 
-class ProductAdmin(ModelAdmin):
+class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductPackageInline, GalleryInline]
     
     def get_categories(self, obj):

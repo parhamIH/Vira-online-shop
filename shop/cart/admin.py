@@ -1,11 +1,10 @@
 from django.contrib import admin
-from unfold.admin import ModelAdmin, TabularInline
 from shop.cart.models import Cart, CartItem
 from django.utils.html import format_html
 import jdatetime
 
 @admin.register(Cart)
-class CartAdmin(ModelAdmin):
+class CartAdmin(admin.ModelAdmin):
     list_display = ('cart_number', 'user', 'status', 'is_paid_colored', 'total_price', 'created_date_jalali', 'updated_date_jalali')
     list_filter = ('status', 'is_paid', 'created_date')
     search_fields = ('cart_number', 'user__username', 'user__email')
@@ -31,7 +30,7 @@ class CartAdmin(ModelAdmin):
             return format_html('<span style="color: red; font-weight: bold;">پرداخت نشده</span>')
     is_paid_colored.short_description = 'وضعیت پرداخت'
 
-class CartItemAdmin(TabularInline):
+class CartItemAdmin(admin.TabularInline):
     model = CartItem
     extra = 1
     fields = ('package', 'count', 'final_price', 'total_price')

@@ -1,44 +1,45 @@
 from django.contrib import admin
-from unfold.admin import ModelAdmin
-from shop.sitesettings.models import *
 from django.utils.html import format_html
 
-# Register your models here.
-class SiteSettingsAdmin(ModelAdmin):
-    list_display = ('site_name', 'email', 'phone', 'logo_preview')
-    
+from shop.sitesettings.models import SiteSettings
+
+
+@admin.register(SiteSettings)
+class SiteSettingsAdmin(admin.ModelAdmin):
+    list_display = ("site_name", "email", "phone", "logo_preview")
+
     fieldsets = (
-        ('اطلاعات اصلی سایت', {
-            'fields': ('site_name', 'site_url', 'logo', 'favicon')
+        ("اطلاعات اصلی سایت", {
+            "fields": ("site_name", "site_url", "logo", "favicon")
         }),
-        ('اطلاعات تماس', {
-            'fields': ('email', 'phone', 'address')
+        ("اطلاعات تماس", {
+            "fields": ("email", "phone", "address")
         }),
-        ('شبکه‌های اجتماعی', {
-            'fields': ('instagram', 'telegram', 'twitter', 'linkedin')
+        ("شبکه‌های اجتماعی", {
+            "fields": ("instagram", "telegram", "twitter", "linkedin")
         }),
-        ('متن‌های سایت', {
-            'fields': ('footer_text', 'about_text')
+        ("متن‌های سایت", {
+            "fields": ("footer_text", "about_text")
         }),
-        ('تنظیمات سئو', {
-            'fields': ('seo_keywords', 'seo_description')
+        ("تنظیمات سئو", {
+            "fields": ("seo_keywords", "seo_description")
         }),
-        ('تنظیمات فروشگاه', {
-            'fields': ('shipping_cost', 'free_shipping_threshold', 'tax_percentage')
+        ("تنظیمات فروشگاه", {
+            "fields": ("shipping_cost", "free_shipping_threshold", "tax_percentage")
         }),
     )
 
     def logo_preview(self, obj):
         if obj.logo:
-            return format_html('<img src="{}" width="120" style="border:1px solid #ccc;" />', obj.logo.url)
+            return format_html(
+                '<img src="{}" width="120" style="border:1px solid #ccc;" />',
+                obj.logo.url
+            )
         return "بدون لوگو"
-    logo_preview.short_description = 'پیش‌نمایش لوگو'
-    logo_preview.allow_tags = True
+
+    logo_preview.short_description = "پیش‌نمایش لوگو"
 
     class Media:
-        js = ()
         css = {
-            'all': ('assets/css/admin-logo.css',)
+            "all": ("assets/css/admin-logo.css",)
         }
-
-admin.site.register(SiteSettings, SiteSettingsAdmin)

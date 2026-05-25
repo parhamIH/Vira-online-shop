@@ -1,5 +1,4 @@
 from django.contrib import admin
-from unfold.admin import ModelAdmin, TabularInline, StackedInline
 from django.utils.html import format_html
 from .models import Article
 

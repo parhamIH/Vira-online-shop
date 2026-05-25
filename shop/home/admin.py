@@ -1,10 +1,9 @@
 from django.contrib import admin
-from unfold.admin import ModelAdmin
 from shop.home.models import *
 from django.utils.html import format_html
 
 
-class HomeSliderAdmin(ModelAdmin):
+class HomeSliderAdmin(admin.ModelAdmin):
     list_display = ('title', 'active', 'order', 'image_preview')
     list_filter = ('active',)
     list_editable = ('active', 'order')
@@ -29,7 +28,7 @@ class HomeSliderAdmin(ModelAdmin):
     )
 
 
-class PromotionalBannerAdmin(ModelAdmin):
+class PromotionalBannerAdmin(admin.ModelAdmin):
     list_display = ('title', 'position', 'size', 'active', 'order', 'image_preview')
     list_filter = ('active', 'position', 'size')
     list_editable = ('active', 'order', 'position', 'size')
@@ -57,7 +56,7 @@ class PromotionalBannerAdmin(ModelAdmin):
     )
 
 
-class FeaturedBrandAdmin(ModelAdmin):
+class FeaturedBrandAdmin(admin.ModelAdmin):
     list_display = ('brand', 'active', 'order', 'logo_preview')
     list_filter = ('active', 'brand')
     list_editable = ('active', 'order')
