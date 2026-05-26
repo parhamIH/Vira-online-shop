@@ -92,7 +92,7 @@ ROOT_URLCONF = 'main.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR,"./template","./templateAdmin"],
+        'DIRS': [BASE_DIR,"./frontend/template","./frontend/templateAdmin"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -162,7 +162,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [BASE_DIR / 'template', BASE_DIR / 'templateAdmin']
+STATICFILES_DIRS = [BASE_DIR / 'frontend/template', BASE_DIR / 'frontend/templateAdmin']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STORAGES = {
