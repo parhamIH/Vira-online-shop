@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     # /////////////////////////////////////
     
     'shop.account',
+    'shop.adminpanel',
     'shop.articles',
     'shop.cart',
     'shop.categories',
@@ -91,7 +92,7 @@ ROOT_URLCONF = 'main.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR,"./template"],
+        'DIRS': [BASE_DIR,"./template","./templateAdmin"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -161,7 +162,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [BASE_DIR / 'template', ]
+STATICFILES_DIRS = [BASE_DIR / 'template', BASE_DIR / 'templateAdmin']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STORAGES = {
