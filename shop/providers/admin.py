@@ -56,7 +56,6 @@ class ProviderAdmin(admin.ModelAdmin):
     
     # فیلدهای فقط خواندنی
     readonly_fields = (
-        'user', 
         'uuid', 
         'created_at', 
         'updated_at', 
