@@ -41,7 +41,7 @@ class Provider(models.Model):
     email = models.EmailField(unique=True)
 
     website = models.URLField(blank=True, null=True)
-
+    #craet new mode for address
     address = models.TextField(blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
     postal_code = models.CharField(max_length=20, blank=True, null=True)
