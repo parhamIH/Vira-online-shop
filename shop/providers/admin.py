@@ -52,7 +52,7 @@ class ProviderAdmin(admin.ModelAdmin):
     )
     
     # فیلدهای قابل ویرایش مستقیم از لیست
-    list_editable = ('status', 'is_verified', 'is_active')
+    list_editable = ('status', 'is_active')
     
     # فیلدهای فقط خواندنی
     readonly_fields = (
@@ -70,6 +70,7 @@ class ProviderAdmin(admin.ModelAdmin):
     fieldsets = (
         ("اطلاعات اصلی", {
             'fields': ('company_name', 'provider_type', 'legal_name', 'national_id', 'registration_number', 'economic_code')
+             'classes': ('collapse',) # بسته‌بندی شده در حالت پیش‌فرض
         }),
         ("اطلاعات تماس و حساب", {
             'fields': ('user', 'email', 'phone_number', 'is_phone_verified', 'website', 'address', 'city', 'postal_code'),
