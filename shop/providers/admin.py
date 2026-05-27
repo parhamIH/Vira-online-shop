@@ -69,7 +69,7 @@ class ProviderAdmin(admin.ModelAdmin):
     # دسته‌بندی فیلدها در صفحه ویرایش
     fieldsets = (
         ("اطلاعات اصلی", {
-            'fields': ('company_name', 'provider_type', 'legal_name', 'national_id', 'registration_number', 'economic_code')
+            'fields': ('company_name', 'provider_type', 'legal_name', 'national_id', 'registration_number', 'economic_code'),
              'classes': ('collapse',) # بسته‌بندی شده در حالت پیش‌فرض
         }),
         ("اطلاعات تماس و حساب", {
