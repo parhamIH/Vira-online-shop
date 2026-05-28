@@ -68,7 +68,9 @@ class Provider(models.Model):
         verbose_name = "Provider"
         verbose_name_plural = "Providers"
         ordering = ["-created_at"]
-
+        permissions = [
+            ("verify_provider", "Can verify provider"),
+        ]
     def __str__(self):
         return self.company_name
 
