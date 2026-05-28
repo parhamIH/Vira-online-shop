@@ -1,4 +1,4 @@
-from providers.models import Provider
+from shop.providers.models import Provider
 from .models import Product
 
 

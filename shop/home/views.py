@@ -72,4 +72,4 @@ def home(request):
     "featured_brands": featured_brands,
 }
 
-    return render (request,"../template/index.html",context) 
+    return render (request,"frontend/template/index.html",context) 

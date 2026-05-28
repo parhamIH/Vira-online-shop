@@ -122,5 +122,5 @@ def category_products(request, en_name):
     
     # print(f"Total category products: {len(unique_packages)}")
     
-    return render(request, "template/category.html", context)
+    return render(request, "frontend/template/category.html", context)
 

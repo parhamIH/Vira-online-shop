@@ -9,7 +9,7 @@ from .models import (
     Gallery,
 )
 
-from providers.models import Provider
+from shop.providers.models import Provider
 
 from .mixins import ProviderRestrictedAdminMixin
 

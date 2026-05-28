@@ -43,13 +43,13 @@ def show_cart(request):
         }
   # بررسی اینکه آیا سبد خرید خالی است یا خیر
         if not cart_info['cart_items']:
-            return render(request, "template/cart-empty.html", context)
+            return render(request, "frontend/template/cart-empty.html", context)
 
     else:
-        return redirect("/template/login.html")
+        return redirect("frontend//template/login.html")
     
 
-    return render(request, "template/cart.html", context)
+    return render(request, "frontend/template/cart.html", context)
 
 
 @require_POST

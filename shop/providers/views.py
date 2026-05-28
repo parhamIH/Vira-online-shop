@@ -8,7 +8,7 @@ from shop.providers.permissions import provider_required
 @provider_required
 def provider_panel(request):
     if not hasattr(request.user, 'provider_profile'):
-        return render(request, '403.html', status=403)
+        return render(request, 'frontend/403.html', status=403)
 
     provider = request.user.provider_profile
 
@@ -17,7 +17,7 @@ def provider_panel(request):
 
     total_sales = packages.aggregate(total=Sum('sold_count'))['total'] or 0
 
-    return render(request, 'provider/panel.html', {
+    return render(request, 'frontend/provider/panel.html', {
         'provider': provider,
         'products': products,
         'packages': packages,

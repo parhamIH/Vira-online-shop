@@ -25,7 +25,7 @@ def articles(request):
     })
     context = common_context
     
-    return render(request, "articles/articles.html", context)
+    return render(request, "frontend/articles/articles.html", context)
 
 
 def article_detail(request, slug):
@@ -43,7 +43,7 @@ def article_detail(request, slug):
         "meta_keywords": article.meta_keywords,
     })
     context = common_context
-    return render(request, "articles/article_detail.html", context)
+    return render(request, "frontend/articles/article_detail.html", context)
 
 
 

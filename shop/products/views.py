@@ -130,7 +130,7 @@ def products_list(request):
     }
     
  
-    return render(request, "template/products.html", context)
+    return render(request, "frontend/template/products.html", context)
 
 
 #products
@@ -258,7 +258,7 @@ def product_detail(request, *args, **kwargs):
                 # print(f"\n\n\n post package pd \n\n\n\n\n\ncart: {cart}")
         return redirect(request.path)  # پس از افزودن به سبد خرید، صفحه رفرش شود
 
-    return render(request, "template/product.html", context)
+    return render(request, "frontend/template/product.html", context)
 
 #category
 def category_products(request, en_name):
@@ -374,7 +374,7 @@ def category_products(request, en_name):
     
     # print(f"Total category products: {len(unique_packages)}")
     
-    return render(request, "template/category.html", context)
+    return render(request, "frontend/template/category.html", context)
 
 
 #products
@@ -506,7 +506,7 @@ def static_page(request, slug):
         "meta_keywords": page.seo_keywords or "",
     }
     
-    return render(request, "template/static_page.html", context)
+    return render(request, "frontend/template/static_page.html", context)
 
 #product
 def get_sizes_for_color(request):

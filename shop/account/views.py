@@ -65,7 +65,7 @@ def login_user(request):
             context = {
                 'login_invalid': "لطفا نام کاربری و رمز عبور را وارد کنید"
             }
-            return render(request, 'template/login.html', context)
+            return render(request, 'frontend/template/login.html', context)
         
         user = authenticate(request, username=username, password=password)
         
@@ -76,9 +76,9 @@ def login_user(request):
             context = {
                 'login_invalid': "نام کاربری یا رمز عبور شما اشتباه است"
             }
-            return render(request, 'template/login.html', context)
+            return render(request, 'frontend/template/login.html', context)
         
-    return render(request, 'template/login.html', context)
+    return render(request, 'frontend/template/login.html', context)
 
 def register_user(request):
     if request.method == 'POST':
@@ -87,12 +87,12 @@ def register_user(request):
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({'status': 'error', 'message': 'شماره موبایل معتبر نیست'})
             messages.error(request, 'شماره موبایل معتبر نیست')
-            return render(request, 'template/login.html')
+            return render(request, 'frontend/template/login.html')
         if Profile.objects.filter(phone_number=phone_number).exists() or User.objects.filter(username=phone_number).exists():
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({'status': 'error', 'message': 'این شماره قبلاً ثبت شده است'})
             messages.error(request, 'این شماره قبلاً ثبت شده است')
-            return render(request, 'template/login.html')
+            return render(request, 'frontend/template/login.html')
         code = generate_verification_code()
         request.session['registration_phone'] = phone_number
         request.session['registration_code'] = code
@@ -101,13 +101,13 @@ def register_user(request):
         if success:
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({'status': 'success', 'message': 'کد تأیید ارسال شد'})
-            return render(request, 'template/verify_registration.html', {'phone_number': phone_number})
+            return render(request, 'frontend/template/verify_registration.html', {'phone_number': phone_number})
         else:
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({'status': 'error', 'message': f'خطا در ارسال پیامک: {response}'})
             messages.error(request, f'خطا در ارسال پیامک: {response}')
-            return render(request, 'template/login.html')
-    return render(request, 'template/login.html')
+            return render(request, 'frontend/template/login.html')
+    return render(request, 'frontend/template/login.html')
 
 def verify_registration(request):
     if request.method == 'POST':
@@ -121,7 +121,7 @@ def verify_registration(request):
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({'status': 'error', 'message': 'کد تأیید اشتباه است'})
             messages.error(request, 'کد تأیید اشتباه است')
-            return render(request, 'template/verify_registration.html', {'phone_number': phone_number})
+            return render(request, 'frontend/template/verify_registration.html', {'phone_number': phone_number})
         # بررسی انقضای کد
         from datetime import datetime
         from utils.sms import is_verification_code_expired
@@ -131,7 +131,7 @@ def verify_registration(request):
                 if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                     return JsonResponse({'status': 'error', 'message': 'کد تأیید منقضی شده است'})
                 messages.error(request, 'کد تأیید منقضی شده است')
-                return render(request, 'template/verify_registration.html', {'phone_number': phone_number})
+                return render(request, 'frontend/template/verify_registration.html', {'phone_number': phone_number})
         # ساخت کاربر جدید
         try:
             user = User.objects.create_user(username=phone_number, password=User.objects.make_random_password())
@@ -150,7 +150,7 @@ def verify_registration(request):
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({'status': 'error', 'message': f'خطا در ثبت‌نام: {str(e)}'})
             messages.error(request, f'خطا در ثبت‌نام: {str(e)}')
-            return render(request, 'template/verify_registration.html', {'phone_number': phone_number})
+            return render(request, 'frontend/template/verify_registration.html', {'phone_number': phone_number})
     return redirect('/login/')
 
 def resend_registration_code(request):
@@ -181,7 +181,7 @@ def resend_registration_code(request):
         else:
             context['error'] = f'خطا در ارسال پیامک: {response}'
         
-        return render(request, 'template/verify_registration.html', context)
+        return render(request, 'frontend/template/verify_registration.html', context)
     
     return redirect('/login/')
 
@@ -197,7 +197,7 @@ def phone_login(request):
         
         if not phone_number:
             context['error'] = "لطفا شماره تلفن خود را وارد کنید"
-            return render(request, 'template/phone_login.html', context)
+            return render(request, 'frontend/template/phone_login.html', context)
         
         try:
             profile = Profile.objects.get(phone_number=phone_number)
@@ -222,20 +222,20 @@ def phone_login(request):
                     context['success'] = "کد تأیید به شماره تلفن شما ارسال شد"
                 
                 context['phone_number'] = phone_number
-                return render(request, 'template/verify_code.html', context)
+                return render(request, 'frontend/template/verify_code.html', context)
             else:
                 context['error'] = f"خطا در ارسال پیامک: {response}"
                 if is_resend:
                     context['phone_number'] = phone_number
-                    return render(request, 'template/verify_code.html', context)
+                    return render(request, 'frontend/template/verify_code.html', context)
                 else:
-                    return render(request, 'template/phone_login.html', context)
+                    return render(request, 'frontend/template/phone_login.html', context)
                 
         except Profile.DoesNotExist:
             context['error'] = "این شماره تلفن در سیستم ثبت نشده است"
-            return render(request, 'template/phone_login.html', context)
+            return render(request, 'frontend/template/phone_login.html', context)
     
-    return render(request, 'template/phone_login.html', context)
+    return render(request, 'frontend/template/phone_login.html', context)
 
 def verify_code(request):
     """تأیید کد ارسال شده به شماره تلفن کاربر"""
@@ -250,7 +250,7 @@ def verify_code(request):
         
         if not phone_number or not code:
             context['error'] = "لطفا شماره تلفن و کد تأیید را وارد کنید"
-            return render(request, 'template/verify_code.html', context)
+            return render(request, 'frontend/template/verify_code.html', context)
         
         try:
             profile = Profile.objects.get(phone_number=phone_number, verification_code=code)
@@ -259,7 +259,7 @@ def verify_code(request):
             if is_verification_code_expired(profile.verification_code_created_at):
                 context['error'] = "کد تأیید منقضی شده است. لطفا مجددا تلاش کنید"
                 context['phone_number'] = phone_number
-                return render(request, 'template/verify_code.html', context)
+                return render(request, 'frontend/template/verify_code.html', context)
             
             # ورود کاربر
             profile.is_phone_verified = True
@@ -275,9 +275,9 @@ def verify_code(request):
         except Profile.DoesNotExist:
             context['error'] = "کد تأیید نامعتبر است"
             context['phone_number'] = phone_number
-            return render(request, 'template/verify_code.html', context)
+            return render(request, 'frontend/template/verify_code.html', context)
     
-    return render(request, 'template/verify_code.html', context)
+    return render(request, 'frontend/template/verify_code.html', context)
 
 @login_required(login_url='/login/')
 def panel(request):
@@ -290,7 +290,7 @@ def panel(request):
     orders = Order.objects.filter(user=request.user).order_by('-order_date')[:10]
     context['orders'] = orders
     
-    return render(request, 'template/panel.html', context)
+    return render(request, 'frontend/template/panel.html', context)
 
 
 
@@ -308,7 +308,7 @@ def user_orders(request):
     context = get_common_context(request)
     context['orders'] = orders
     
-    return render(request, "template/order.html", context)
+    return render(request, "frontend/template/order.html", context)
 
 
 
@@ -414,7 +414,7 @@ def user_notifications(request):
                     return JsonResponse({'status': 'success'})
                 return redirect('user_notifications')
     
-    return render(request, "template/notification.html", context)
+    return render(request, "frontend/template/notification.html", context)
 
 
 
@@ -542,7 +542,7 @@ def edit_user_informations(request):
             profile.save()
             messages.success(request, 'اطلاعات حقوقی با موفقیت به‌روزرسانی شد')
     
-    return render(request, "template/edit-profile.html", context)
+    return render(request, "frontend/template/edit-profile.html", context)
 
 
 @login_required(login_url='/login/')
@@ -595,7 +595,7 @@ def edit_client_address(request):
             context['success_message'] = "آدرس با موفقیت حذف شد."
             return redirect("/profile")
 
-    return render(request, "template/address.html", context)
+    return render(request, "frontend/template/address.html", context)
 
 
 
@@ -634,7 +634,7 @@ def liked_list(request):
     # اضافه کردن محصولات مورد علاقه به context
     context['FavouriteProducts'] = FavouriteProducts
     
-    return render(request, 'template/favorites.html', context)
+    return render(request, 'frontend/template/favorites.html', context)
 
 @login_required(login_url='/login/')
 def add_to_favorites(request):
@@ -690,7 +690,7 @@ def user_comments(request):
     # Get common context
     context = get_common_context(request)
     
-    return render(request, 'template/user_comments.html', context)
+    return render(request, 'frontend/template/user_comments.html', context)
 
 def get_common_context(request):
     """
@@ -1064,5 +1064,5 @@ def user_offers(request):
     context = {
         'coupons': coupons,
     }
-    return render(request, 'template/offers.html', context)
+    return render(request, 'frontend/template/offers.html', context)
 

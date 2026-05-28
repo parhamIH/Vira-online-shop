@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.shortcuts import render, redirect, get_object_or_404
 from shop.utils.cart_utils import get_cart_info
 from shop.utils.sms import send_sms  # فرض بر این است که چنین utility دارید
@@ -78,7 +77,7 @@ def support(request):
     context['tickets_resolved'] = tickets.filter(status='resolved').count()
     context['tickets_closed'] = tickets.filter(status='closed').count()
     
-    return render(request, "template/support.html", context)
+    return render(request, "frontend/template/support.html", context)
 
 @login_required
 @require_POST
@@ -157,7 +156,7 @@ def view_ticket(request, ticket_id):
         replies = TicketReply.objects.filter(ticket=ticket).order_by('created_at')
         context['replies'] = replies
         
-        return render(request, "template/ticket_detail.html", context)
+        return render(request, "frontend/template/ticket_detail.html", context)
     except SupportTicket.DoesNotExist:
         return redirect('support')
 
@@ -376,7 +375,7 @@ def admin_tickets(request):
     context['department_filter'] = department_filter
     context['search_query'] = search_query
     
-    return render(request, "template/admin_tickets.html", context)
+    return render(request, "frontend/template/admin_tickets.html", context)
 
 @staff_member_required
 def send_custom_sms(request):
@@ -392,4 +391,4 @@ def send_custom_sms(request):
                 context['error'] = f'خطا در ارسال پیامک: {response}'
         else:
             context['error'] = 'شماره و متن پیامک الزامی است.'
-    return render(request, 'template/send_sms.html', context)
+    return render(request, 'frontend/template/send_sms.html', context)

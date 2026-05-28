@@ -101,7 +101,7 @@ def checkout_view(request):
             'provinces': provinces,
             'cities': cities,
         }
-        return render(request, 'template/checkout.html', context)
+        return render(request, 'frontend/template/checkout.html', context)
     else:
         return redirect('login')
 
@@ -386,7 +386,7 @@ def bank_payment_gateway(request):
                 'sandbox': is_sandbox,
                 'error_message': str(e)
             }
-            return render(request, 'direct_zarinpal.html', context)
+            return render(request, 'frontend/direct_zarinpal.html', context)
         else:
             messages.error(request, f"خطای سیستمی: {str(e)}")
             return redirect('checkout')
@@ -573,7 +573,7 @@ def order_invoice(request, order_id):
             'store_info': store_info,
             'date_str': date_str,
         }
-        return render(request, 'template/factor.html', context)
+        return render(request, 'frontend/template/factor.html', context)
     except Order.DoesNotExist:
         messages.error(request, "سفارش مورد نظر یافت نشد")
         return redirect('')
