@@ -15,6 +15,8 @@ class Product(models.Model):
     is_active = models.BooleanField(default=False, verbose_name="active")
     categories = models.ManyToManyField('categories.Category', verbose_name="categories")
     
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE, related_name='product', null=True, blank=True)
+
     created_date = models.DateTimeField(auto_now_add=True, verbose_name="created_date")
     updated_date = models.DateTimeField(auto_now=True, verbose_name="last update")
     image = models.ImageField(upload_to='uploads/', verbose_name="image", blank=True, null=True)  # مسیر بارگذاری تصویر را تنظیم کنید
@@ -22,7 +24,9 @@ class Product(models.Model):
     class Meta:
         verbose_name = "product"
         verbose_name_plural = "products"
-
+        permissions = [
+            ("manage_own_products", "Can manage own products"),
+        ]
     def __str__(self):
         return f"نام محصول: {self.name}"
 
@@ -41,7 +45,7 @@ class Product(models.Model):
 #__________________________________________ ------ProductPackage------ _______________________________________
 class ProductPackage(models.Model):
     product = models.ForeignKey('products.Product', on_delete=models.CASCADE, related_name='product_packages',  null=True)
-    provider = models.ForeignKey(Provider, on_delete=models.CASCADE, related_name='provider')
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE, related_name='product_packageser', null=True, blank=True)
     waranty = models.ForeignKey( Warranty , on_delete=models.CASCADE, related_name='product_packages')
 
     # ____________________________________________________*product attributes *___________________________________________
@@ -73,8 +77,7 @@ class ProductPackage(models.Model):
         verbose_name_plural = " product packages"
 
         permissions = [
-            ("can_publish_product", "Can publish product"),
-            ("can_see_sales_stats", "Can see sales statistics"),
+            ("manage_own_packages", "Can manage own packages"),
         ]
 
     def __str__(self):
