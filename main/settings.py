@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from django.templatetags.static import static
 import os
+from .config.settings_manager import settings_instance
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-2$ps*%$q_juaz!&kcidd1k^3*qcum*5wc3!)3!kz72ulo!#*@&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", True)
 
 ALLOWED_HOSTS = ["*",""]
 
@@ -115,15 +116,14 @@ WSGI_APPLICATION = 'main.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'shahan_shop1',
-        'USER': 'root',
-        'PASSWORD': 'mysql',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'ENGINE': settings_instance.db_engine,
+        'NAME': settings_instance.db_name,
+        'USER': settings_instance.db_user,
+        'PASSWORD': settings_instance.db_password,
+        'HOST': settings_instance.db_host,
+        'PORT': settings_instance.db_port,
     }
 }
-
 
 
 # Password validation
