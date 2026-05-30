@@ -17,9 +17,17 @@ def provider_panel(request):
 
     total_sales = packages.aggregate(total=Sum('sold_count'))['total'] or 0
 
-    return render(request, 'frontend/provider/panel.html', {
+    return render(request, 'frontend/templateAdmin/index.html', {
         'provider': provider,
         'products': products,
         'packages': packages,
         'total_sales': total_sales,
     })
+
+def register_provider (request):
+    if request.method == "POST":
+        ...
+    else:
+        ...
+
+    return render(request,'frontend/templateAdmin/register-provider.html',context=None)

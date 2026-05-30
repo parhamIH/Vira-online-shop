@@ -28,6 +28,7 @@ urlpatterns = [
     path("",include("shop.cart.urls")),
     path("",include("shop.order.urls")),
     path("",include("shop.products.urls")),
+    path("provider/",include("shop.providers.urls")),
     path("blog/",include("shop.articles.urls")),
     path("support/",include("shop.support.urls")),
 ]
