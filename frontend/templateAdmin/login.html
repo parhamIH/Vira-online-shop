@@ -2,110 +2,480 @@
 <html lang="fa" dir="rtl">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>قالب Nextable - قالب مدیریتی نکستیبل</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ورود به حساب کاربری</title>
 
-	<!-- Favicon -->
-	<link rel="shortcut icon" href="assets/media/image/favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-	<!-- Theme Color -->
-	<meta name="theme-color" content="#5867dd">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3046c9;
+            --primary-light: #eef2ff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --bg: #f8fafc;
+        }
 
-	<!-- Plugin styles -->
-	<link rel="stylesheet" href='vendors/bundle.css' type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-	<!-- App styles -->
-	<link rel="stylesheet" href='assets/css/app.css' type="text/css">
+        body {
+            font-family: Tahoma, sans-serif;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top right,
+                    rgba(67, 97, 238, .12),
+                    transparent 35%),
+                radial-gradient(circle at bottom left,
+                    rgba(99, 102, 241, .08),
+                    transparent 35%),
+                var(--bg);
+        }
+
+        .auth-wrapper {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Left Side */
+        .auth-side {
+            flex: 1;
+            background: linear-gradient(135deg,
+                    #4361ee,
+                    #6366f1);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-side::before {
+            content: "";
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .08);
+            top: -150px;
+            left: -150px;
+        }
+
+        .auth-side::after {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .05);
+            bottom: -100px;
+            right: -100px;
+        }
+
+        .auth-side-content {
+            max-width: 500px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .auth-side h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .auth-side p {
+            line-height: 2;
+            opacity: .95;
+            font-size: 18px;
+        }
+
+        /* Right Side */
+        .auth-form {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 28px;
+            padding: 40px;
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, .06),
+                0 2px 8px rgba(0, 0, 0, .04);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .logo-circle {
+            width: 75px;
+            height: 75px;
+            border-radius: 20px;
+            background: var(--primary);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+        }
+
+        .login-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-title h2 {
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .login-title p {
+            color: var(--muted);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-control {
+            width: 100%;
+            height: 54px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 0 15px;
+            font-size: 15px;
+            transition: .3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, .12);
+        }
+
+        .password-toggle {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: var(--muted);
+            font-size: 16px;
+        }
+
+        .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            gap: 10px;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text);
+        }
+
+        .forgot-link {
+            text-decoration: none;
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        .login-btn {
+            width: 100%;
+            height: 54px;
+            border: none;
+            border-radius: 14px;
+            background: var(--primary);
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .login-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .divider {
+            margin: 28px 0;
+            text-align: center;
+            position: relative;
+            color: #94a3b8;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .divider::before {
+            right: 0;
+        }
+
+        .divider::after {
+            left: 0;
+        }
+
+        .social-login {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .social-btn {
+            height: 50px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            color: #475569;
+            transition: .3s;
+            font-size: 18px;
+        }
+
+        .social-btn:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            color: var(--muted);
+        }
+
+        .register-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        /* Mobile */
+        @media (max-width: 992px) {
+            .auth-side {
+                display: none;
+            }
+
+            .auth-form {
+                padding: 20px;
+            }
+
+            .login-card {
+                padding: 30px 25px;
+                border-radius: 22px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .social-login {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .options {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .login-card {
+                padding: 24px 20px;
+            }
+
+            .login-title h2 {
+                font-size: 24px;
+            }
+
+            .form-control,
+            .login-btn {
+                height: 50px;
+            }
+        }
+    </style>
 </head>
 
-<body class="form-membership">
+<body>
 
-	<!-- begin::page loader-->
-	<div class="page-loader">
-		<div class="spinner-border"></div>
-	</div>
-	<!-- end::page loader -->
+    <div class="auth-wrapper">
 
-	<div class="form-wrapper">
+        <div class="auth-side">
+            <div class="auth-side-content">
+                <h1>خوش آمدید</h1>
 
-		<!-- logo -->
-		<div class="logo">
-			<img src='assets/media/image/logo-sm.png' alt="image">
-		</div>
-		<!-- ./ logo -->
+                <p>
+                    برای دسترسی به پنل مدیریت و امکانات سیستم،
+                    وارد حساب کاربری خود شوید و مدیریت کسب‌وکار
+                    خود را سریع‌تر و حرفه‌ای‌تر انجام دهید.
+                </p>
+            </div>
+        </div>
 
-		<h5>ورود</h5>
+        <div class="auth-form">
 
-		<!-- form -->
-		<form>
-			<div class="form-group">
-				<input type="text" class="form-control text-left" placeholder="نام کاربری یا ایمیل" dir="ltr" required autofocus>
-			</div>
-			<div class="form-group">
-				<input type="password" class="form-control text-left" placeholder="رمز عبور" dir="ltr" required>
-			</div>
-			<div class="form-group d-sm-flex justify-content-between text-left mb-4">
-				<div class="custom-control custom-checkbox">
-					<input type="checkbox" class="custom-control-input" checked id="customCheck1">
-					<label class="custom-control-label" for="customCheck1">به خاطر سپاری</label>
-				</div>
-				<a class="d-block mt-2 mt-sm-0 line-height-28" href="recover-password.html">بازنشانی رمز عبور</a>
-			</div>
-			<button class="btn btn-primary btn-block">ورود</button>
-			<hr>
-			<p class="text-muted">با حساب شبکه اجتماعی خود وارد شوید.</p>
-			<ul class="list-inline">
-				<li class="list-inline-item">
-					<a href="#" class="btn btn-floating btn-facebook">
-						<i class="fa fa-facebook"></i>
-					</a>
-				</li>
-				<li class="list-inline-item">
-					<a href="#" class="btn btn-floating btn-twitter">
-						<i class="fa fa-twitter"></i>
-					</a>
-				</li>
-				<li class="list-inline-item">
-					<a href="#" class="btn btn-floating btn-dribbble">
-						<i class="fa fa-dribbble"></i>
-					</a>
-				</li>
-				<li class="list-inline-item">
-					<a href="#" class="btn btn-floating btn-linkedin">
-						<i class="fa fa-linkedin"></i>
-					</a>
-				</li>
-				<li class="list-inline-item">
-					<a href="#" class="btn btn-floating btn-google">
-						<i class="fa fa-google"></i>
-					</a>
-				</li>
-				<li class="list-inline-item">
-					<a href="#" class="btn btn-floating btn-behance">
-						<i class="fa fa-behance"></i>
-					</a>
-				</li>
-				<li class="list-inline-item">
-					<a href="#" class="btn btn-floating btn-instagram">
-						<i class="fa fa-instagram"></i>
-					</a>
-				</li>
-			</ul>
-			<hr>
-			<p class="text-muted">حسابی ندارید؟</p>
-			<a href="./register.html" class="btn btn-outline-light btn-sm">هم اکنون ثبت نام کنید!</a>
-		</form>
-		<!-- ./ form -->
+            <div class="login-card">
 
-	</div>
+                <div class="logo">
+                    <div class="logo-circle">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                </div>
 
-	<!-- Plugin scripts -->
-	<script src='vendors/bundle.js'></script>
+                <div class="login-title">
+                    <h2>ورود به حساب کاربری</h2>
+                    <p>لطفاً اطلاعات ورود خود را وارد کنید</p>
+                </div>
 
-	<!-- App scripts -->
-	<script src='assets/js/app.js'></script>
+                <form>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            ایمیل یا نام کاربری
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               placeholder="example@mail.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            رمز عبور
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <input type="password"
+                                   id="password"
+                                   class="form-control"
+                                   placeholder="رمز عبور">
+
+                            <button type="button"
+                                    class="password-toggle"
+                                    onclick="togglePassword()">
+
+                                <i id="eyeIcon"
+                                   class="fa-solid fa-eye"></i>
+
+                            </button>
+
+                        </div>
+                    </div>
+
+                    <div class="options">
+
+                        <label class="remember">
+                            <input type="checkbox">
+                            مرا به خاطر بسپار
+                        </label>
+
+                        <a href="#" class="forgot-link">
+                            رمز عبور را فراموش کرده‌اید؟
+                        </a>
+
+                    </div>
+
+                    <button class="login-btn" type="submit">
+                        ورود به سیستم
+                    </button>
+
+                </form>
+
+                <div class="divider">
+                    یا ادامه با
+                </div>
+
+                <div class="social-login">
+
+                    <a href="#" class="social-btn">
+                        <i class="fab fa-google"></i>
+                    </a>
+
+                    <a href="#" class="social-btn">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+
+                    <a href="#" class="social-btn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+
+                    <a href="#" class="social-btn">
+                        <i class="fab fa-github"></i>
+                    </a>
+
+                </div>
+
+                <div class="register-link">
+                    حساب کاربری ندارید؟
+                    <a href="#">
+                        ثبت نام کنید
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        function togglePassword() {
+            const password = document.getElementById("password");
+            const icon = document.getElementById("eyeIcon");
+
+            if (password.type === "password") {
+                password.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            } else {
+                password.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            }
+        }
+    </script>
+
 </body>
 
 </html>
+

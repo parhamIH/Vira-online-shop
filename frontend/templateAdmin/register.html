@@ -2,70 +2,369 @@
 <html lang="fa" dir="rtl">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>قالب Nextable - قالب مدیریتی نکستیبل</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ثبت نام</title>
 
-	<!-- Favicon -->
-	<link rel="shortcut icon" href="assets/media/image/favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-	<!-- Theme Color -->
-	<meta name="theme-color" content="#5867dd">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3046c9;
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+        }
 
-	<!-- Plugin styles -->
-	<link rel="stylesheet" href="vendors/bundle.css" type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-	<!-- App styles -->
-	<link rel="stylesheet" href="assets/css/app.css" type="text/css">
+        body {
+            font-family: Tahoma, sans-serif;
+            background: radial-gradient(circle at top right, rgba(67,97,238,.12), transparent 40%),
+                        radial-gradient(circle at bottom left, rgba(99,102,241,.10), transparent 40%),
+                        var(--bg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 520px;
+            background: white;
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.06);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .logo img {
+            width: 65px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        .sub {
+            text-align: center;
+            color: var(--muted);
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .progress {
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 50px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 33%;
+            background: var(--primary);
+            transition: .3s;
+        }
+
+        .step-text {
+            text-align: center;
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 20px;
+        }
+
+        .step {
+            display: none;
+            animation: fade .25s ease;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        @keyframes fade {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 13px;
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        input {
+            width: 100%;
+            height: 48px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 0 12px;
+            outline: none;
+            transition: .2s;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67,97,238,.12);
+        }
+
+        .row {
+            display: grid;
+            gap: 12px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            height: 48px;
+            border-radius: 14px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: .2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-light {
+            background: #f1f5f9;
+        }
+
+        .btn-light:hover {
+            background: #e2e8f0;
+        }
+
+        .strength {
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .bar {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .fill {
+            height: 100%;
+            width: 0%;
+            transition: .3s;
+        }
+
+        .error {
+            font-size: 12px;
+            color: #ef4444;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
 
-<body class="form-membership">
+<body>
 
-	<!-- begin::page loader-->
-	<div class="page-loader">
-		<div class="spinner-border"></div>
-	</div>
-	<!-- end::page loader -->
+<div class="card">
 
-	<div class="form-wrapper">
+    <div class="logo">
+        <img src="assets/media/image/logo-sm.png">
+    </div>
 
-		<!-- logo -->
-		<div class="logo">
-			<img src="assets/media/image/logo-sm.png" alt="image">
-		</div>
-		<!-- ./ logo -->
+    <h2>ایجاد حساب کاربری</h2>
+    <div class="sub">فرم ثبت‌نام مرحله‌ای</div>
 
-		<h5>ایجاد حساب</h5>
+    <div class="progress">
+        <div class="progress-bar" id="bar"></div>
+    </div>
 
-		<!-- form -->
-		<form>
-			<div class="form-group">
-				<input type="text" class="form-control" placeholder="نام" required autofocus>
-			</div>
-			<div class="form-group">
-				<input type="text" class="form-control" placeholder="نام خانوادگی" required>
-			</div>
-			<div class="form-group">
-				<input type="email" class="form-control text-left" placeholder="ایمیل" dir="ltr" required>
-			</div>
-			<div class="form-group">
-				<input type="password" class="form-control text-left" placeholder="رمز عبور" dir="ltr" required>
-			</div>
-			<button class="btn btn-primary btn-block">ثبت نام</button>
-			<hr>
-			<p class="text-muted">حساب کاربری دارید؟</p>
-			<a href="./login.html" class="btn btn-outline-light btn-sm">وارد شوید!</a>
-		</form>
-		<!-- ./ form -->
+    <div class="step-text" id="stepText">مرحله 1 از 3</div>
 
-	</div>
+    <form id="form">
 
-	<!-- Plugin scripts -->
-	<script src="vendors/bundle.js"></script>
+        <!-- STEP 1 -->
+        <div class="step active">
 
-	<!-- App scripts -->
-	<script src="assets/js/app.js"></script>
+            <div class="row">
+                <div>
+                    <label>نام</label>
+                    <input required>
+                </div>
+
+                <div>
+                    <label>نام خانوادگی</label>
+                    <input required>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button type="button" class="btn-primary next">ادامه</button>
+            </div>
+
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="step">
+
+            <div>
+                <label>ایمیل</label>
+                <input type="email" required>
+            </div>
+
+            <div style="margin-top:10px;">
+                <label>شماره موبایل</label>
+                <input required>
+            </div>
+
+            <div class="actions">
+                <button type="button" class="btn-light prev">قبلی</button>
+                <button type="button" class="btn-primary next">ادامه</button>
+            </div>
+
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="step">
+
+            <div>
+                <label>رمز عبور</label>
+                <input type="password" id="pass" required>
+
+                <div class="strength">
+                    قدرت رمز عبور
+                    <div class="bar">
+                        <div class="fill" id="fill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:10px;">
+                <label>تکرار رمز</label>
+                <input type="password" id="confirm" required>
+                <div class="error" id="err">رمزها یکسان نیستند</div>
+            </div>
+
+            <div class="actions">
+                <button type="button" class="btn-light prev">قبلی</button>
+                <button class="btn-primary">ثبت نام</button>
+            </div>
+
+        </div>
+
+    </form>
+
+    <div class="link">
+        قبلاً حساب دارید؟
+        <a href="login.html">ورود</a>
+    </div>
+
+</div>
+
+<script>
+let step = 0;
+const steps = document.querySelectorAll(".step");
+const bar = document.getElementById("bar");
+const text = document.getElementById("stepText");
+
+function show() {
+    steps.forEach(s => s.classList.remove("active"));
+    steps[step].classList.add("active");
+    bar.style.width = ((step + 1) / steps.length) * 100 + "%";
+    text.innerText = `مرحله ${step + 1} از ${steps.length}`;
+}
+
+document.querySelectorAll(".next").forEach(btn => {
+    btn.onclick = () => {
+        step++;
+        show();
+    };
+});
+
+document.querySelectorAll(".prev").forEach(btn => {
+    btn.onclick = () => {
+        step--;
+        show();
+    };
+});
+
+const pass = document.getElementById("pass");
+const fill = document.getElementById("fill");
+
+pass?.addEventListener("input", e => {
+    let v = e.target.value;
+    let s = 0;
+
+    if (v.length > 6) s++;
+    if (/[A-Z]/.test(v)) s++;
+    if (/[0-9]/.test(v)) s++;
+    if (/[^A-Za-z0-9]/.test(v)) s++;
+
+    fill.style.width = (s * 25) + "%";
+    fill.style.background =
+        s < 2 ? "#ef4444" :
+        s < 3 ? "#f59e0b" :
+        "#22c55e";
+});
+
+document.getElementById("form").addEventListener("submit", e => {
+    const p = pass.value;
+    const c = document.getElementById("confirm").value;
+
+    if (p !== c) {
+        e.preventDefault();
+        document.getElementById("err").style.display = "block";
+    }
+});
+</script>
+
 </body>
-
 </html>
