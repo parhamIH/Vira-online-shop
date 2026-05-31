@@ -36,8 +36,8 @@ A comprehensive Django-based e-commerce platform with RTL (Right-to-Left) suppor
 
 1. **Clone the Repository**
 ```bash
-git clone https://github.com/yourusername/RTL-online-shop.git
-cd RTL-online-shop
+git clone https://github.com/parhamIH/Vira-online-shop.git
+cd Vira-online-shop
 ```
 
 2. **Set Up Virtual Environment**
