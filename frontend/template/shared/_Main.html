@@ -583,16 +583,16 @@
                 <div class="cart-canvas">
                     <div class="row align-items-center">
                         <div class="col-4 ps-0">
-                            <img src="{{ item.image }}" alt="">
+                            <img src="{{ item.package.product.image.url }}" alt="">
                         </div>
                         <div class="col-8">
-                            <h3 class="text-overflow-1 title-font font-14">{{ item.name }}</h3>
+                            <h3 class="text-overflow-1 title-font font-14">{{ item.package.product.name }}</h3>
                             <div class="cart-canvas-price my-3 d-flex align-items-center">
-                                {% if item.is_active_discount %}
-                                    <p class="mb-0 text-muted me-2 font-16 text-decoration-line-through">{{ item.original_price|intcomma }}</p>
-                                    <h6 class="title-font main-color-one-color">{{ item.price|intcomma }}</h6>
+                                {% if item.package.is_active_discount %}
+                                    <p class="mb-0 text-muted me-2 font-16 text-decoration-line-through">{{ item.package.price|intcomma }}</p>
+                                    <h6 class="title-font main-color-one-color">{{ item.package.final_price|intcomma }}</h6>
                                 {% else %}
-                                    <h6 class="title-font main-color-one-color">{{ item.price|intcomma }}</h6>
+                                    <h6 class="title-font main-color-one-color">{{ item.package.price|intcomma }}</h6>
                                 {% endif %}
                             </div>
                             <div class="cart-canvas-foot d-flex align-items-center justify-content-between">
@@ -643,7 +643,9 @@
     </div>
 </div>
 <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
-
+<script>
+    window.CART_DELETE_URL = "{% url 'delete_cart_item' %}";
+</script>
 <script src="{% static 'admin/js/django_jalali.min.js' %}"></script>
 <script src="{% static 'assets/js/vendor/modernizr-3.11.2.min.js' %}"></script>
 <script src="{% static 'assets/js/vendor/jquery-3.7.1.min.js' %}"></script>

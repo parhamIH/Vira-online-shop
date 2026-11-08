@@ -5,11 +5,10 @@ from shop.reviews.models import *
 
 class CommentAdmin(admin.ModelAdmin):
     readonly_fields = ("created_at",)
-    list_display = ("product", "user", "created_at", "text_preview", "rating", "is_approved")
+    list_display = ("product", "user", "created_at", "text_preview", "rating")
     list_display_links = ("product",)
-    list_filter = ("product", "is_approved", "rating", "created_at")
+    list_filter = ("product", "rating", "created_at")
     ordering = ("product", "created_at")
-    list_editable = ("is_approved",)
     
     def text_preview(self, obj):
         if len(obj.text) > 50:
@@ -19,7 +18,7 @@ class CommentAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ("محصول / کاربر", {"fields": ("product", "user")}),
-        ("نظر / امتیاز", {"fields": ("text", "rating", "is_approved")}),
+        ("نظر / امتیاز", {"fields": ("text", "rating")}),
         ("زمان ثبت", {"fields": ("created_at",)}),
     )
 

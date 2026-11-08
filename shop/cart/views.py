@@ -82,18 +82,45 @@ def delete_CartItem(request):
                 return JsonResponse({'status': 'error', 'message': 'هیچ آیتمی حذف نشد'}, status=404)
 
             # محاسبه تعداد باقی‌مانده آیتم‌ها و قیمت‌ها
-            remaining_count = CartItem.objects.filter(cart=cart).count()
-            
+            remaining_items = CartItem.objects.filter(
+                cart=cart
+            ).select_related("package")
+
+            remaining_count = sum(
+                item.count for item in remaining_items
+            )            
             # محاسبه قیمت‌ها - استفاده از متدهای موجود در مدل Cart
             total_goods_price = cart.total_goods_price() if hasattr(cart, 'total_goods_price') else 0
             total_discount = cart.total_discount() if hasattr(cart, 'total_discount') else 0
             total_price = cart.total_price() if hasattr(cart, 'total_price') else 0
             
-            # اگر متدهای مذکور وجود ندارند، محاسبه دستی انجام شود
-            if not hasattr(cart, 'total_price'):
-                total_price = sum(item.package.final_price * item.count for item in CartItem.objects.filter(cart=cart))
-                cart.save()
-            
+            # # اگر متدهای مذکور وجود ندارند، محاسبه دستی انجام شود
+            # if not hasattr(cart, 'total_price'):
+            #     total_price = sum(item.package.final_price * item.count for item in CartItem.objects.filter(cart=cart))
+            #     cart.save()
+            remaining_items = CartItem.objects.filter(
+                cart=cart
+            ).select_related("package")
+
+            total_goods_price = sum(
+                item.package.price * item.count
+                for item in remaining_items
+            )
+
+            total_price = sum(
+                (
+                    item.final_price
+                    if item.final_price is not None
+                    else (
+                        item.package.final_price
+                        if item.package.is_active_discount
+                        else item.package.price
+                    )
+                ) * item.count
+                for item in remaining_items
+            )
+
+            total_discount = total_goods_price - total_price
             return JsonResponse({
                 'status': 'success', 
                 'message': 'محصول با موفقیت از سبد خرید حذف شد',

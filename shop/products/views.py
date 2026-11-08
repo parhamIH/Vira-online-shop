@@ -144,8 +144,42 @@ def product_detail(request, *args, **kwargs):
     packages = ProductPackage.objects.filter(product=product)
 
     # حذف بسته‌هایی که نامعتبرند
-    packages = packages.exclude(quantity__lte=0, is_active_package=False)
+    # بررسی وجود رنگ و سایز در بسته‌های محصول
+    has_colors = packages.filter(
+        color__isnull=False
+    ).exists()
 
+    has_sizes = packages.filter(
+        size__isnull=False
+    ).exists()
+
+    # ساخت لیست رنگ‌های یکتا
+    color_options = []
+    seen_colors = set()
+
+    for package in packages.select_related("color"):
+
+        if package.color_id and package.color_id not in seen_colors:
+
+            color_options.append({
+                "color": package.color,
+                "package_id": (
+                    package.id if not has_sizes else ""
+                )
+            })
+
+            seen_colors.add(package.color_id)
+
+
+    # اگر محصول نه رنگ دارد و نه سایز،
+    # اولین بسته به‌صورت خودکار انتخاب شود.
+    default_package_id = ""
+
+    if not has_colors and not has_sizes:
+        first_package = packages.first()
+
+        if first_package:
+            default_package_id = first_package.id
     # دریافت مشخصات محصول
 
 
@@ -162,24 +196,43 @@ def product_detail(request, *args, **kwargs):
 
     if request.user.is_authenticated:
         cart = Cart.objects.filter(user=request.user, is_paid=False).first()
-        if cart:
-            cart_items = CartItem.objects.filter(cart=cart)
-            cart_package_ids = [item.package.id for item in cart_items]
-            # print(f"\n\n\n\ncart_package_ids:{cart_package_ids}\ncart_items:{cart_items}\n\n\n\n\n\n\n\n")
-            cart_items_json = [
-                {
-                    'package': {'id': item.package.id, 'quantity': item.package.quantity},
-                    'count': item.count
-                } for item in cart_items
-            ]
+    if cart:
+        cart_items = CartItem.objects.filter(
+            cart=cart
+        ).select_related(
+            "package",
+            "package__product",
+            "package__color",
+            "package__size"
+        )
+
+        cart_package_ids = [
+            item.package_id for item in cart_items
+        ]
+
+        cart_items_json = [
+            {
+                'package': {
+                    'id': item.package_id,
+                    'quantity': item.package.quantity
+                },
+                'count': item.count
+            }
+            for item in cart_items
+        ]
 
     # ایجاد دیکشنری رنگ‌های یکتا
     unique_colors = {}
-    for package in packages:
-        if package.color.id not in unique_colors:
-            unique_colors[package.color.id] = package.color
 
-    product_needs_color_or_size = packages.exists()
+    for package in packages:
+        if package.color_id is not None:
+            if package.color_id not in unique_colors:
+                unique_colors[package.color_id] = package.color
+    # بررسی وجود تنوع رنگ و سایز
+    has_colors = packages.filter(color__isnull=False).exists()
+    has_sizes = packages.filter(size__isnull=False).exists()
+
+    product_needs_color_or_size = has_colors or has_sizes
 
     # مدیریت جستجو
     search = request.GET.get("q")
@@ -215,9 +268,16 @@ def product_detail(request, *args, **kwargs):
         "more_products": more_products,
         "packages": packages,
         "unique_colors": unique_colors.values(),
+        "has_colors": has_colors,
+        "has_sizes": has_sizes,
+        "color_options": color_options,
+        "default_package_id": default_package_id,
         "cart_items": cart_items,
         "cart_count": sum(item.count for item in cart_items) if cart_items else 0,
-        "cart_total": sum(item.package.price * item.count for item in cart_items) if cart_items else 0,
+       "cart_total": sum(
+    (
+        item.final_price
+        if item.final_price is not None else ( item.package.final_price if item.package.is_active_discount else item.package.price)) * item.count for item in cart_items) if cart_items else 0,
         "product_needs_color_or_size": product_needs_color_or_size,
         "cart_package_ids": cart_package_ids,
         "cart_items_json": json.dumps(cart_items_json),  # تبدیل به JSON برای جاوااسکریپت
@@ -259,6 +319,7 @@ def product_detail(request, *args, **kwargs):
         return redirect(request.path)  # پس از افزودن به سبد خرید، صفحه رفرش شود
 
     return render(request, "frontend/template/product.html", context)
+
 
 #category
 def category_products(request, en_name):

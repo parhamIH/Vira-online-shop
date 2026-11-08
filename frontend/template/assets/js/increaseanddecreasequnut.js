@@ -325,7 +325,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
             
-            fetch("cart/delete-cart-item/", {
+            fetch(window.CART_DELETE_URL, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

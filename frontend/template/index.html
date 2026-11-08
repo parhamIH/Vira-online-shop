@@ -159,15 +159,29 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="swiper" id="brandSlider">
                 <div class="swiper-wrapper py-4">
             {% for featured_brand in featured_brands %}
-                    <div class="swiper-slide">
-                        <div class="brand-item bg-white rounded-4 shadow-sm p-3 text-center brand-card">
-                            <a href="/products?brand={{ featured_brand.brand.en_name }}" class="d-block">
-                                <img src="{{ featured_brand.brand.logo.url }}" alt="{{ featured_brand.brand.name }}" class="img-fluid brand-logo mb-3">
-                                <h5 class="brand-name mb-0">{{ featured_brand.brand.name }}</h5>
-                    </a>
+                <div class="swiper-slide">
+                    <div class="brand-item bg-white rounded-4 shadow-sm p-3 text-center brand-card">
+                        <a href="/products?brand={{ featured_brand.brand.en_name }}" class="d-block">
+
+                            {% if featured_brand.brand.logo %}
+                                <img src="{{ featured_brand.brand.logo.url }}"
+                                    alt="{{ featured_brand.brand.name }}"
+                                    class="img-fluid brand-logo mb-3">
+                            {% else %}
+                                <img src="{% static 'assets/img/brand1-1.png' %}"
+                                    alt="{{ featured_brand.brand.name }}"
+                                    class="img-fluid brand-logo mb-3">
+                            {% endif %}
+
+                            <h5 class="brand-name mb-0">
+                                {{ featured_brand.brand.name }}
+                            </h5>
+
+                        </a>
+                    </div>
                 </div>
-            </div>
             {% empty %}
+                            
             <!-- برندهای پیش‌فرض در صورت خالی بودن -->
                     <div class="swiper-slide">
                         <div class="brand-item bg-white rounded-4 shadow-sm p-3 text-center brand-card">

@@ -511,86 +511,196 @@
                             </div>
                         </div>
                             
-                        
-                        <form method="post" name="package" id="add-to-cart-form">
-                            {% csrf_token %}
-                            
-                            <!-- انتخاب رنگ کالا -->
-                            <div class="product-meta-color bottom-border my-4">
-                                <h5 class="font-16">انتخاب رنگ کالا</h5>
-                                <div class="product-meta-color-items d-flex flex-wrap gap-2">
-                                    {% for color in unique_colors %}
-                                    
-                                    <div class="form-check">
-                                        <input type="radio" class="form-check-input color-option" 
-                                             name="color-options" id="option{{color.id}}" 
-                                            value="{{color.id}}" onclick="filterSizes('{{color.id}}')"
-                                            {% if color.id == selected_color_id or forloop.first %} checked {% endif %}>
+                            <form method="post" name="package" id="add-to-cart-form">
+                                {% csrf_token %}
 
-                                        <label class="btn btn-outline-secondary" for="option{{color.id}}">
-                                            <span style="background-color: {{color.hex_code}}; width: 15px; height: 15px; display: inline-block; border-radius: 50%;"></span> 
-                                            {{color.name}}
-                                        </label>
+                                <!-- ================================= -->
+                                <!-- انتخاب رنگ کالا -->
+                                <!-- ================================= -->
+
+                                {% if has_colors %}
+                                <div class="product-meta-color bottom-border my-4">
+
+                                    <h5 class="font-16">انتخاب رنگ کالا</h5>
+
+                                    <div class="product-meta-color-items d-flex flex-wrap gap-2">
+
+                                        {% for option in color_options %}
+
+                                        <div class="form-check">
+
+                                            <input
+                                                type="radio"
+                                                class="form-check-input color-option"
+                                                name="color-options"
+                                                id="option{{ option.color.id }}"
+                                                value="{{ option.color.id }}"
+                                                data-package-id="{{ option.package_id }}"
+                                                {% if selected_color_id == option.color.id %}
+                                                    checked
+                                                {% elif not selected_color_id and forloop.first %}
+                                                    checked
+                                                {% endif %}
+                                            >
+
+                                            <label
+                                                class="btn btn-outline-secondary"
+                                                for="option{{ option.color.id }}"
+                                            >
+                                                <span
+                                                    style="
+                                                        background-color: {{ option.color.hex_code }};
+                                                        width: 15px;
+                                                        height: 15px;
+                                                        display: inline-block;
+                                                        border-radius: 50%;
+                                                    "
+                                                ></span>
+
+                                                {{ option.color.name }}
+                                            </label>
+
+                                        </div>
+
+                                        {% endfor %}
+
                                     </div>
-                                    {% endfor %}
                                 </div>
-                            </div>
-                        
-                            <!-- فیلد مخفی برای package-id -->
-                            <input type="hidden" name="package-id" id="package-id" value="">
-                        
-                            <!-- انتخاب سایز کالا -->
-                            <h5 class="font-16">انتخاب سایز کالا</h5>
-                            <div class="product-meta-color-items d-flex flex-wrap gap-2" id="size-options-container">
-                                {% for package in packages %}
-                                <div class="size-option size-color-{{package.color.id}}" style="display: none;">
-                                    <input type="radio" class="form-check-input" 
-                                        name="size-options" id="size-option{{package.id}}" 
-                                        value="{{package.id}}" data-quantity="{{package.quantity}}"
-                                        onclick="setPackageId('{{package.id}}')">
-                                    <label class="btn btn-outline-secondary" for="size-option{{package.id}}">
-                                        {% if package.size.size %}
-                                            {{package.size.size}}
-                                        {% elif package.size.size_numrical %}
-                                            {{package.size.size_numrical}}
-                                        {% elif package.size.number_size %}
-                                            {{package.size.number_size}}
-                                        {% endif %}
-                                    </label>
+                                {% endif %}
+
+
+                                <!-- ================================= -->
+                                <!-- شناسه بسته انتخاب شده -->
+                                <!-- ================================= -->
+
+                                <input
+                                    type="hidden"
+                                    name="package-id"
+                                    id="package-id"
+                                    value="{{ default_package_id|default:'' }}"
+                                >
+
+
+                                <!-- ================================= -->
+                                <!-- انتخاب سایز کالا -->
+                                <!-- ================================= -->
+
+                                {% if has_sizes %}
+
+                                <div class="product-meta-color bottom-border my-4">
+
+                                    <h5 class="font-16">انتخاب سایز کالا</h5>
+
+                                    <div
+                                        class="product-meta-color-items d-flex flex-wrap gap-2"
+                                        id="size-options-container"
+                                    >
+
+                                        {% for package in packages %}
+
+                                            {% if package.size_id %}
+
+                                            <div
+                                                class="size-option"
+                                                data-package-id="{{ package.id }}"
+                                                data-color-id="{{ package.color_id|default_if_none:'' }}"
+                                                style="{% if has_colors %}display: none;{% endif %}"
+                                            >
+
+                                                <input
+                                                    type="radio"
+                                                    class="form-check-input size-option-input"
+                                                    name="size-options"
+                                                    id="size-option{{ package.id }}"
+                                                    value="{{ package.id }}"
+                                                    data-quantity="{{ package.quantity }}"
+                                                >
+
+                                                <label
+                                                    class="btn btn-outline-secondary"
+                                                    for="size-option{{ package.id }}"
+                                                >
+
+                                                    {% if package.size.size %}
+                                                        {{ package.size.size }}
+
+                                                    {% elif package.size.size_numrical %}
+                                                        {{ package.size.size_numrical }}
+
+                                                    {% elif package.size.number_size %}
+                                                        {{ package.size.number_size }}
+                                                    {% endif %}
+
+                                                </label>
+
+                                            </div>
+
+                                            {% endif %}
+
+                                        {% endfor %}
+
+                                    </div>
                                 </div>
-                                {% endfor %}
-                            </div>
-                            
-                            <div class="col-sm-6 text-center mt-4">
-                                <div class="counter">
-                                    <input type="hidden" class="package-id" value="{{ item.package.id|default:'' }}">
-                                    <button type="button" 
-                                            class="decrease-btn" 
-                                            data-max-quantity="{{ item.package.quantity|default:'1' }}">
-                                        -
+
+                                {% endif %}
+
+
+                                <!-- ================================= -->
+                                <!-- تعداد محصول -->
+                                <!-- ================================= -->
+
+                                <div class="col-sm-6 text-center mt-4">
+
+                                    <div class="counter">
+
+                                        <button
+                                            type="button"
+                                            class="decrease-btn"
+                                            data-max-quantity="1"
+                                        >
+                                            -
+                                        </button>
+
+                                        <input
+                                            type="text"
+                                            class="counter-input"
+                                            name="countt"
+                                            id="product-count"
+                                            value="1"
+                                            readonly
+                                        >
+
+                                        <button
+                                            type="button"
+                                            class="increase-btn"
+                                            data-max-quantity="1"
+                                        >
+                                            +
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- ================================= -->
+                                <!-- افزودن به سبد خرید -->
+                                <!-- ================================= -->
+
+                                <div class="product-meta-add-to-cart mt-4">
+
+                                    <button
+                                        type="submit"
+                                        id="submit-button"
+                                        class="btn product-meta-add-to-cart-btn main-color-one-bg rounded-pill"
+                                    >
+                                        افزودن به سبد خرید
                                     </button>
-                                    <input type="text"
-                                           class="counter-input"
-                                           data-package-id="{{ item.package.id|default:'' }}"
-                                           value="{{ item.count|default:'1' }}"
-                                           name="countt"
-                                           readonly>
-                                    <button type="button" 
-                                            class="increase-btn" 
-                                            data-max-quantity="{{ item.package.quantity|default:'' }}">
-                                        +
-                                    </button>
+
                                 </div>
-                                
-                                              <!-- دکمه افزودن به سبد خرید -->
-                            </div>
-                            <div class="product-meta-add-to-cart mt-4">
-                                <button type="submit" id="submit-button" 
-                                        class="btn product-meta-add-to-cart-btn main-color-one-bg rounded-pill ">
-                                    افزودن به سبد خرید
-                                </button>
-                            </div>
-                        </form>
+
+                            </form>
+
 
                         <style>
                             .form-check-input:checked + .btn {

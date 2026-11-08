@@ -977,7 +977,7 @@ def create_reviews(users, products, Comment):
                     "ارسال هم رضایت‌بخش بود."
                 ),
                 "rating": 4 + (index % 2),
-                "is_approved": True,
+                "status": "approved",
             },
         )
 
