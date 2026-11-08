@@ -42,14 +42,14 @@ cd Vira-online-shop
 
 2. **Set Up Virtual Environment**
 ```bash
-python -m venv venv
-.\venv\Scripts\activate  # Windows
-source venv/bin/activate  # Linux/Mac
+python -m venv .venv
+.\.venv\Scripts\activate  # Windows
+source .venv/bin/activate  # Linux/Mac
 ```
 
 3. **Install Dependencies**
 ```bash
-pip install -r freeze.txt
+pip install -r requirements.txt
 ```
 
 4. **Database Setup**
@@ -76,6 +76,12 @@ python manage.py createsuperuser
 7. **Run Development Server**
 ```bash
 python manage.py runserver
+```
+
+
+8. **Create Demo datas**
+```bash
+python seed_demo_data.py   
 ```
 
 ## 🌐 Available URLs
