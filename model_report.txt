@@ -1,0 +1,360 @@
+﻿[Django] settings: main.settings
+
+=== Django model/field inspection ===
+
+[account.ClientAddress]
+  - user: ForeignKey -> auth.User
+  - title_address: CharField
+  - province: CharField
+  - city: CharField
+  - full_address: TextField
+  - postcode: CharField
+
+[account.FavouriteProducts]
+  - user: ForeignKey -> auth.User
+  - created_at: DateTimeField (blank)
+  - updated_at: DateTimeField (blank)
+  - products: ManyToManyField
+  - products: MANY-TO-MANY -> products.Product
+
+[account.Notification]
+  - user: ForeignKey -> auth.User
+  - title: CharField
+  - message: TextField
+  - notification_type: CharField (default)
+  - is_read: BooleanField (default)
+  - related_url: CharField (nullable, blank)
+  - created_at: DateTimeField (blank)
+
+[account.Profile]
+  - user: OneToOneField (unique)
+  - phone_number: CharField (nullable, blank, unique)
+  - is_phone_verified: BooleanField (default)
+  - verification_code: CharField (nullable, blank)
+  - verification_code_created_at: DateTimeField (nullable, blank)
+  - national_id: CharField (nullable, blank)
+  - birth_date: DateField (nullable, blank)
+  - job: CharField (nullable, blank)
+  - economic_code: CharField (nullable, blank)
+  - legal_info: TextField (nullable, blank)
+  - refund_method: CharField (nullable, blank)
+
+[account.UserCoupon]
+  - user: ForeignKey -> auth.User
+  - code: CharField
+  - discount: PositiveIntegerField
+  - is_active: BooleanField (default)
+  - created_at: DateTimeField (blank)
+  - expire_at: DateTimeField (nullable, blank)
+
+[admin.LogEntry]
+  - action_time: DateTimeField (default)
+  - user: ForeignKey -> auth.User
+  - content_type: ForeignKey -> contenttypes.ContentType (nullable, blank)
+  - object_id: TextField (nullable, blank)
+  - object_repr: CharField
+  - action_flag: PositiveSmallIntegerField
+  - change_message: TextField (blank)
+
+[articles.Article]
+  - title: CharField
+  - slug: SlugField (unique)
+  - content: TextField
+  - short_description: TextField (nullable, blank)
+  - created_at: DateTimeField (blank)
+  - updated_at: DateTimeField (blank)
+  - image: FileField [FILE] (nullable, blank)
+  - is_published: BooleanField (default)
+  - meta_title: CharField (nullable, blank)
+  - meta_description: TextField (nullable, blank)
+  - meta_keywords: CharField (nullable, blank)
+
+[auth.Group]
+  - name: CharField (unique)
+  - permissions: ManyToManyField (blank)
+  - permissions: MANY-TO-MANY -> auth.Permission
+
+[auth.Permission]
+  - name: CharField
+  - content_type: ForeignKey -> contenttypes.ContentType
+  - codename: CharField
+
+[auth.User]
+  - password: CharField
+  - last_login: DateTimeField (nullable, blank)
+  - is_superuser: BooleanField (default)
+  - username: CharField (unique)
+  - first_name: CharField (blank)
+  - last_name: CharField (blank)
+  - email: CharField (blank)
+  - is_staff: BooleanField (default)
+  - is_active: BooleanField (default)
+  - date_joined: DateTimeField (default)
+  - groups: ManyToManyField (blank)
+  - user_permissions: ManyToManyField (blank)
+  - groups: MANY-TO-MANY -> auth.Group
+  - user_permissions: MANY-TO-MANY -> auth.Permission
+
+[cart.Cart]
+  - user: ForeignKey -> auth.User
+  - is_paid: BooleanField (default)
+  - created_date: DateTimeField (blank)
+  - updated_date: DateTimeField (blank)
+  - status: CharField (default)
+  - cart_number: CharField (default, unique)
+
+[cart.CartItem]
+  - cart: ForeignKey -> cart.Cart
+  - package: ForeignKey -> products.ProductPackage
+  - count: PositiveIntegerField (default)
+  - final_price: PositiveIntegerField (nullable, blank)
+
+[categories.BaseCategories]
+  - name: CharField (unique)
+  - en_name: CharField (unique)
+  - description: TextField
+  - image: FileField [FILE] (nullable, blank)
+  - brands: ManyToManyField (blank)
+  - brands: MANY-TO-MANY -> public.Brand
+
+[categories.Category]
+  - parent: ForeignKey -> categories.Category (nullable, blank)
+  - base_catgory: ForeignKey -> categories.BaseCategories
+  - name: CharField (unique)
+  - en_name: CharField (unique)
+  - description: TextField
+  - image: FileField [FILE] (nullable, blank)
+
+[contenttypes.ContentType]
+  - app_label: CharField
+  - model: CharField
+
+[guardian.GroupObjectPermission]
+  - permission: ForeignKey -> auth.Permission
+  - content_type: ForeignKey -> contenttypes.ContentType
+  - object_pk: CharField
+  - group: ForeignKey -> auth.Group
+
+[guardian.UserObjectPermission]
+  - permission: ForeignKey -> auth.Permission
+  - content_type: ForeignKey -> contenttypes.ContentType
+  - object_pk: CharField
+  - user: ForeignKey -> auth.User
+
+[home.FeaturedBrand]
+  - brand: ForeignKey -> public.Brand
+  - active: BooleanField (default)
+  - order: PositiveIntegerField (default)
+
+[home.HomeSlider]
+  - title: CharField (nullable, blank)
+  - subtitle: CharField (nullable, blank)
+  - image: FileField [FILE] (nullable, blank)
+  - link: CharField (nullable, blank)
+  - active: BooleanField (default)
+  - order: PositiveIntegerField (default)
+
+[home.PromotionalBanner]
+  - title: CharField (nullable, blank)
+  - image: FileField [FILE] (nullable, blank)
+  - link: CharField (nullable, blank)
+  - position: CharField (default)
+  - size: CharField (default)
+  - active: BooleanField (default)
+  - order: PositiveIntegerField (default)
+
+[order.Order]
+  - user: ForeignKey -> auth.User
+  - cart: OneToOneField (unique)
+  - address: ForeignKey -> account.ClientAddress
+  - order_number: CharField (default, unique)
+  - order_date: DateTimeField (blank)
+  - payment_method: CharField
+  - payment_id: CharField (nullable, blank)
+  - payment_date: DateTimeField (nullable, blank)
+  - payment_reference_id: CharField (nullable, blank)
+  - payment_status: CharField (blank, default)
+  - payment_error: TextField (nullable, blank)
+  - status: CharField (default)
+  - shipping_method: CharField (default)
+  - shipping_cost: PositiveIntegerField (default)
+  - total_price: PositiveIntegerField
+  - discount_code: CharField (nullable, blank)
+  - discount_amount: PositiveIntegerField (default)
+  - shipping_date: DateTimeField (nullable, blank)
+  - delivery_date: DateField (nullable, blank)
+  - jalali_delivery_date: CharField (nullable, blank)
+  - notes: TextField (nullable, blank)
+
+[products.Gallery]
+  - product: ForeignKey -> products.Product
+  - image: FileField [FILE] (nullable, blank)
+
+[products.Product]
+  - name: CharField (unique)
+  - description: TextField
+  - is_active: BooleanField (default)
+  - provider: ForeignKey -> providers.Provider (nullable, blank)
+  - created_date: DateTimeField (blank)
+  - updated_date: DateTimeField (blank)
+  - image: FileField [FILE] (nullable, blank)
+  - categories: ManyToManyField
+  - categories: MANY-TO-MANY -> categories.Category
+
+[products.ProductPackage]
+  - product: ForeignKey -> products.Product (nullable)
+  - provider: ForeignKey -> providers.Provider (nullable, blank)
+  - waranty: ForeignKey -> public.Warranty
+  - size: ForeignKey -> public.Size (nullable, blank, default)
+  - brand: ForeignKey -> public.Brand (nullable, blank, default)
+  - color: ForeignKey -> public.Color (nullable, blank)
+  - quantity: PositiveIntegerField (default)
+  - weight: PositiveIntegerField (nullable, blank, default)
+  - is_active_package: BooleanField (default)
+  - created_date: DateTimeField (blank)
+  - attributs: JSONField (nullable, blank, default)
+  - price: BigIntegerField
+  - final_price: BigIntegerField (default)
+  - discount: IntegerField (nullable, blank, default)
+  - is_active_discount: BooleanField (default)
+  - sold_count: PositiveIntegerField (default)
+  - views_count: PositiveIntegerField (default)
+  - rating: FloatField (default)
+
+[providers.Provider]
+  - user: OneToOneField (unique)
+  - uuid: UUIDField (default, unique)
+  - provider_type: CharField (default)
+  - status: CharField (default)
+  - company_name: CharField (unique)
+  - legal_name: CharField (nullable, blank)
+  - national_id: CharField (nullable, blank, unique)
+  - registration_number: CharField (nullable, blank, unique)
+  - economic_code: CharField (nullable, blank, unique)
+  - phone_number: CharField (nullable, blank, unique)
+  - is_phone_verified: BooleanField (default)
+  - verification_code: CharField (nullable, blank)
+  - verification_code_created_at: DateTimeField (nullable, blank)
+  - email: CharField (unique)
+  - website: CharField (nullable, blank)
+  - address: TextField (nullable, blank)
+  - city: CharField (nullable, blank)
+  - postal_code: CharField (nullable, blank)
+  - sheba: CharField (nullable, blank, unique)
+  - bank_account_number: CharField (nullable, blank)
+  - logo: FileField [FILE] (nullable, blank)
+  - description: TextField (nullable, blank)
+  - commission_rate: DecimalField (default)
+  - rating: DecimalField (default)
+  - is_verified: BooleanField (default)
+  - is_active: BooleanField (default)
+  - created_at: DateTimeField (blank)
+  - updated_at: DateTimeField (blank)
+
+[providers.ProviderMember]
+  - provider: ForeignKey -> providers.Provider
+  - user: ForeignKey -> auth.User
+  - is_owner: BooleanField (default)
+  - is_active: BooleanField (default)
+  - joined_at: DateTimeField (blank)
+
+[public.BaseColor]
+  - name: CharField (nullable, blank)
+  - color: CharField (default)
+
+[public.Brand]
+  - name: CharField (unique)
+  - en_name: CharField (unique)
+  - logo: FileField [FILE] (nullable, blank)
+  - category: ManyToManyField (blank)
+  - category: MANY-TO-MANY -> categories.Category
+
+[public.Color]
+  - name: CharField
+  - hex_code: CharField
+  - image: FileField [FILE] (nullable, blank)
+  - base_color: ForeignKey -> public.BaseColor (nullable, blank)
+
+[public.Size]
+  - size: CharField (nullable, blank)
+  - number_size: PositiveSmallIntegerField (nullable, blank)
+  - size_numrical: CharField
+  - category: CharField (nullable, blank)
+
+[public.Warranty]
+  - name: CharField
+  - company: CharField (nullable, blank)
+  - duration: PositiveIntegerField
+  - is_active: BooleanField (default)
+  - description: TextField (blank)
+  - terms_conditions: TextField (blank)
+  - support_phone: CharField (blank)
+  - registration_required: BooleanField (default)
+  - created_at: DateTimeField (blank)
+  - updated_at: DateTimeField (blank)
+
+[reviews.Comment]
+  - user: ForeignKey -> auth.User
+  - product: ForeignKey -> products.Product
+  - parent: ForeignKey -> reviews.Comment (nullable, blank)
+  - text: TextField
+  - rating: PositiveSmallIntegerField
+  - created_at: DateTimeField (blank)
+  - is_approved: BooleanField (default)
+
+[sessions.Session]
+  - session_data: TextField
+  - expire_date: DateTimeField
+
+[sitesettings.SiteSettings]
+  - site_name: CharField
+  - site_url: CharField
+  - logo: FileField [FILE] (nullable, blank)
+  - favicon: FileField [FILE] (nullable, blank)
+  - email: CharField
+  - phone: CharField
+  - address: TextField
+  - instagram: CharField (nullable, blank)
+  - telegram: CharField (nullable, blank)
+  - twitter: CharField (nullable, blank)
+  - linkedin: CharField (nullable, blank)
+  - footer_text: TextField
+  - about_text: TextField
+  - seo_keywords: TextField (nullable, blank)
+  - seo_description: TextField (nullable, blank)
+  - shipping_cost: PositiveIntegerField (default)
+  - free_shipping_threshold: PositiveIntegerField (default)
+  - tax_percentage: FloatField (default)
+
+[sitesettings.StaticPage]
+  - title: CharField
+  - slug: SlugField (unique)
+  - content: TextField
+  - active: BooleanField (default)
+  - seo_title: CharField (nullable, blank)
+  - seo_keywords: TextField (nullable, blank)
+  - seo_description: TextField (nullable, blank)
+  - created_at: DateTimeField (blank)
+  - updated_at: DateTimeField (blank)
+
+[support.SupportTicket]
+  - user: ForeignKey -> auth.User
+  - subject: CharField
+  - message: TextField
+  - department: CharField (default)
+  - priority: CharField (default)
+  - attachment: FileField [FILE] (nullable, blank)
+  - status: CharField (default)
+  - created_at: DateTimeField (blank)
+  - updated_at: DateTimeField (blank)
+
+[support.TicketReply]
+  - ticket: ForeignKey -> support.SupportTicket
+  - user: ForeignKey -> auth.User
+  - message: TextField
+  - attachment: FileField [FILE] (nullable, blank)
+  - is_staff_reply: BooleanField (default)
+  - created_at: DateTimeField (blank)
+
+======================================
+
